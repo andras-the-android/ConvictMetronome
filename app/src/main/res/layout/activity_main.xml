@@ -27,15 +27,30 @@
             android:background="@drawable/metronome_indicator"/>
 
         <TextView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:textColor="@color/primary_text"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:text="@string/help_before_start"
+            android:textSize="16sp"/>
+
+        <TextView
             android:id="@+id/rep_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/secondary_text"
+            android:layout_below="@id/help"
             android:text="0"
             android:textSize="150sp"
             android:textStyle="bold"/>
+
+
+
     </RelativeLayout>
+
 
 
 </RelativeLayout>
