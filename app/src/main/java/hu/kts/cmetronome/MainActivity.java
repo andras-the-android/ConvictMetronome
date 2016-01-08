@@ -27,10 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
     int repCount = 0;
     private SoundPool soundPool;
-    private int soundID;
+    private int lowBeepSoundID;
+    private int highBeepSoundID;
     private WorkoutStatus workoutStatus = WorkoutStatus.BEFORE_START;
 
-    private Animator.AnimatorListener beepAnimatorListener = new Animator.AnimatorListener() {
+    private Animator.AnimatorListener lowBeepAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
 
@@ -38,7 +39,29 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            makeBeep();
+            makeLowBeep();
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
+    };
+
+    private Animator.AnimatorListener highBeepAnimatorListener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            makeHighBeep();
         }
 
         @Override
@@ -65,27 +88,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void initSoundPool() {
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-        soundID = soundPool.load(this, R.raw.beep, 1);
+        lowBeepSoundID = soundPool.load(this, R.raw.beep_low, 1);
+        highBeepSoundID = soundPool.load(this, R.raw.beep_high, 1);
     }
 
-    private void makeBeep() {
+    private void makeLowBeep() {
         if (soundPool != null) {
-            soundPool.play(soundID, 1f, 1f, 5, 0, 1f);
+            soundPool.play(lowBeepSoundID, 1f, 1f, 5, 0, 1f);
+        }
+    }
+
+    private void makeHighBeep() {
+        if (soundPool != null) {
+            soundPool.play(highBeepSoundID, 1f, 1f, 5, 0, 1f);
         }
     }
 
     private void startAnimation() {
 
-        float shortPath = getResources().getDimensionPixelSize(R.dimen.indicator_path_short);
         float longPath = getResources().getDimensionPixelSize(R.dimen.indicator_path_long);
+        float shortPath = longPath / 2;
         ObjectAnimator down = ObjectAnimator.ofFloat(indicatorView, "translationY", 0f, longPath).setDuration(2000);
-        down.addListener(beepAnimatorListener);
+        down.addListener(highBeepAnimatorListener);
         ObjectAnimator right = ObjectAnimator.ofFloat(indicatorView, "translationX", 0f, shortPath).setDuration(1000);
-        right.addListener(beepAnimatorListener);
+        right.addListener(highBeepAnimatorListener);
         ObjectAnimator up = ObjectAnimator.ofFloat(indicatorView, "translationY", longPath, 0f).setDuration(2000);
-        up.addListener(beepAnimatorListener);
+        up.addListener(lowBeepAnimatorListener);
         ObjectAnimator left = ObjectAnimator.ofFloat(indicatorView, "translationX", shortPath, 0f).setDuration(1000);
-        left.addListener(beepAnimatorListener);
+        left.addListener(lowBeepAnimatorListener);
 
         animation = new AnimatorSet();
         animation.play(down).before(right);
