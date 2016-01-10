@@ -6,8 +6,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -17,6 +19,8 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     @InjectView(R.id.metronome_indicator)
     View indicatorView;
@@ -34,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private Animator.AnimatorListener lowBeepAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
-
+            makeLowBeep();
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            makeLowBeep();
+
         }
 
         @Override
@@ -56,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
     private Animator.AnimatorListener highBeepAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
-
+            makeHighBeep();
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            makeHighBeep();
+
         }
 
         @Override
@@ -74,7 +78,25 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    private CountDownTimer countDownTimer = new CountDownTimer(5000, 1000) {
+
+             public void onTick(long millisUntilFinished) {
+                 int remainingInSeconds = Math.round((float)millisUntilFinished / 1000);
+                 repCounterTextView.setText(String.valueOf(remainingInSeconds));
+                 Log.d(TAG, "countdown: " + millisUntilFinished + " -> " + remainingInSeconds);
+             }
+
+             public void onFinish() {
+                 repCounterTextView.setText(String.valueOf(repCount));
+                 startAnimation();
+             }
+          };
+
+
     private AnimatorSet animation;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initSoundPool() {
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-        lowBeepSoundID = soundPool.load(this, R.raw.beep_low, 1);
-        highBeepSoundID = soundPool.load(this, R.raw.beep_high, 1);
+        lowBeepSoundID = soundPool.load(this, R.raw.up_sine, 1);
+        highBeepSoundID = soundPool.load(this, R.raw.down_sine, 1);
     }
 
     private void makeLowBeep() {
@@ -109,13 +131,13 @@ public class MainActivity extends AppCompatActivity {
         float longPath = getResources().getDimensionPixelSize(R.dimen.indicator_path_long);
         float shortPath = longPath / 2;
         ObjectAnimator down = ObjectAnimator.ofFloat(indicatorView, "translationY", 0f, longPath).setDuration(2000);
-        down.addListener(highBeepAnimatorListener);
+        down.addListener(lowBeepAnimatorListener);
         ObjectAnimator right = ObjectAnimator.ofFloat(indicatorView, "translationX", 0f, shortPath).setDuration(1000);
-        right.addListener(highBeepAnimatorListener);
+        //right.addListener(highBeepAnimatorListener);
         ObjectAnimator up = ObjectAnimator.ofFloat(indicatorView, "translationY", longPath, 0f).setDuration(2000);
-        up.addListener(lowBeepAnimatorListener);
+        up.addListener(highBeepAnimatorListener);
         ObjectAnimator left = ObjectAnimator.ofFloat(indicatorView, "translationX", shortPath, 0f).setDuration(1000);
-        left.addListener(lowBeepAnimatorListener);
+        //left.addListener(lowBeepAnimatorListener);
 
         animation = new AnimatorSet();
         animation.play(down).before(right);
@@ -140,11 +162,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pauseAnimation() {
-        animation.pause();
+        animation.cancel();
+        resetIndicatroPosition();
+    }
+
+    private void resetIndicatroPosition() {
+        indicatorView.setTranslationX(0f);
+        indicatorView.setTranslationY(0f);
     }
 
     private void resumeAnimation() {
-        animation.resume();
+        countDownAndStart();
+    }
+
+    private void countDownAndStart() {
+        countDownTimer.start();
     }
 
     @OnClick(R.id.rep_counter)
@@ -158,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startWorkout() {
         workoutStatus = WorkoutStatus.IN_PROGRESS;
-        startAnimation();
+        countDownAndStart();
         helpTextView.setText(R.string.help_in_progress);
     }
 
