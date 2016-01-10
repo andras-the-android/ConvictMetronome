@@ -17,6 +17,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     View indicatorView;
     @InjectView(R.id.rep_counter)
     TextView repCounterTextView;
-    @InjectView(R.id.help)
-    TextView helpTextView;
+//    @InjectView(R.id.help)
+//    TextView helpTextView;
 
     int repCount = 0;
     private SoundPool soundPool;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private CountDownTimer countDownTimer = new CountDownTimer(5000, 1000) {
+    private CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
 
              public void onTick(long millisUntilFinished) {
                  int remainingInSeconds = Math.round((float)millisUntilFinished / 1000);
@@ -89,13 +90,16 @@ public class MainActivity extends AppCompatActivity {
 
              public void onFinish() {
                  repCounterTextView.setText(String.valueOf(repCount));
+                 workoutStatus = WorkoutStatus.IN_PROGRESS;
+                 repCounterTextView.setTextColor(getResources().getColor(R.color.secondary_text));
                  startAnimation();
              }
           };
 
 
     private AnimatorSet animation;
-
+    private int currentSoundId;
+    private ObjectAnimator down;
 
 
     @Override
@@ -116,13 +120,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeLowBeep() {
         if (soundPool != null) {
-            soundPool.play(lowBeepSoundID, 1f, 1f, 5, 0, 1f);
+//            currentSoundId = lowBeepSoundID;
+            currentSoundId = soundPool.play(lowBeepSoundID, 1f, 1f, 5, 0, 1f);
         }
     }
 
     private void makeHighBeep() {
         if (soundPool != null) {
-            soundPool.play(highBeepSoundID, 1f, 1f, 5, 0, 1f);
+            //currentSoundId = highBeepSoundID;
+            currentSoundId = soundPool.play(highBeepSoundID, 1f, 1f, 5, 0, 1f);
         }
     }
 
@@ -130,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         float longPath = getResources().getDimensionPixelSize(R.dimen.indicator_path_long);
         float shortPath = longPath / 2;
-        ObjectAnimator down = ObjectAnimator.ofFloat(indicatorView, "translationY", 0f, longPath).setDuration(2000);
+        down = ObjectAnimator.ofFloat(indicatorView, "translationY", 0f, longPath).setDuration(2000);
         down.addListener(lowBeepAnimatorListener);
         ObjectAnimator right = ObjectAnimator.ofFloat(indicatorView, "translationX", 0f, shortPath).setDuration(1000);
         //right.addListener(highBeepAnimatorListener);
@@ -151,22 +157,33 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationEnd(Animator animation) {
 
                 super.onAnimationEnd(animation);
-                ++repCount;
-                repCounterTextView.setText(String.valueOf(repCount));
-                animation.start();
+                if (workoutStatus == WorkoutStatus.IN_PROGRESS) {
+                    ++repCount;
+                    repCounterTextView.setText(String.valueOf(repCount));
+                    animation.start();
+                } else {
+                    indicatorView.setTranslationX(0f);
+                    indicatorView.setTranslationY(0f);
+                }
 
             }
 
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                indicatorView.setTranslationX(0f);
+                indicatorView.setTranslationY(0f);
+            }
         });
         animation.start();
     }
 
-    private void pauseAnimation() {
+    private void resetIndicator() {
         animation.cancel();
-        resetIndicatroPosition();
-    }
-
-    private void resetIndicatroPosition() {
+        down.cancel();
+        soundPool.stop(currentSoundId);
+        Log.d(TAG, "resetIndicator: " + String.valueOf(currentSoundId == lowBeepSoundID)  + " "  + String.valueOf(currentSoundId == highBeepSoundID));
+        indicatorView.clearAnimation();
         indicatorView.setTranslationX(0f);
         indicatorView.setTranslationY(0f);
     }
@@ -176,11 +193,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void countDownAndStart() {
+        workoutStatus = WorkoutStatus.COUNTDOWN_IN_PROGRESS;
+        repCounterTextView.setTextColor(getResources().getColor(android.R.color.holo_red_light));
         countDownTimer.start();
     }
 
     @OnClick(R.id.rep_counter)
     public void onRepCounterClick(View view) {
+        Log.d(TAG, "onRepCounterClick: " + workoutStatus);
         switch (workoutStatus) {
             case BEFORE_START: startWorkout(); break;
             case IN_PROGRESS: pauseWorkout(); break;
@@ -188,22 +208,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @OnLongClick(R.id.rep_counter)
+    public boolean onRepCounterLongClick(View view) {
+        workoutStatus = WorkoutStatus.BEFORE_START;
+        resetIndicator();
+        countDownTimer.cancel();
+        repCount = 0;
+        repCounterTextView.setText("0");
+        return true;
+    }
+
     private void startWorkout() {
-        workoutStatus = WorkoutStatus.IN_PROGRESS;
         countDownAndStart();
-        helpTextView.setText(R.string.help_in_progress);
+//        helpTextView.setText(R.string.help_in_progress);
     }
 
     private void pauseWorkout() {
         workoutStatus = WorkoutStatus.PAUSED;
-        pauseAnimation();
-        helpTextView.setText(R.string.help_paused);
+        resetIndicator();
+//        helpTextView.setText(R.string.help_paused);
     }
 
     private void resumeWorkout() {
         workoutStatus = WorkoutStatus.IN_PROGRESS;
         resumeAnimation();
-        helpTextView.setText(R.string.help_in_progress);
+//        helpTextView.setText(R.string.help_in_progress);
     }
 
     @Override
@@ -214,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private enum WorkoutStatus {
-        BEFORE_START, IN_PROGRESS, PAUSED;
+        BEFORE_START, IN_PROGRESS, COUNTDOWN_IN_PROGRESS, PAUSED;
     }
 
 }
