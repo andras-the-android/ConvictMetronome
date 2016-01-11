@@ -1,3 +1,4 @@
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.android.application'
 
 android {
@@ -11,6 +12,12 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -24,4 +31,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.android.support:percent:23.1.1'
+}
+
+retrolambda {
+    oldJdk JAVA_HOME
+    jdk JAVA8_HOME
 }
