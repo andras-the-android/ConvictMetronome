@@ -80,26 +80,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
-
-             public void onTick(long millisUntilFinished) {
-                 int remainingInSeconds = Math.round((float)millisUntilFinished / 1000);
-                 repCounterTextView.setText(String.valueOf(remainingInSeconds));
-                 Log.d(TAG, "countdown: " + millisUntilFinished + " -> " + remainingInSeconds);
-             }
-
-             public void onFinish() {
-                 repCounterTextView.setText(String.valueOf(repCount));
-                 workoutStatus = WorkoutStatus.IN_PROGRESS;
-                 repCounterTextView.setTextColor(getResources().getColor(R.color.secondary_text));
-                 startAnimation();
-             }
-          };
-
-
     private AnimatorSet animation;
     private int currentSoundId;
     private ObjectAnimator down;
+    private TimeProvider timeProvider;
 
 
     @Override
@@ -202,7 +186,19 @@ public class MainActivity extends AppCompatActivity {
     private void countDownAndStart() {
         workoutStatus = WorkoutStatus.COUNTDOWN_IN_PROGRESS;
         repCounterTextView.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-        countDownTimer.start();
+        timeProvider = new TimeProvider(this::onTick, this::onFinish);
+        timeProvider.startDown(3);
+    }
+
+    public void onTick(int remainingInSeconds) {
+        repCounterTextView.setText(String.valueOf(remainingInSeconds));
+    }
+
+    public void onFinish() {
+        repCounterTextView.setText(String.valueOf(repCount));
+        workoutStatus = WorkoutStatus.IN_PROGRESS;
+        repCounterTextView.setTextColor(getResources().getColor(R.color.secondary_text));
+        startAnimation();
     }
 
     @OnClick(R.id.rep_counter)
@@ -219,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onRepCounterLongClick(View view) {
         workoutStatus = WorkoutStatus.BEFORE_START;
         resetIndicator();
-        countDownTimer.cancel();
+        timeProvider.stop();
         repCount = 0;
         repCounterTextView.setText("0");
         return true;
