@@ -9,22 +9,23 @@
 
     <android.support.percent.PercentRelativeLayout
         android:id="@+id/metronome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/indicator_path_long"
+        android:layout_width="@dimen/indicator_path_short"
         >
 
         <View
             android:id="@+id/metronome_indicator_path"
-            android:layout_height="@dimen/indicator_path_long"
-            app:layout_aspectRatio="50%"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:layout_margin="20dp"
             android:background="@drawable/metronome_indicator_path"/>
 
         <View
             android:id="@+id/metronome_indicator"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/indicator_diameter"
+            android:layout_height="@dimen/indicator_diameter"
             android:background="@drawable/metronome_indicator"/>
+
 
 
         <TextView
@@ -48,7 +49,7 @@
             android:textColor="@color/primary_text"
             android:layout_centerHorizontal="true"
             android:layout_above="@id/rep_counter"
-            android:gravity="bottom"
+            android:gravity="center"
             android:text="@string/help_before_start"
             android:textSize="16sp"/>
 

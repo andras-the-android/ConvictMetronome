@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     View indicatorView;
     @InjectView(R.id.rep_counter)
     TextView repCounterTextView;
-//    @InjectView(R.id.help)
-//    TextView helpTextView;
+    @InjectView(R.id.help)
+    TextView helpTextView;
 
     int repCount = 0;
     private SoundPool soundPool;
@@ -120,22 +120,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeLowBeep() {
         if (soundPool != null) {
-//            currentSoundId = lowBeepSoundID;
+            currentSoundId = lowBeepSoundID;
             currentSoundId = soundPool.play(lowBeepSoundID, 1f, 1f, 5, 0, 1f);
         }
     }
 
     private void makeHighBeep() {
         if (soundPool != null) {
-            //currentSoundId = highBeepSoundID;
             currentSoundId = soundPool.play(highBeepSoundID, 1f, 1f, 5, 0, 1f);
         }
     }
 
     private void startAnimation() {
 
-        float longPath = getResources().getDimensionPixelSize(R.dimen.indicator_path_long);
-        float shortPath = longPath / 2;
+
+        if (animation == null) {
+            createAnimation();
+        }
+        animation.start();
+    }
+
+    private void createAnimation() {
+        float indicatorDiameter = (float)getResources().getDimensionPixelSize(R.dimen.indicator_diameter);
+        float longPath = getResources().getDimensionPixelSize(R.dimen.indicator_path_long) - indicatorDiameter;
+        float shortPath = getResources().getDimensionPixelSize(R.dimen.indicator_path_short) - indicatorDiameter;
         down = ObjectAnimator.ofFloat(indicatorView, "translationY", 0f, longPath).setDuration(2000);
         down.addListener(lowBeepAnimatorListener);
         ObjectAnimator right = ObjectAnimator.ofFloat(indicatorView, "translationX", 0f, shortPath).setDuration(1000);
@@ -175,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
                 indicatorView.setTranslationY(0f);
             }
         });
-        animation.start();
     }
 
     private void resetIndicator() {
@@ -220,19 +227,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void startWorkout() {
         countDownAndStart();
-//        helpTextView.setText(R.string.help_in_progress);
+        helpTextView.setText(R.string.help_in_progress);
     }
 
     private void pauseWorkout() {
         workoutStatus = WorkoutStatus.PAUSED;
         resetIndicator();
-//        helpTextView.setText(R.string.help_paused);
+        helpTextView.setText(R.string.help_paused);
     }
 
     private void resumeWorkout() {
         workoutStatus = WorkoutStatus.IN_PROGRESS;
         resumeAnimation();
-//        helpTextView.setText(R.string.help_in_progress);
+        helpTextView.setText(R.string.help_in_progress);
     }
 
     @Override
