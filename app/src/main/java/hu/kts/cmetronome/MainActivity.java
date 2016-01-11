@@ -6,13 +6,15 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import java.util.Formatter;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -29,12 +31,15 @@ public class MainActivity extends AppCompatActivity {
     TextView repCounterTextView;
     @InjectView(R.id.help)
     TextView helpTextView;
+    @InjectView(R.id.stopwarch)
+    TextView stopwatchTextView;
 
     int repCount = 0;
     private SoundPool soundPool;
     private int lowBeepSoundID;
     private int highBeepSoundID;
     private WorkoutStatus workoutStatus = WorkoutStatus.BEFORE_START;
+
 
     private Animator.AnimatorListener lowBeepAnimatorListener = new Animator.AnimatorListener() {
         @Override
@@ -83,7 +88,12 @@ public class MainActivity extends AppCompatActivity {
     private AnimatorSet animation;
     private int currentSoundId;
     private ObjectAnimator down;
-    private TimeProvider timeProvider;
+    private TimeProvider countDownTimeProvider = new TimeProvider(this::onCountDownTick, this::onFinish);;
+    private TimeProvider stopwatchTimeProvider = new TimeProvider(this::onStopwatchTick, null);
+
+    StringBuilder sb = new StringBuilder();
+    // Send all output to the Appendable object sb
+    Formatter formatter = new Formatter(sb);
 
 
     @Override
@@ -183,14 +193,32 @@ public class MainActivity extends AppCompatActivity {
         countDownAndStart();
     }
 
-    private void countDownAndStart() {
-        workoutStatus = WorkoutStatus.COUNTDOWN_IN_PROGRESS;
-        repCounterTextView.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-        timeProvider = new TimeProvider(this::onTick, this::onFinish);
-        timeProvider.startDown(3);
+    private void startStopWatch() {
+        stopwatchTextView.setVisibility(View.VISIBLE);
+        stopwatchTimeProvider.startUp();
     }
 
-    public void onTick(int remainingInSeconds) {
+    private void stopStopWatch() {
+        stopwatchTextView.setVisibility(View.INVISIBLE);
+        stopwatchTimeProvider.stop();
+    }
+
+    public void onStopwatchTick(int totalSeconds) {
+        int minutes = (totalSeconds / 60) % 60;
+        int seconds = totalSeconds % 60;
+        sb.setLength(0);
+        formatter.format("%02d:%02d", minutes, seconds);
+        stopwatchTextView.setText(sb.toString());
+    }
+
+    private void countDownAndStart() {
+        stopStopWatch();
+        workoutStatus = WorkoutStatus.COUNTDOWN_IN_PROGRESS;
+        repCounterTextView.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+        countDownTimeProvider.startDown(3);
+    }
+
+    public void onCountDownTick(int remainingInSeconds) {
         repCounterTextView.setText(String.valueOf(remainingInSeconds));
     }
 
@@ -215,9 +243,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onRepCounterLongClick(View view) {
         workoutStatus = WorkoutStatus.BEFORE_START;
         resetIndicator();
-        timeProvider.stop();
+        countDownTimeProvider.stop();
+        startStopWatch();
         repCount = 0;
         repCounterTextView.setText("0");
+
         return true;
     }
 
