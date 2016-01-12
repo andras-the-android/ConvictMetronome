@@ -2,19 +2,22 @@ package hu.kts.cmetronome;
 
 import android.os.Handler;
 
+import hu.kts.cmetronome.functional.IntConsumer;
+import hu.kts.cmetronome.functional.SimpleMethod;
+
 /**
  * Created by andrasnemeth on 11/01/16.
  */
 public class TimeProvider {
 
     private IntConsumer callback;
-    private CountDownCallback countDownCallback;
+    private SimpleMethod countDownCallback;
     private boolean inProgress;
     private Handler handler = new Handler();
     private int increment;
     private int count;
 
-    public TimeProvider(IntConsumer callback, CountDownCallback countDownCallback) {
+    public TimeProvider(IntConsumer callback, SimpleMethod countDownCallback) {
         this.callback = callback;
         this.countDownCallback = countDownCallback;
     }
@@ -35,7 +38,7 @@ public class TimeProvider {
     private void startCycle() {
         if (inProgress) {
             if (isCountDownLastRound()) {
-                countDownCallback.finished();
+                countDownCallback.call();
             } else {
                 callback.accept(count);
                 count += increment;
@@ -52,19 +55,9 @@ public class TimeProvider {
         inProgress = false;
     }
 
-    public interface IntConsumer {
 
-        /**
-         * Performs this operation on the given argument.
-         *
-         * @param value the input argument
-         */
-        void accept(int value);
-    }
 
-    public interface CountDownCallback {
-        void finished();
-    }
+
 
 
 }
