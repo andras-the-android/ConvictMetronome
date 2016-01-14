@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    @InjectView(R.id.metronome)
+    View metronomeView;
     @InjectView(R.id.metronome_indicator)
     View indicatorView;
     @InjectView(R.id.rep_counter)
@@ -69,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.inject(this);
-        indicatorAnimation = new IndicatorAnimation(this, indicatorView, indicatorAnimationCallback);
         sounds = new Sounds(this);
     }
 
@@ -130,7 +131,14 @@ public class MainActivity extends AppCompatActivity {
         workoutStatus = WorkoutStatus.IN_PROGRESS;
         repCounterTextView.setTextColor(getResources().getColor(R.color.secondary_text));
         repCounterTextView.setText("0");
-        indicatorAnimation.start();
+        getIndicatorAnimation().start();
+    }
+
+    private IndicatorAnimation getIndicatorAnimation() {
+        if (indicatorAnimation == null) {
+            indicatorAnimation = new IndicatorAnimation(this, metronomeView, indicatorView, indicatorAnimationCallback);
+        }
+        return indicatorAnimation;
     }
 
     @OnLongClick(R.id.rep_counter)

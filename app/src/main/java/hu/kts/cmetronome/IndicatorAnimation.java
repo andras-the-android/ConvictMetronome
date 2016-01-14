@@ -83,14 +83,14 @@ public class IndicatorAnimation {
         indicatorView.setTranslationY(0f);
     }
 
-    public IndicatorAnimation(Context context, View indicatorView, IndicatorAnimationCallback callback) {
+    public IndicatorAnimation(Context context, View metronomeView, View indicatorView, IndicatorAnimationCallback callback) {
         this.indicatorView = indicatorView;
         this.callback = callback;
 
         Resources resources = context.getResources();
         float indicatorDiameter = (float)resources.getDimensionPixelSize(R.dimen.indicator_diameter);
-        float longPath = resources.getDimensionPixelSize(R.dimen.indicator_path_long) - indicatorDiameter;
-        float shortPath = resources.getDimensionPixelSize(R.dimen.indicator_path_short) - indicatorDiameter;
+        float longPath = metronomeView.getHeight() - indicatorDiameter;
+        float shortPath = metronomeView.getWidth() - indicatorDiameter;
 
         down = ObjectAnimator.ofFloat(indicatorView, "translationY", 0f, longPath).setDuration(2000);
         down.addListener(animatorListener);

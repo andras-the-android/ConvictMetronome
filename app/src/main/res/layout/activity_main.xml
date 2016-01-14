@@ -9,8 +9,9 @@
 
     <android.support.percent.PercentRelativeLayout
         android:id="@+id/metronome"
-        android:layout_height="@dimen/indicator_path_long"
-        android:layout_width="@dimen/indicator_path_short"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_margin="32dp"
         >
 
         <View
@@ -26,16 +27,14 @@
             android:layout_height="@dimen/indicator_diameter"
             android:background="@drawable/metronome_indicator"/>
 
-
-
         <TextView
             android:id="@+id/rep_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/secondary_text"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginLeft="@dimen/indicator_diameter"
+            android:layout_marginRight="@dimen/indicator_diameter"
             android:text="0"
             android:textSize="150sp"
             android:textStyle="bold"/>
@@ -44,8 +43,8 @@
             android:id="@+id/help"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginLeft="@dimen/indicator_diameter"
+            android:layout_marginRight="@dimen/indicator_diameter"
             android:textColor="@color/accent"
             android:layout_centerHorizontal="true"
             android:layout_above="@id/rep_counter"
@@ -57,8 +56,8 @@
             android:id="@+id/stopwarch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginLeft="@dimen/indicator_diameter"
+            android:layout_marginRight="@dimen/indicator_diameter"
             android:textColor="@color/accent"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/rep_counter"
