@@ -1,5 +1,6 @@
 package hu.kts.cmetronome;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         stopStopWatch();
         helpTextView.setText("");
         workoutStatus = WorkoutStatus.COUNTDOWN_IN_PROGRESS;
-        repCounterTextView.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+        repCounterTextView.setTextColor(ContextCompat.getColor(this, R.color.accent));
         countDownTimeProvider.startDown(3);
     }
 
