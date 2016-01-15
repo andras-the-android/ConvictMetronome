@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/rep_counter"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/secondary_text"
@@ -38,7 +38,9 @@
             android:text="0"
             tools:text="99"
             android:textSize="@dimen/rep_counter_size"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/help"
