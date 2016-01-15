@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     TextView stopwatchTextView;
 
     int repCount = 0;
-    private WorkoutStatus workoutStatus = WorkoutStatus.BEFORE_START;
+    private WorkoutStatus workoutStatus;
     private TimeProvider countDownTimeProvider = new TimeProvider(this::onCountDownTick, this::onCountDownFinished);
     private TimeProvider stopwatchTimeProvider = new TimeProvider(this::onStopwatchTick, null);
     private StopwatchFormatter stopwatchFormatter = new StopwatchFormatter();
@@ -60,9 +60,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void cycleFinished() {
             ++repCount;
-            repCounterTextView.setText(String.valueOf(repCount));
+            fillRepCounterTextViewWithTruncatedData();
         }
     };
+
+    private void fillRepCounterTextViewWithTruncatedData() {
+        repCounterTextView.setText(String.valueOf(repCount % 100));
+    }
 
 
     @Override
@@ -72,22 +76,23 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.inject(this);
         sounds = new Sounds(this);
+        setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
     }
 
     @OnClick(R.id.rep_counter)
     public void onRepCounterClick(View view) {
         Log.d(TAG, "onRepCounterClick: " + workoutStatus);
         switch (workoutStatus) {
-            case BEFORE_START: countDownAndStart(); break;
+            case BEFORE_START:
+            case PAUSED:
+            case BETWEEN_SETS: countDownAndStart(); break;
             case IN_PROGRESS: pauseWorkout(); break;
-            case PAUSED: countDownAndStart(); break;
         }
     }
 
     private void pauseWorkout() {
-        workoutStatus = WorkoutStatus.PAUSED;
+        setWorkoutStatusAndHelpText(WorkoutStatus.PAUSED);
         resetIndicator();
-        helpTextView.setText(R.string.help_paused);
     }
 
     private void resetIndicator() {
@@ -111,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void countDownAndStart() {
         stopStopWatch();
-        helpTextView.setText("");
-        workoutStatus = WorkoutStatus.COUNTDOWN_IN_PROGRESS;
+        setWorkoutStatusAndHelpText(WorkoutStatus.COUNTDOWN_IN_PROGRESS);
         repCounterTextView.setTextColor(ContextCompat.getColor(this, R.color.accent));
         countDownTimeProvider.startDown(3);
     }
@@ -127,9 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void startWorkout() {
         repCounterTextView.setText(String.valueOf(repCount));
-        helpTextView.setText(R.string.help_in_progress);
-        workoutStatus = WorkoutStatus.IN_PROGRESS;
-        repCounterTextView.setTextColor(getResources().getColor(R.color.secondary_text));
+        setWorkoutStatusAndHelpText(WorkoutStatus.IN_PROGRESS);
+        repCounterTextView.setTextColor(ContextCompat.getColor(this, R.color.secondary_text));
         repCounterTextView.setText("0");
         getIndicatorAnimation().start();
     }
@@ -143,12 +146,15 @@ public class MainActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.rep_counter)
     public boolean onRepCounterLongClick(View view) {
-        resetWorkout();
-        return true;
+        if (workoutStatus == WorkoutStatus.IN_PROGRESS || workoutStatus == WorkoutStatus.PAUSED) {
+            stopSet();
+            return true;
+        }
+        return false;
     }
 
-    private void resetWorkout() {
-        workoutStatus = WorkoutStatus.BEFORE_START;
+    private void stopSet() {
+        setWorkoutStatusAndHelpText(WorkoutStatus.BETWEEN_SETS);
         resetIndicator();
         countDownTimeProvider.stop();
         startStopWatch();
@@ -161,8 +167,23 @@ public class MainActivity extends AppCompatActivity {
         sounds.release();
     }
 
+    private void setWorkoutStatusAndHelpText(WorkoutStatus status) {
+        workoutStatus = status;
+        helpTextView.setText(getHelpTextIdByWorkoutStatus(status));
+    }
+
+    private int getHelpTextIdByWorkoutStatus(WorkoutStatus status) {
+        switch (status) {
+            case BEFORE_START: return R.string.help_before_start;
+            case IN_PROGRESS: return R.string.help_in_progress;
+            case PAUSED: return R.string.help_paused;
+            case BETWEEN_SETS: return R.string.help_between_sets;
+            default: return R.string.empty_string;
+        }
+    }
+
     private enum WorkoutStatus {
-        BEFORE_START, IN_PROGRESS, COUNTDOWN_IN_PROGRESS, PAUSED;
+        BEFORE_START, COUNTDOWN_IN_PROGRESS, IN_PROGRESS, PAUSED, BETWEEN_SETS
     }
 
 }

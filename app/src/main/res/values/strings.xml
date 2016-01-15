@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Convict Metronome</string>
-    <string name="help_before_start">Touch the counter for start</string>
-    <string name="help_in_progress">Touch the counter for pause</string>
-    <string name="help_paused">Touch the counter for resume</string>
+    <string name="help_before_start">Touch the counter for start workout</string>
+    <string name="help_in_progress">Touch the counter for pause\n\nTouch the counter long to finish set</string>
+    <string name="help_paused">Touch the counter for resume\n\nTouch the counter long to finish set</string>
+    <string name="help_between_sets">Touch the counter to start new set</string>
+    <string name="empty_string"></string>
 </resources>

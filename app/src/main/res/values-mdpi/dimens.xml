@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rep_counter_size">90sp</dimen>
+    <dimen name="help_text_size">12sp</dimen>
+    <dimen name="stopwatch_text_size">30sp</dimen>
+</resources>

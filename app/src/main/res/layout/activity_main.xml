@@ -36,7 +36,8 @@
             android:layout_marginLeft="@dimen/indicator_diameter"
             android:layout_marginRight="@dimen/indicator_diameter"
             android:text="0"
-            android:textSize="150sp"
+            tools:text="99"
+            android:textSize="@dimen/rep_counter_size"
             android:textStyle="bold"/>
 
         <TextView
@@ -49,8 +50,8 @@
             android:layout_centerHorizontal="true"
             android:layout_above="@id/rep_counter"
             android:gravity="center"
-            android:text="@string/help_before_start"
-            android:textSize="16sp"/>
+            tools:text="@string/help_in_progress"
+            android:textSize="@dimen/help_text_size"/>
 
         <TextView
             android:id="@+id/stopwarch"
@@ -63,8 +64,8 @@
             android:layout_below="@id/rep_counter"
             android:gravity="center"
             tools:text="00:00"
-            android:textSize="40sp"
-            android:visibility="invisible"/>
+            android:textSize="@dimen/stopwatch_text_size"
+            android:visibility="visible"/>
 
 
     </android.support.percent.PercentRelativeLayout>
