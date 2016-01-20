@@ -5,4 +5,5 @@
     <string name="help_paused">Touch the counter for resume\n\nTouch the counter long to finish set</string>
     <string name="help_between_sets">Touch the counter to start new set</string>
     <string name="empty_string"></string>
+    <string name="banner_ad_unit_id">ca-app-pub-3891048739907811/7842466287</string>
 </resources>

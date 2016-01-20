@@ -9,8 +9,8 @@ android {
         applicationId "hu.kts.cmetronome"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.e7fc1ef"
     }
 
     compileOptions {
@@ -43,6 +43,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
 }
 
 retrolambda {

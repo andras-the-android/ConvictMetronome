@@ -8,10 +8,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import hu.kts.cmetronome.functional.AdMobTestDeviceFilteredBuilderFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     TextView helpTextView;
     @InjectView(R.id.stopwarch)
     TextView stopwatchTextView;
+    @InjectView(R.id.adView)
+    AdView adView;
 
     int repCount = 0;
     private WorkoutStatus workoutStatus;
@@ -77,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.inject(this);
         sounds = new Sounds(this);
         setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
+        setupAd();
+    }
+
+    private void setupAd() {
+        AdRequest adRequest = AdMobTestDeviceFilteredBuilderFactory.get().build();
+        adView.loadAd(adRequest);
     }
 
     @OnClick(R.id.rep_counter)
@@ -161,12 +173,6 @@ public class MainActivity extends AppCompatActivity {
         repCount = 0;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sounds.release();
-    }
-
     private void setWorkoutStatusAndHelpText(WorkoutStatus status) {
         workoutStatus = status;
         helpTextView.setText(getHelpTextIdByWorkoutStatus(status));
@@ -180,6 +186,26 @@ public class MainActivity extends AppCompatActivity {
             case BETWEEN_SETS: return R.string.help_between_sets;
             default: return R.string.empty_string;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adView.resume();
+    }
+
+    @Override
+    public void onPause() {
+        adView.pause();
+        super.onPause();
+    }
+
+    /** Called before the activity is destroyed */
+    @Override
+    public void onDestroy() {
+        sounds.release();
+        adView.destroy();
+        super.onDestroy();
     }
 
     private enum WorkoutStatus {
