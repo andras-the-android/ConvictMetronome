@@ -70,6 +70,34 @@
             android:textSize="@dimen/stopwatch_text_size"
             android:visibility="visible"/>
 
+        <TextView
+            android:id="@+id/set_counter_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/indicator_diameter"
+            android:layout_marginStart="@dimen/indicator_diameter"
+            android:textColor="@color/accent"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/stopwarch"
+            android:text="@string/set_counter_label"
+            android:textSize="@dimen/help_text_size"/>
+
+        <TextView
+            android:id="@+id/set_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginRight="@dimen/indicator_diameter"
+            android:layout_marginEnd="@dimen/indicator_diameter"
+            android:textColor="@color/secondary_text"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/stopwarch"
+            android:layout_toRightOf="@+id/set_counter_label"
+            android:layout_toEndOf="@+id/set_counter_label"
+            android:text="0"
+            android:textSize="@dimen/help_text_size"/>
+
 
     </RelativeLayout>
 

@@ -31,10 +31,13 @@ public class MainActivity extends AppCompatActivity {
     TextView helpTextView;
     @InjectView(R.id.stopwarch)
     TextView stopwatchTextView;
+    @InjectView(R.id.set_counter)
+    TextView setCounterTextView;
     @InjectView(R.id.adView)
     AdView adView;
 
     int repCount = 0;
+    int setCount = 0;
     private WorkoutStatus workoutStatus;
     private TimeProvider countDownTimeProvider = new TimeProvider(this::onCountDownTick, this::onCountDownFinished);
     private TimeProvider stopwatchTimeProvider = new TimeProvider(this::onStopwatchTick, null);
@@ -161,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
         if (workoutStatus == WorkoutStatus.IN_PROGRESS || workoutStatus == WorkoutStatus.PAUSED) {
             stopSet();
             return true;
+        } if (workoutStatus == WorkoutStatus.BETWEEN_SETS) {
+            resetWorkout();
+            return true;
         }
         return false;
     }
@@ -171,11 +177,32 @@ public class MainActivity extends AppCompatActivity {
         countDownTimeProvider.stop();
         startStopWatch();
         repCount = 0;
+        increaseSetCounter();
     }
 
     private void setWorkoutStatusAndHelpText(WorkoutStatus status) {
         workoutStatus = status;
         helpTextView.setText(getHelpTextIdByWorkoutStatus(status));
+    }
+
+    private void increaseSetCounter() {
+        ++setCount;
+        //setcounter schould contain maximum 2 digits
+        setCounterTextView.setText(String.valueOf(setCount % 100));
+    }
+
+
+    private void resetWorkout() {
+        setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
+        stopStopWatch();
+        resetCounters();
+    }
+
+    private void resetCounters() {
+        setCount = 0;
+        setCounterTextView.setText("0");
+        repCount = 0;
+        repCounterTextView.setText("0");
     }
 
     private int getHelpTextIdByWorkoutStatus(WorkoutStatus status) {
