@@ -89,8 +89,9 @@ public class IndicatorAnimation {
 
         Resources resources = context.getResources();
         float indicatorDiameter = (float)resources.getDimensionPixelSize(R.dimen.indicator_diameter);
-        float longPath = metronomeView.getHeight() - indicatorDiameter;
-        float shortPath = metronomeView.getWidth() - indicatorDiameter;
+        float metronomePadding = (float)resources.getDimensionPixelSize(R.dimen.metronome_padding) * 2;
+        float longPath = metronomeView.getHeight() - indicatorDiameter - metronomePadding;
+        float shortPath = metronomeView.getWidth() - indicatorDiameter - metronomePadding;
 
         down = ObjectAnimator.ofFloat(indicatorView, "translationY", 0f, longPath).setDuration(2000);
         down.addListener(animatorListener);
