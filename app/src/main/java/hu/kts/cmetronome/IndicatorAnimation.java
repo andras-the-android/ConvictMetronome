@@ -2,9 +2,13 @@ package hu.kts.cmetronome;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by andrasnemeth on 12/01/16.
@@ -13,7 +17,11 @@ import android.view.View;
  */
 public class IndicatorAnimation {
 
-    private View indicatorView;
+    @InjectView(R.id.metronome)
+    View metronomeView;
+    @InjectView(R.id.metronome_indicator)
+    View indicatorView;
+
     private IndicatorAnimationCallback callback;
     private boolean animationRunning;
     private ObjectAnimator down;
@@ -83,11 +91,11 @@ public class IndicatorAnimation {
         indicatorView.setTranslationY(0f);
     }
 
-    public IndicatorAnimation(Context context, View metronomeView, View indicatorView, IndicatorAnimationCallback callback) {
-        this.indicatorView = indicatorView;
+    public IndicatorAnimation(Activity activity, IndicatorAnimationCallback callback) {
         this.callback = callback;
+        ButterKnife.inject(this, activity);
 
-        Resources resources = context.getResources();
+        Resources resources = activity.getResources();
         float indicatorDiameter = (float)resources.getDimensionPixelSize(R.dimen.indicator_diameter);
         float metronomePadding = (float)resources.getDimensionPixelSize(R.dimen.metronome_padding) * 2;
         float longPath = metronomeView.getHeight() - indicatorDiameter - metronomePadding;
