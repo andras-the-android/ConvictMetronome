@@ -7,4 +7,5 @@
     <string name="empty_string"></string>
     <string name="banner_ad_unit_id">ca-app-pub-3891048739907811/7842466287</string>
     <string name="set_counter_label">Sets completed:</string>
+    <string name="menu_settings">Settings</string>
 </resources>

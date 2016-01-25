@@ -1,9 +1,12 @@
 package hu.kts.cmetronome;
 
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private StopwatchFormatter stopwatchFormatter = new StopwatchFormatter();
     private Sounds sounds;
     private IndicatorAnimation indicatorAnimation;
+    private Settings settings;
 
     private IndicatorAnimationCallback indicatorAnimationCallback = new IndicatorAnimationCallback() {
         @Override
@@ -85,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.inject(this);
         sounds = new Sounds(this);
+        settings = Settings.INSTANCE;
+        initSettingsRelatedParts();
         setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
         setupAd();
     }
@@ -233,6 +239,40 @@ public class MainActivity extends AppCompatActivity {
         sounds.release();
         adView.destroy();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_settings) {
+            openSettings();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openSettings() {
+        startActivityForResult(new Intent(this, SettingsActivity.class), Settings.REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Settings.REQUEST_CODE && resultCode == RESULT_OK) {
+            initSettingsRelatedParts();
+        }
+    }
+
+    private void initSettingsRelatedParts() {
+        helpTextView.setVisibility(settings.isShowHelp() ? View.VISIBLE : View.GONE);
     }
 
     private enum WorkoutStatus {
