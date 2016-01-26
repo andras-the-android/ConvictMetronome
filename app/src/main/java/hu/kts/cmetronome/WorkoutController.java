@@ -1,6 +1,7 @@
 package hu.kts.cmetronome;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
@@ -10,6 +11,11 @@ import butterknife.InjectView;
  * Created by andrasnemeth on 25/01/16.
  */
 public class WorkoutController {
+
+    private static final String KEY_REP_COUNT = "repCount";
+    private static final String KEY_SET_COUNT = "setCount";
+    private static final String KEY_WORKOUT_STATUS = "workoutStatus";
+    private static final String KEY_STOPWATCH_START = "stopwatchStart";
 
     @InjectView(R.id.rep_counter)
     TextView repCounterTextView;
@@ -57,21 +63,33 @@ public class WorkoutController {
         }
     };
 
-    private void fillRepCounterTextViewWithTruncatedData() {
-        repCounterTextView.setText(String.valueOf(repCount % 100));
-    }
-
-    public WorkoutController(Activity activity) {
+    public WorkoutController(Activity activity, Bundle savedInstanceState) {
         this.activity = activity;
         ButterKnife.inject(this, activity);
-
-        sounds = new Sounds(activity);
         help = new Help(activity);
+        sounds = new Sounds(activity);
         countDowner = new CountDowner(activity, this::startWorkout);
         stopWatch = new StopWatch(activity);
         settings = Settings.INSTANCE;
+        initWorkoutData(savedInstanceState);
         initSettingsRelatedParts();
-        setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
+
+    }
+
+    private void initWorkoutData(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            repCount = savedInstanceState.getInt(KEY_REP_COUNT);
+            setCount = savedInstanceState.getInt(KEY_SET_COUNT);
+            WorkoutStatus savedWorkoutStatus = (WorkoutStatus) savedInstanceState.getSerializable(KEY_WORKOUT_STATUS);
+            setWorkoutStatusAndHelpText(savedWorkoutStatus == WorkoutStatus.IN_PROGRESS || savedWorkoutStatus == WorkoutStatus.COUNTDOWN_IN_PROGRESS? WorkoutStatus.PAUSED : savedWorkoutStatus);
+            if (workoutStatus == WorkoutStatus.BETWEEN_SETS) {
+                stopWatch.start(savedInstanceState.getLong(KEY_STOPWATCH_START));
+            }
+        } else {
+            setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
+        }
+        fillRepCounterTextViewWithTruncatedData();
+        fillSetCounterTextViewWithTruncatedData();
     }
 
     public void onRepCounterClick() {
@@ -100,7 +118,7 @@ public class WorkoutController {
     }
 
     private void resetIndicator() {
-        indicatorAnimation.stop();
+        getIndicatorAnimation().stop();
         sounds.stop();
     }
 
@@ -112,13 +130,15 @@ public class WorkoutController {
     }
 
     private void startWorkout() {
-        repCounterTextView.setText(String.valueOf(repCount));
         setWorkoutStatusAndHelpText(WorkoutStatus.IN_PROGRESS);
-
-        repCounterTextView.setText("0");
+        fillRepCounterTextViewWithTruncatedData();
         getIndicatorAnimation().start();
     }
 
+    /**
+     * Initialization can't be called from onCreate because animation needs the actual size of the elements
+     * @return
+     */
     private IndicatorAnimation getIndicatorAnimation() {
         if (indicatorAnimation == null) {
             indicatorAnimation = new IndicatorAnimation(activity, indicatorAnimationCallback);
@@ -142,8 +162,7 @@ public class WorkoutController {
 
     private void increaseSetCounter() {
         ++setCount;
-        //setcounter should contain maximum 2 digits
-        setCounterTextView.setText(String.valueOf(setCount % 100));
+        fillSetCounterTextViewWithTruncatedData();
     }
 
 
@@ -155,9 +174,9 @@ public class WorkoutController {
 
     private void resetCounters() {
         setCount = 0;
-        setCounterTextView.setText("0");
+        fillSetCounterTextViewWithTruncatedData();
         repCount = 0;
-        repCounterTextView.setText("0");
+        fillSetCounterTextViewWithTruncatedData();
     }
 
     public void initSettingsRelatedParts() {
@@ -166,7 +185,28 @@ public class WorkoutController {
 
     public void onDestroy() {
         sounds.release();
+        stopWatch.stop();
+        countDowner.stop();
     }
 
+    public void saveInstanceState(Bundle outState) {
+        outState.putInt(KEY_REP_COUNT, repCount);
+        outState.putInt(KEY_SET_COUNT, setCount);
+        outState.putSerializable(KEY_WORKOUT_STATUS, workoutStatus);
+        outState.putLong(KEY_STOPWATCH_START, stopWatch.getStartTime());
+    }
 
+    /**
+     * counter should contain maximum 2 digits
+     */
+    private void fillRepCounterTextViewWithTruncatedData() {
+        repCounterTextView.setText(String.valueOf(repCount % 100));
+    }
+
+    /**
+     * counter should contain maximum 2 digits
+     */
+    private void fillSetCounterTextViewWithTruncatedData() {
+        setCounterTextView.setText(String.valueOf(setCount % 100));
+    }
 }

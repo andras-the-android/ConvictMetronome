@@ -28,7 +28,7 @@ public class CountDowner {
         normalColor = ContextCompat.getColor(activity, R.color.secondary_text);
     }
 
-    public void onCountDownTick(int remainingInSeconds) {
+    public void onCountDownTick(long remainingInSeconds) {
         repCounterTextView.setText(String.valueOf(remainingInSeconds));
     }
 

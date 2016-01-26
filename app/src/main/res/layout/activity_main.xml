@@ -40,7 +40,6 @@
             android:textColor="@color/secondary_text"
             android:layout_marginLeft="@dimen/indicator_diameter"
             android:layout_marginRight="@dimen/indicator_diameter"
-            android:text="0"
             tools:text="99"
             android:textSize="@dimen/rep_counter_size"
             android:textStyle="bold"
@@ -99,7 +98,6 @@
             android:layout_below="@id/stopwarch"
             android:layout_toRightOf="@+id/set_counter_label"
             android:layout_toEndOf="@+id/set_counter_label"
-            android:text="0"
             android:textSize="@dimen/help_text_size"/>
 
 

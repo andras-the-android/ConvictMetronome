@@ -121,8 +121,10 @@ public class IndicatorAnimation {
     }
 
     public void stop() {
-        animationRunning = false;
-        currentAnimation.cancel();
+        if (animationRunning) {
+            animationRunning = false;
+            currentAnimation.cancel();
+        }
     }
 
 

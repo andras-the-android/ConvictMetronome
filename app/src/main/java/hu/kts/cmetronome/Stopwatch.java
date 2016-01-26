@@ -19,7 +19,7 @@ public class StopWatch {
 
     StringBuilder sb = new StringBuilder();
     Formatter formatter = new Formatter(sb);
-    private TimeProvider stopwatchTimeProvider = new TimeProvider(this::onStopwatchTick, null);
+    private TimeProvider timeProvider = new TimeProvider(this::onStopwatchTick, null);
 
     public StopWatch(Activity activity) {
         ButterKnife.inject(this, activity);
@@ -27,25 +27,33 @@ public class StopWatch {
 
     public void start() {
         stopwatchTextView.setVisibility(View.VISIBLE);
-        stopwatchTimeProvider.startUp();
+        timeProvider.startUp();
+    }
+
+    public void start(long originalStartTime) {
+        stopwatchTextView.setVisibility(View.VISIBLE);
+        timeProvider.continueSeamlesslyUp(originalStartTime);
     }
 
     public void stop() {
         stopwatchTextView.setVisibility(View.INVISIBLE);
-        stopwatchTimeProvider.stop();
+        timeProvider.stop();
     }
 
-    private void onStopwatchTick(int totalSeconds) {
+    private void onStopwatchTick(long totalSeconds) {
         stopwatchTextView.setText(format(totalSeconds));
     }
 
 
-    private String format(int totalSeconds) {
-        int minutes = (totalSeconds / 60) % 60;
-        int seconds = totalSeconds % 60;
+    private String format(long totalSeconds) {
+        long minutes = (totalSeconds / 60) % 60;
+        long seconds = totalSeconds % 60;
         sb.setLength(0);
         formatter.format("%02d:%02d", minutes, seconds);
         return sb.toString();
     }
 
+    public long getStartTime() {
+        return timeProvider.getStartTime();
+    }
 }

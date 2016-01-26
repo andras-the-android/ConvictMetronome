@@ -18,6 +18,7 @@ import butterknife.OnLongClick;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @InjectView(R.id.adView)
     AdView adView;
 
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.inject(this);
-        workoutController = new WorkoutController(this);
+        workoutController = new WorkoutController(this, savedInstanceState);
         setupAd();
     }
 
@@ -97,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        workoutController.saveInstanceState(outState);
+    }
 }
