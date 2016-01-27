@@ -12,7 +12,7 @@ import butterknife.InjectView;
 /**
  * Created by andrasnemeth on 12/01/16.
  */
-public class StopWatch {
+public class Stopwatch {
 
     @InjectView(R.id.stopwarch)
     TextView stopwatchTextView;
@@ -21,7 +21,7 @@ public class StopWatch {
     Formatter formatter = new Formatter(sb);
     private TimeProvider timeProvider = new TimeProvider(this::onStopwatchTick, null);
 
-    public StopWatch(Activity activity) {
+    public Stopwatch(Activity activity) {
         ButterKnife.inject(this, activity);
     }
 

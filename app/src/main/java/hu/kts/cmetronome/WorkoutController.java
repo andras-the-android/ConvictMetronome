@@ -28,12 +28,12 @@ public class WorkoutController {
     private WorkoutStatus workoutStatus;
 
 
-    private StopWatch stopWatch;
+    private Stopwatch stopWatch;
     private Sounds sounds;
     private IndicatorAnimation indicatorAnimation;
     private Settings settings;
     private Help help;
-    private CountDowner countDowner;
+    private Countdowner countdowner;
 
     private IndicatorAnimationCallback indicatorAnimationCallback = new IndicatorAnimationCallback() {
         @Override
@@ -68,8 +68,8 @@ public class WorkoutController {
         ButterKnife.inject(this, activity);
         help = new Help(activity);
         sounds = new Sounds(activity);
-        countDowner = new CountDowner(activity, this::startWorkout);
-        stopWatch = new StopWatch(activity);
+        countdowner = new Countdowner(activity, this::startWorkout);
+        stopWatch = new Stopwatch(activity);
         settings = Settings.INSTANCE;
         initWorkoutData(savedInstanceState);
         initSettingsRelatedParts();
@@ -126,7 +126,7 @@ public class WorkoutController {
     private void countDownAndStart() {
         stopWatch.stop();
         setWorkoutStatusAndHelpText(WorkoutStatus.COUNTDOWN_IN_PROGRESS);
-        countDowner.start();
+        countdowner.start();
     }
 
     private void startWorkout() {
@@ -149,7 +149,7 @@ public class WorkoutController {
     private void stopSet() {
         setWorkoutStatusAndHelpText(WorkoutStatus.BETWEEN_SETS);
         resetIndicator();
-        countDowner.stop();
+        countdowner.stop();
         stopWatch.start();
         repCount = 0;
         increaseSetCounter();
@@ -186,7 +186,7 @@ public class WorkoutController {
     public void onDestroy() {
         sounds.release();
         stopWatch.stop();
-        countDowner.stop();
+        countdowner.stop();
     }
 
     public void saveInstanceState(Bundle outState) {

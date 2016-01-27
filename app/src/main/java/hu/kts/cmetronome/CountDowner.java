@@ -11,17 +11,18 @@ import hu.kts.cmetronome.functional.SimpleMethod;
 /**
  * Created by andrasnemeth on 25/01/16.
  */
-public class CountDowner {
+public class Countdowner {
 
     @InjectView(R.id.rep_counter)
     TextView repCounterTextView;
 
     private final SimpleMethod callback;
     private TimeProvider countDownTimeProvider = new TimeProvider(this::onCountDownTick, this::onCountDownFinished);
+    Settings settings = Settings.INSTANCE;
     private int countDownColor;
     private int normalColor;
 
-    public CountDowner(Activity activity, SimpleMethod callback) {
+    public Countdowner(Activity activity, SimpleMethod callback) {
         this.callback = callback;
         ButterKnife.inject(this, activity);
         countDownColor = ContextCompat.getColor(activity, R.color.accent);
@@ -39,7 +40,7 @@ public class CountDowner {
 
     public void start() {
         repCounterTextView.setTextColor(countDownColor);
-        countDownTimeProvider.startDown(5);
+        countDownTimeProvider.startDown(settings.getCountdownStartValue());
     }
 
     public void stop() {

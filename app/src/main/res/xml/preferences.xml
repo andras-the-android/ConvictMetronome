@@ -2,14 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
         android:key="showHelp"
-        android:title="Show help"
+        android:title="@string/settings_show_help"
         android:defaultValue="true" />
-    <!--<ListPreference-->
-        <!--android:dependency="pref_sync"-->
-        <!--android:key="pref_syncConnectionType"-->
-        <!--android:title="@string/pref_syncConnectionType"-->
-        <!--android:dialogTitle="@string/pref_syncConnectionType"-->
-        <!--android:entries="@array/pref_syncConnectionTypes_entries"-->
-        <!--android:entryValues="@array/pref_syncConnectionTypes_values"-->
-        <!--android:defaultValue="@string/pref_syncConnectionTypes_default" />-->
+    <ListPreference
+        android:key="countdownStartValue"
+        android:title="@string/settings_countdown_start_value"
+        android:entries="@array/settings_countdown_start_values"
+        android:entryValues="@array/settings_countdown_start_values"
+        android:defaultValue="3" />
 </PreferenceScreen>

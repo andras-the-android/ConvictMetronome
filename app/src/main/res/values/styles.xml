@@ -10,7 +10,11 @@
         <item name="android:textColorSecondary">@color/secondary_text</item>
         <item name="android:divider">@color/divider</item>
         <item name="android:icon">@color/icons</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/AppPreferencesTheme</item>
+    </style>
+
+    <style name="AppPreferencesTheme" parent="PreferenceThemeOverlay">
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>
