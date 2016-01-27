@@ -53,13 +53,13 @@ public class WorkoutController {
 
         @Override
         public void onLeftStarted() {
-
+            ++repCount;
+            fillRepCounterTextViewWithTruncatedData();
         }
 
         @Override
         public void cycleFinished() {
-            ++repCount;
-            fillRepCounterTextViewWithTruncatedData();
+
         }
     };
 

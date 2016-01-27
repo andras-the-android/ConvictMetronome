@@ -39,7 +39,7 @@ public class CountDowner {
 
     public void start() {
         repCounterTextView.setTextColor(countDownColor);
-        countDownTimeProvider.startDown(3);
+        countDownTimeProvider.startDown(5);
     }
 
     public void stop() {
