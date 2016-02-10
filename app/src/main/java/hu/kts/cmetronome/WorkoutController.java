@@ -33,7 +33,7 @@ public class WorkoutController {
     private IndicatorAnimation indicatorAnimation;
     private Settings settings;
     private Help help;
-    private Countdowner countdowner;
+    private Countdowner1 countdowner;
 
     private IndicatorAnimationCallback indicatorAnimationCallback = new IndicatorAnimationCallback() {
         @Override
@@ -68,7 +68,7 @@ public class WorkoutController {
         ButterKnife.inject(this, activity);
         help = new Help(activity);
         sounds = new Sounds(activity);
-        countdowner = new Countdowner(activity, this::startWorkout);
+        countdowner = new Countdowner1(activity, this::startWorkout);
         stopWatch = new Stopwatch(activity);
         settings = Settings.INSTANCE;
         initWorkoutData(savedInstanceState);
