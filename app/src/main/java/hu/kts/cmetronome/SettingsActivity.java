@@ -1,16 +1,19 @@
 package hu.kts.cmetronome;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v4.content.SharedPreferencesCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 /**
  * Created by andrasnemeth on 21/01/16.
  */
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private boolean settingsChanged = false;
 
@@ -18,8 +21,24 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> settingsChanged = true);
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
+
+    private void handleDiagnosticChange(boolean enabled) {
+        Log.enableTracker(this, enabled);
+        if (!enabled) {
+            new AlertDialog.Builder(this).setMessage(R.string.settings_diagnostics_message).setPositiveButton(android.R.string.ok, (dialog, which) -> {}).show();
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        settingsChanged = true;
+        if (Settings.KEY_USE_DIAGNOSTICS.equals(key)) {
+            handleDiagnosticChange(sharedPreferences.getBoolean(Settings.KEY_USE_DIAGNOSTICS, true));
+        }
+    }
+
 
     public static class MyPreferenceFragment extends PreferenceFragmentCompat
     {

@@ -11,7 +11,7 @@ import hu.kts.cmetronome.functional.SimpleMethod;
 /**
  * Created by andrasnemeth on 25/01/16.
  */
-public class Countdowner1 {
+public class Countdowner {
 
     @InjectView(R.id.rep_counter)
     TextView repCounterTextView;
@@ -22,7 +22,7 @@ public class Countdowner1 {
     private int countDownColor;
     private int normalColor;
 
-    public Countdowner1(Activity activity, SimpleMethod callback) {
+    public Countdowner(Activity activity, SimpleMethod callback) {
         this.callback = callback;
         ButterKnife.inject(this, activity);
         countDownColor = ContextCompat.getColor(activity, R.color.accent);

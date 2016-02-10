@@ -10,4 +10,8 @@
         android:entries="@array/settings_countdown_start_values"
         android:entryValues="@array/settings_countdown_start_values"
         android:defaultValue="3" />
+    <CheckBoxPreference
+        android:key="useDiagnostics"
+        android:title="@string/settings_diagnostics"
+        android:defaultValue="true" />
 </PreferenceScreen>

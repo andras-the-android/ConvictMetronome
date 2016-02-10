@@ -13,8 +13,9 @@ public class Settings {
     public static final int REQUEST_CODE = 23429;
     public static final Settings INSTANCE = new Settings();
 
-    private static final String KEY_SHOW_HELP = "showHelp";
-    private static final String KEY_COUNTDOWN_START_VALUE = "countdownStartValue";
+    public static final String KEY_SHOW_HELP = "showHelp";
+    public static final String KEY_COUNTDOWN_START_VALUE = "countdownStartValue";
+    public static final String KEY_USE_DIAGNOSTICS = "useDiagnostics";
 
     private SharedPreferences sharedPreferences;
 

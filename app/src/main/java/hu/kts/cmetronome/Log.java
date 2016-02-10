@@ -34,7 +34,7 @@ public class Log {
         tracker = analytics.newTracker(R.xml.google_analytics_tracker);
     }
 
-    private static void enableTracker(Context context, boolean enable) {
+    public static void enableTracker(Context context, boolean enable) {
         GoogleAnalytics.getInstance(context).setAppOptOut(enable);
     }
 
