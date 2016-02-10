@@ -11,6 +11,7 @@ public class ConvictMetronomeApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initSettings();
+        Log.init(this);
     }
 
     private void initSettings() {

@@ -45,9 +45,12 @@ dependencies {
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.android.support:preference-v7:23.1.1'
+    compile 'com.google.android.gms:play-services-analytics:8.4.0'
 }
 
-retrolambda {
-    oldJdk JAVA_HOME
-    jdk JAVA8_HOME
+//this line has to be placed after the dependency declarations
+apply plugin: 'com.google.gms.google-services'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
 }
