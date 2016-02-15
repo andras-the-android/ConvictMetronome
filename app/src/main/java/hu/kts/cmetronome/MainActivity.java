@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         adView.pause();
+        workoutController.pauseWorkout();
         super.onPause();
     }
 

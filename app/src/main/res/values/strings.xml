@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">Convict Metronome</string>
-    <string name="help_before_start">Touch the counter for start workout</string>
-    <string name="help_in_progress">Touch the counter for pause\n\nTouch the counter long to finish set</string>
-    <string name="help_paused">Touch the counter for resume\n\nTouch the counter long to finish set</string>
-    <string name="help_between_sets">Touch the counter to start new set\n\nTouch the counter long to reset workout</string>
+    <string name="help_before_start">Tap the counter to start a workout</string>
+    <string name="help_in_progress">Tap the counter to pause\n\nHold down the counter to finish set</string>
+    <string name="help_paused">Tap the counter to resume\n\nHold down the counter to finish set</string>
+    <string name="help_between_sets">Tap the counter to start a new set\n\nHold down the counter to reset workout</string>
     <string name="empty_string"></string>
     <string name="banner_ad_unit_id">ca-app-pub-3891048739907811/7842466287</string>
     <string name="set_counter_label">Sets completed:</string>
     <string name="menu_settings">Settings</string>
     <string name="settings_show_help">Show help</string>
     <string name="settings_countdown_start_value">Countdown from</string>
-    <string name="settings_diagnostics">Anonymus diagnostics</string>
-    <string name="settings_diagnostics_message">This feature provides anonymous information about the user habits and bugs. Please help the developer by enabling this function!</string>
+    <string name="settings_diagnostics">Anonymous diagnostics</string>
+    <string name="settings_diagnostics_message">This feature provides anonymous information which will improve user experience and help uncover bugs. Please help the developer by enabling this function.</string>
 </resources>

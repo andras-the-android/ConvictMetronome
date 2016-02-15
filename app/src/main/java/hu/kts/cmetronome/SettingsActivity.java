@@ -9,6 +9,7 @@ import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.MenuItem;
 
 /**
  * Created by andrasnemeth on 21/01/16.
@@ -22,6 +23,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void handleDiagnosticChange(boolean enabled) {
@@ -59,5 +61,14 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public void finish() {
         setResult(settingsChanged ? RESULT_OK : RESULT_CANCELED);
         super.finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

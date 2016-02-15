@@ -68,7 +68,7 @@ public class WorkoutController {
         ButterKnife.inject(this, activity);
         help = new Help(activity);
         sounds = new Sounds(activity);
-        countdowner = new Countdowner(activity, this::startWorkout);
+        countdowner = new Countdowner(activity, this::startWorkout, this::onCountdownCancelled);
         stopWatch = new Stopwatch(activity);
         settings = Settings.INSTANCE;
         initWorkoutData(savedInstanceState);
@@ -97,6 +97,7 @@ public class WorkoutController {
             case BEFORE_START:
             case PAUSED:
             case BETWEEN_SETS: countDownAndStart(); break;
+            case COUNTDOWN_IN_PROGRESS:
             case IN_PROGRESS: pauseWorkout(); break;
         }
     }
@@ -112,9 +113,14 @@ public class WorkoutController {
         return false;
     }
 
-    private void pauseWorkout() {
+    public void pauseWorkout() {
         setWorkoutStatusAndHelpText(WorkoutStatus.PAUSED);
+        countdowner.cancel();
         resetIndicator();
+    }
+
+    private void onCountdownCancelled() {
+        fillRepCounterTextViewWithTruncatedData();
     }
 
     private void resetIndicator() {
@@ -124,6 +130,7 @@ public class WorkoutController {
 
 
     private void countDownAndStart() {
+        repCount = 0;
         stopWatch.stop();
         setWorkoutStatusAndHelpText(WorkoutStatus.COUNTDOWN_IN_PROGRESS);
         countdowner.start();
@@ -149,9 +156,8 @@ public class WorkoutController {
     private void stopSet() {
         setWorkoutStatusAndHelpText(WorkoutStatus.BETWEEN_SETS);
         resetIndicator();
-        countdowner.stop();
+        countdowner.cancel();
         stopWatch.start();
-        repCount = 0;
         increaseSetCounter();
     }
 
@@ -176,7 +182,7 @@ public class WorkoutController {
         setCount = 0;
         fillSetCounterTextViewWithTruncatedData();
         repCount = 0;
-        fillSetCounterTextViewWithTruncatedData();
+        fillRepCounterTextViewWithTruncatedData();
     }
 
     public void initSettingsRelatedParts() {
@@ -186,7 +192,7 @@ public class WorkoutController {
     public void onDestroy() {
         sounds.release();
         stopWatch.stop();
-        countdowner.stop();
+        countdowner.cancel();
     }
 
     public void saveInstanceState(Bundle outState) {

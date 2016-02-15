@@ -17,13 +17,15 @@ public class Countdowner {
     TextView repCounterTextView;
 
     private final SimpleMethod callback;
+    private final SimpleMethod onCancel;
     private TimeProvider countDownTimeProvider = new TimeProvider(this::onCountDownTick, this::onCountDownFinished);
     Settings settings = Settings.INSTANCE;
     private int countDownColor;
     private int normalColor;
 
-    public Countdowner(Activity activity, SimpleMethod callback) {
-        this.callback = callback;
+    public Countdowner(Activity activity, SimpleMethod onFinish, SimpleMethod onCancel) {
+        this.callback = onFinish;
+        this.onCancel = onCancel;
         ButterKnife.inject(this, activity);
         countDownColor = ContextCompat.getColor(activity, R.color.accent);
         normalColor = ContextCompat.getColor(activity, R.color.secondary_text);
@@ -35,6 +37,7 @@ public class Countdowner {
 
     public void onCountDownFinished() {
         repCounterTextView.setTextColor(normalColor);
+        countDownTimeProvider.stop();
         callback.call();
     }
 
@@ -43,7 +46,9 @@ public class Countdowner {
         countDownTimeProvider.startDown(settings.getCountdownStartValue());
     }
 
-    public void stop() {
+    public void cancel() {
         countDownTimeProvider.stop();
+        repCounterTextView.setTextColor(normalColor);
+        onCancel.call();
     }
 }
