@@ -1,6 +1,7 @@
 package hu.kts.cmetronome;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,9 @@ import android.view.WindowManager;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -23,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     AdView adView;
 
     private WorkoutController workoutController;
+    private AppIndexing appIndexing;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.inject(this);
         workoutController = new WorkoutController(this, savedInstanceState);
         setupAd();
+        appIndexing = new AppIndexing(this);
     }
 
     private void setupAd() {
@@ -103,5 +110,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         workoutController.saveInstanceState(outState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        appIndexing.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        appIndexing.onStop();
     }
 }

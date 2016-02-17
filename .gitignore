@@ -33,3 +33,4 @@ libs/
 **/gradle
 **/src/main/jniLibs
 /*/*/aidl
+app-release.apk
