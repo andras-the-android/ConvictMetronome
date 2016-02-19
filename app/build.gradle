@@ -9,8 +9,8 @@ android {
         applicationId "hu.kts.cmetronome"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.0.0777ae3"
+        versionCode 4
+        versionName "1.0.f8623b5"
     }
 
     compileOptions {
@@ -47,6 +47,10 @@ dependencies {
     compile 'com.android.support:preference-v7:23.1.1'
     compile 'com.google.android.gms:play-services-analytics:8.4.0'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+
+    testCompile ('com.android.support.test.espresso:espresso-core:2.2.1') {
+        exclude module: 'support-annotations'
+    }
 }
 
 //this line has to be placed after the dependency declarations
