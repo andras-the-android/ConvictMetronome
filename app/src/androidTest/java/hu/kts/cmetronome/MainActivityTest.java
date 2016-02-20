@@ -29,7 +29,7 @@ public class MainActivityTest {
     @Test
     public void testSomething() {
         onView(withId(R.id.rep_counter))         // withId(R.id.my_view) is a ViewMatcher
-                .perform(click())               // click() is a ViewAction
+                .perform(click())               // click) is a ViewAction
                 .check(matches(isDisplayed()));
     }
 }
