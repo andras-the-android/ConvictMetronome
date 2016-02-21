@@ -14,26 +14,29 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class AppIndexing {
 
     private GoogleApiClient client;
-    private Action viewAction;
+    private String appName;
 
     public AppIndexing(Context context) {
         client = new GoogleApiClient.Builder(context).addApi(AppIndex.API).build();
-        viewAction = Action.newAction(
+        appName = context.getString(R.string.app_name);
+    }
+
+    private Action getAction() {
+        return Action.newAction(
                 Action.TYPE_ACTIVATE,
-                context.getString(R.string.app_name),
-                Uri.parse("android-app://hu.kts.cmetronome/")
+                appName,
+                Uri.parse("android-app://hu.kts.cmetronome/http/convictmetronome.wordpress.com")
         );
     }
 
     public void onStart() {
         client.connect();
-        AppIndex.AppIndexApi.start(client, viewAction);
+        AppIndex.AppIndexApi.start(client, getAction());
     }
 
     public void onStop() {
-        AppIndex.AppIndexApi.end(client, viewAction);
+        AppIndex.AppIndexApi.end(client, getAction());
         client.disconnect();
     }
-
 
 }
