@@ -30,7 +30,6 @@ libs/
 .DS_Store
 **/build
 **/$buildDir
-**/gradle
 **/src/main/jniLibs
 /*/*/aidl
 app-release.apk
