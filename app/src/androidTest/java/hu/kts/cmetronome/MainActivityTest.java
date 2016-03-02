@@ -3,6 +3,8 @@ package hu.kts.cmetronome;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -28,6 +30,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -51,11 +54,59 @@ public class MainActivityTest {
 
 
     @Test
-    public void testSomething() {
+    public void testApp() {
+        testBeforeStart();
+        testStart();
+        testPause();
+    }
+
+    private void testBeforeStart() {
+        matchHelpText(R.string.help_before_start);
+        onCounter()
+                .check(matchText("0"))
+                .check(matchTextColor(R.color.secondary_text));
+        matchSetCounter("0");
+    }
+
+    private void testStart() {
+
         clickOnCounter()
                 .perform(waitMillis(1100))
+                .check(matchText("2"))
+                .check(matchTextColor(R.color.accent))
+
+                .perform(waitMillis(2000))
+                .check(matchText("0"))
+                .check(matchTextColor(R.color.secondary_text))
+
+                .perform(waitMillis(6000))
+                .check(matchText("1"))
+                .check(matchTextColor(R.color.secondary_text))
+
+                .perform(waitMillis(6000))
+                .check(matchText("2"))
+                .check(matchTextColor(R.color.secondary_text));
+
+        matchHelpText(R.string.help_in_progress);
+        matchSetCounter("0");
+    }
+
+    private void testPause() {
+        clickOnCounter()
+                .perform(waitMillis(6000))
                 .check(matches(withText("2")))
-                .check(matches(withTextColor(R.color.accent)));
+                .check(matches(withTextColor(R.color.secondary_text)));
+        matchSetCounter("0");
+    }
+
+    @NonNull
+    private ViewAssertion matchTextColor(@ColorRes int colorResId) {
+        return matches(withTextColor(colorResId));
+    }
+
+    @NonNull
+    private ViewAssertion matchText(String text) {
+        return matches(withText(text));
     }
 
     /** Perform action of waiting for a specific view id. */
@@ -73,21 +124,37 @@ public class MainActivityTest {
 
             @Override
             public void perform(final UiController uiController, final View view) {
-                SystemClock.sleep(millis);
+                uiController.loopMainThreadUntilIdle();
+                final long startTime = System.currentTimeMillis();
+                final long endTime = startTime + millis;
+
+                do {
+                    uiController.loopMainThreadForAtLeast(50);
+                } while (System.currentTimeMillis() < endTime);
             }
         };
     }
 
     public static ViewInteraction clickOnCounter() {
-        return onView(withId(R.id.rep_counter))
-                .perform(click());
+        return onCounter().perform(click());
 
     }
 
     public static ViewInteraction longClickOnCounter() {
-        return onView(withId(R.id.rep_counter))
-                .perform(click());
+        return onCounter().perform(longClick());
 
+    }
+
+    private static ViewInteraction onCounter() {
+        return onView(withId(R.id.rep_counter));
+    }
+
+    private static void matchHelpText(@StringRes int helpTextResId) {
+        onView(withId(R.id.help)).check(matches(withText(helpTextResId)));
+    }
+
+    private static void matchSetCounter(String setCount) {
+        onView(withId(R.id.set_counter)).check(matches(withText(setCount)));
     }
 
     public static Matcher<View> withTextColor(@ColorRes int colorResId) {
