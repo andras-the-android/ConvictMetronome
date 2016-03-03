@@ -116,6 +116,7 @@ public class WorkoutController {
     public void pauseWorkout() {
         setWorkoutStatusAndHelpText(WorkoutStatus.PAUSED);
         countdowner.cancel();
+        sounds.stop();
         resetIndicator();
     }
 
@@ -125,12 +126,13 @@ public class WorkoutController {
 
     private void resetIndicator() {
         getIndicatorAnimation().stop();
-        sounds.stop();
     }
 
 
     private void countDownAndStart() {
-        repCount = 0;
+        if (workoutStatus == WorkoutStatus.BETWEEN_SETS) {
+            repCount = 0;
+        }
         stopWatch.stop();
         setWorkoutStatusAndHelpText(WorkoutStatus.COUNTDOWN_IN_PROGRESS);
         countdowner.start();
@@ -156,6 +158,7 @@ public class WorkoutController {
     private void stopSet() {
         setWorkoutStatusAndHelpText(WorkoutStatus.BETWEEN_SETS);
         resetIndicator();
+        sounds.stop();
         countdowner.cancel();
         stopWatch.start();
         increaseSetCounter();
