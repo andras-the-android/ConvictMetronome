@@ -1,7 +1,6 @@
 package hu.kts.cmetronome;
 
 import android.content.SharedPreferences;
-import android.os.SystemClock;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -32,8 +31,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.Is.is;
 
 /**
  * Created by andrasnemeth on 19/02/16.
@@ -52,12 +54,22 @@ public class MainActivityTest {
         preferences.edit().putString(Settings.KEY_COUNTDOWN_START_VALUE, "3").apply();
     }
 
-
     @Test
     public void testApp() {
         testBeforeStart();
-        testStart();
-        testPause();
+        clickOnCounter();
+        testCountdown();
+        testInProgress(0, 0);
+        clickOnCounter();
+        testPause(2, 0);
+        clickOnCounter();
+        testCountdown();
+        clickOnCounter();
+        testPause(2, 0);
+        longClickOnCounter();
+        testBetweenSets(2, 1);
+        longClickOnCounter();
+        testBeforeStart();
     }
 
     private void testBeforeStart() {
@@ -65,47 +77,75 @@ public class MainActivityTest {
         onCounter()
                 .check(matchText("0"))
                 .check(matchTextColor(R.color.secondary_text));
-        matchSetCounter("0");
+        matchSetCounter(0);
+        checkIndicatorIsOnTheBaseSpot();
+        checkIsStopperInvisible();
     }
 
-    private void testStart() {
+    private void testCountdown() {
 
-        clickOnCounter()
+        onCounter()
                 .perform(waitMillis(1100))
                 .check(matchText("2"))
-                .check(matchTextColor(R.color.accent))
+                .check(matchTextColor(R.color.accent));
+        matchHelpText(R.string.empty_string);
+        checkIndicatorIsOnTheBaseSpot();
+        checkIsStopperInvisible();
+    }
 
+    private void testInProgress(int initialRepCount, int setCount) {
+        onCounter()
                 .perform(waitMillis(2000))
-                .check(matchText("0"))
+                .check(matchText(String.valueOf(initialRepCount)))
                 .check(matchTextColor(R.color.secondary_text))
 
                 .perform(waitMillis(6000))
-                .check(matchText("1"))
+                .check(matchText(String.valueOf(initialRepCount + 1)))
                 .check(matchTextColor(R.color.secondary_text))
 
                 .perform(waitMillis(6000))
-                .check(matchText("2"))
+                .check(matchText(String.valueOf(initialRepCount + 2)))
                 .check(matchTextColor(R.color.secondary_text));
 
         matchHelpText(R.string.help_in_progress);
-        matchSetCounter("0");
+        matchSetCounter(setCount);
+        checkIndicatorIsNotOnTheBaseSpot();
+        checkIsStopperInvisible();
     }
 
-    private void testPause() {
-        clickOnCounter()
+    private void testPause(int repCount, int setCount) {
+        checkIndicatorIsOnTheBaseSpot();
+        matchHelpText(R.string.help_paused);
+        onCounter()
                 .perform(waitMillis(6000))
-                .check(matches(withText("2")))
+                .check(matches(withText(String.valueOf(repCount))))
                 .check(matches(withTextColor(R.color.secondary_text)));
-        matchSetCounter("0");
+        matchSetCounter(setCount);
+        checkIsStopperInvisible();
+    }
+
+    private static void testBetweenSets(int repCount, int setCount) {
+        checkIndicatorIsOnTheBaseSpot();
+        matchHelpText(R.string.help_between_sets);
+        onCounter()
+                .check(matches(withText(String.valueOf(repCount))))
+                .check(matches(withTextColor(R.color.secondary_text)));
+
+        onView(withId(R.id.stopwarch))
+                .check(matches(withText("00:00")))
+                .perform(waitMillis(5000))
+                .check(matches(withText("00:05")));
+
+        matchSetCounter(setCount);
     }
 
     @NonNull
-    private ViewAssertion matchTextColor(@ColorRes int colorResId) {
+    private static ViewAssertion matchTextColor(@ColorRes int colorResId) {
         return matches(withTextColor(colorResId));
     }
 
     @NonNull
-    private ViewAssertion matchText(String text) {
+    private static ViewAssertion matchText(String text) {
         return matches(withText(text));
     }
 
@@ -153,11 +193,11 @@ public class MainActivityTest {
         onView(withId(R.id.help)).check(matches(withText(helpTextResId)));
     }
 
-    private static void matchSetCounter(String setCount) {
-        onView(withId(R.id.set_counter)).check(matches(withText(setCount)));
+    private static void matchSetCounter(int setCount) {
+        onView(withId(R.id.set_counter)).check(matches(withText(String.valueOf(setCount))));
     }
 
-    public static Matcher<View> withTextColor(@ColorRes int colorResId) {
+    private static Matcher<View> withTextColor(@ColorRes int colorResId) {
         return new BoundedMatcher<View, TextView>(TextView.class) {
             @Override
             protected boolean matchesSafely(TextView textView) {
@@ -171,4 +211,31 @@ public class MainActivityTest {
             }
         };
     }
+
+    private static void checkIndicatorIsOnTheBaseSpot() {
+        onView(withId(R.id.metronome_indicator)).check(matches(withZeroTranslationXY()));
+    }
+
+    private static void checkIndicatorIsNotOnTheBaseSpot() {
+        onView(withId(R.id.metronome_indicator)).check(matches(not(withZeroTranslationXY())));
+    }
+
+    private static Matcher<View> withZeroTranslationXY() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            protected boolean matchesSafely(View indicator) {
+                return indicator.getTranslationX() == 0f && indicator.getTranslationY() == 0f;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Text color" );
+            }
+        };
+    }
+
+    private static void checkIsStopperInvisible() {
+        onView(withId(R.id.stopwarch)).check(matches(not(isDisplayed())));
+    }
+
 }
