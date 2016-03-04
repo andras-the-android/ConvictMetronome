@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 import android.app.Activity;
 import android.view.View;
@@ -8,6 +8,8 @@ import java.util.Formatter;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.TimeProvider;
 
 /**
  * Created by andrasnemeth on 12/01/16.

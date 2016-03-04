@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
@@ -6,6 +6,9 @@ import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.Settings;
+import hu.kts.cmetronome.TimeProvider;
 import hu.kts.cmetronome.functional.SimpleMethod;
 
 /**

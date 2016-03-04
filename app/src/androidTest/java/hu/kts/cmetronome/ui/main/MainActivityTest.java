@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 import android.content.SharedPreferences;
 import android.support.annotation.ColorRes;
@@ -26,6 +26,10 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.Settings;
+import hu.kts.cmetronome.ui.main.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

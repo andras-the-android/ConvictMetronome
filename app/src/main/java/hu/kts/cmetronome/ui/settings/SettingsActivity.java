@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
+
+import hu.kts.cmetronome.Log;
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.Settings;
 
 /**
  * Created by andrasnemeth on 21/01/16.

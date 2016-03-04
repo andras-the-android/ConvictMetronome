@@ -1,14 +1,15 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.ui.main.IndicatorAnimationCallback;
 
 /**
  * Created by andrasnemeth on 12/01/16.

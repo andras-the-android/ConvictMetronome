@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,6 +6,15 @@ import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.Settings;
+import hu.kts.cmetronome.Sounds;
+import hu.kts.cmetronome.WorkoutStatus;
+import hu.kts.cmetronome.ui.main.Countdowner;
+import hu.kts.cmetronome.ui.main.Help;
+import hu.kts.cmetronome.ui.main.IndicatorAnimation;
+import hu.kts.cmetronome.ui.main.IndicatorAnimationCallback;
+import hu.kts.cmetronome.ui.main.Stopwatch;
 
 /**
  * Created by andrasnemeth on 25/01/16.

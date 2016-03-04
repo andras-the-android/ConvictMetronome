@@ -1,7 +1,6 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,14 +10,16 @@ import android.view.WindowManager;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import hu.kts.cmetronome.AdMobTestDeviceFilteredBuilderFactory;
+import hu.kts.cmetronome.AppIndexing;
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.Settings;
+import hu.kts.cmetronome.ui.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 

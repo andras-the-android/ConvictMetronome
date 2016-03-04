@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 import android.app.Activity;
 import android.view.View;
@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.WorkoutStatus;
 
 /**
  * Created by andrasnemeth on 25/01/16.

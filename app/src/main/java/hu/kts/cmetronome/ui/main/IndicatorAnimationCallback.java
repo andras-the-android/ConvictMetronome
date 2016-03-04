@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.ui.main;
 
 /**
  * Created by andrasnemeth on 12/01/16.
