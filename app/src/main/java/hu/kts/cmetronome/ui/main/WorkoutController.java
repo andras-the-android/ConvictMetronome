@@ -4,17 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.Sounds;
 import hu.kts.cmetronome.WorkoutStatus;
-import hu.kts.cmetronome.ui.main.Countdowner;
-import hu.kts.cmetronome.ui.main.Help;
-import hu.kts.cmetronome.ui.main.IndicatorAnimation;
-import hu.kts.cmetronome.ui.main.IndicatorAnimationCallback;
-import hu.kts.cmetronome.ui.main.Stopwatch;
 
 /**
  * Created by andrasnemeth on 25/01/16.
@@ -26,9 +21,9 @@ public class WorkoutController {
     private static final String KEY_WORKOUT_STATUS = "workoutStatus";
     private static final String KEY_STOPWATCH_START = "stopwatchStart";
 
-    @InjectView(R.id.rep_counter)
+    @BindView(R.id.rep_counter)
     TextView repCounterTextView;
-    @InjectView(R.id.set_counter)
+    @BindView(R.id.set_counter)
     TextView setCounterTextView;
 
     private Activity activity;
@@ -74,7 +69,7 @@ public class WorkoutController {
 
     public WorkoutController(Activity activity, Bundle savedInstanceState) {
         this.activity = activity;
-        ButterKnife.inject(this, activity);
+        ButterKnife.bind(this, activity);
         help = new Help(activity);
         sounds = new Sounds(activity);
         countdowner = new Countdowner(activity, this::startWorkout, this::onCountdownCancelled);

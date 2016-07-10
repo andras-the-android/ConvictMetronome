@@ -1,8 +1,8 @@
 package hu.kts.cmetronome.ui.main;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,8 +11,8 @@ import android.view.WindowManager;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import hu.kts.cmetronome.AdMobTestDeviceFilteredBuilderFactory;
@@ -24,7 +24,7 @@ import hu.kts.cmetronome.ui.settings.SettingsActivity;
 public class MainActivity extends AppCompatActivity {
 
 
-    @InjectView(R.id.adView)
+    @BindView(R.id.adView)
     AdView adView;
 
     private WorkoutController workoutController;
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         workoutController = new WorkoutController(this, savedInstanceState);
         setupAd();
         appIndexing = new AppIndexing(this);

@@ -6,10 +6,9 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.view.View;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import hu.kts.cmetronome.R;
-import hu.kts.cmetronome.ui.main.IndicatorAnimationCallback;
 
 /**
  * Created by andrasnemeth on 12/01/16.
@@ -18,9 +17,9 @@ import hu.kts.cmetronome.ui.main.IndicatorAnimationCallback;
  */
 public class IndicatorAnimation {
 
-    @InjectView(R.id.metronome)
+    @BindView(R.id.metronome)
     View metronomeView;
-    @InjectView(R.id.metronome_indicator)
+    @BindView(R.id.metronome_indicator)
     View indicatorView;
 
     private IndicatorAnimationCallback callback;
@@ -94,7 +93,7 @@ public class IndicatorAnimation {
 
     public IndicatorAnimation(Activity activity, IndicatorAnimationCallback callback) {
         this.callback = callback;
-        ButterKnife.inject(this, activity);
+        ButterKnife.bind(this, activity);
 
         Resources resources = activity.getResources();
         float indicatorDiameter = (float)resources.getDimensionPixelSize(R.dimen.indicator_diameter);

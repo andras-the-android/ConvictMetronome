@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.WorkoutStatus;
 
@@ -14,12 +14,12 @@ import hu.kts.cmetronome.WorkoutStatus;
  */
 public class Help {
 
-    @InjectView(R.id.help)
+    @BindView(R.id.help)
     TextView helpTextView;
 
 
     public Help(Activity activity) {
-        ButterKnife.inject(this, activity);
+        ButterKnife.bind(this, activity);
     }
 
     public void setEnabled(boolean enabled) {

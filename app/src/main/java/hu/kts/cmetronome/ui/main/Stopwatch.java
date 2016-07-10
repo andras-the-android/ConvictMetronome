@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import java.util.Formatter;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.TimeProvider;
 
@@ -16,7 +16,7 @@ import hu.kts.cmetronome.TimeProvider;
  */
 public class Stopwatch {
 
-    @InjectView(R.id.stopwarch)
+    @BindView(R.id.stopwarch)
     TextView stopwatchTextView;
 
     StringBuilder sb = new StringBuilder();
@@ -24,7 +24,7 @@ public class Stopwatch {
     private TimeProvider timeProvider = new TimeProvider(this::onStopwatchTick, null);
 
     public Stopwatch(Activity activity) {
-        ButterKnife.inject(this, activity);
+        ButterKnife.bind(this, activity);
     }
 
     public void start() {

@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.TimeProvider;
@@ -16,7 +16,7 @@ import hu.kts.cmetronome.functional.SimpleMethod;
  */
 public class Countdowner {
 
-    @InjectView(R.id.rep_counter)
+    @BindView(R.id.rep_counter)
     TextView repCounterTextView;
 
     private final SimpleMethod callback;
@@ -29,7 +29,7 @@ public class Countdowner {
     public Countdowner(Activity activity, SimpleMethod onFinish, SimpleMethod onCancel) {
         this.callback = onFinish;
         this.onCancel = onCancel;
-        ButterKnife.inject(this, activity);
+        ButterKnife.bind(this, activity);
         countDownColor = ContextCompat.getColor(activity, R.color.accent);
         normalColor = ContextCompat.getColor(activity, R.color.secondary_text);
     }
