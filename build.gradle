@@ -8,8 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
-        classpath 'com.github.JakeWharton:sdk-manager-plugin:220bf7a88a7072df3ed16dc8466fb144f2817070'
+        classpath 'com.android.tools.build:gradle:2.2.0-alpha7'
         classpath 'me.tatarka:gradle-retrolambda:3.2.0'
         classpath 'com.google.gms:google-services:3.0.0'
 
@@ -22,8 +21,4 @@ allprojects {
     repositories {
         jcenter()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
