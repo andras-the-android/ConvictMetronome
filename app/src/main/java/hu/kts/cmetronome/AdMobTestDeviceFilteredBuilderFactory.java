@@ -14,9 +14,9 @@ public final class AdMobTestDeviceFilteredBuilderFactory {
     public static AdRequest.Builder get() {
         return new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("DEF436D888219AF0E490690759A15C54") //Acro S
                 .addTestDevice("21A7F45D4BDEB3BCCD96A1057F1DB48A") //Oneplus One
-                .addTestDevice("66D50DBE3EB178B2906A0159E37438B6") //Xperia T
+                .addTestDevice("A60733E79D236E05846D3742AF9C6113") //Nexus 5
+                .addTestDevice("3EEA5F0C49FB4B07428FD96F5998BFEB") //Alcatel POP C3
                 ;
     }
 }
