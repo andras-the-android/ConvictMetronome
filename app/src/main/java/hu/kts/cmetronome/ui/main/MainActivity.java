@@ -16,9 +16,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import hu.kts.cmetronome.AdMobTestDeviceFilteredBuilderFactory;
-import hu.kts.cmetronome.AppIndexing;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
+import hu.kts.cmetronome.appindexing.AppIndexing;
 import hu.kts.cmetronome.ui.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         workoutController = new WorkoutController(this, savedInstanceState);
         setupAd();
-        appIndexing = new AppIndexing(this);
+        appIndexing = AppIndexing.Factory.get(this);
     }
 
     private void setupAd() {
