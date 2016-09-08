@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Convict Metronome</string>
+    <string name="app_name">Convict DEBUG</string>
     <string name="help_before_start">Tap the counter to start a workout</string>
     <string name="help_in_progress">Tap the counter to pause\n\nHold down the counter to finish set</string>
     <string name="help_paused">Tap the counter to resume\n\nHold down the counter to finish set</string>

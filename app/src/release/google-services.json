@@ -1,0 +1,34 @@
+{
+  "project_info": {
+    "project_number": "137003954685",
+    "project_id": "convict-metronome"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137003954685:android:103817a7283da632",
+        "android_client_info": {
+          "package_name": "hu.kts.cmetronome"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [{ "current_key": "" }],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-69644747-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
