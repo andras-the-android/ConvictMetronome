@@ -54,6 +54,12 @@ dependencies {
     compile "com.google.android.gms:play-services-analytics:$play_services_version"
     compile "com.google.firebase:firebase-appindexing:$play_services_version"
 
+    provided "org.projectlombok:lombok:1.16.18"
+    annotationProcessor "org.projectlombok:lombok:1.16.18"
+
+    implementation "android.arch.lifecycle:extensions:1.0.0-beta1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-beta1"
+
 
     //more about espreso configuration
     //https://google.github.io/android-testing-support-library/docs/espresso/setup/index.html

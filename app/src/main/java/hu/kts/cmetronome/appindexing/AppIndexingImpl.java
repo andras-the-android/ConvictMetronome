@@ -1,5 +1,7 @@
 package hu.kts.cmetronome.appindexing;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.net.Uri;
 
@@ -9,7 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import hu.kts.cmetronome.R;
 
-class AppIndexingImpl implements AppIndexing {
+public class AppIndexingImpl implements AppIndexing {
 
     private GoogleApiClient client;
     private String appName;
@@ -27,13 +29,13 @@ class AppIndexingImpl implements AppIndexing {
         );
     }
 
-    @Override
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onStart() {
         client.connect();
         AppIndex.AppIndexApi.start(client, getAction());
     }
 
-    @Override
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onStop() {
         AppIndex.AppIndexApi.end(client, getAction());
         client.disconnect();

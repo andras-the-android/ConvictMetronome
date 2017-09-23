@@ -2,9 +2,8 @@ package hu.kts.cmetronome;
 
 import android.app.Application;
 
-/**
- * Created by andrasnemeth on 25/01/16.
- */
+import hu.kts.cmetronome.di.Injector;
+
 public class ConvictMetronomeApplication extends Application {
 
     @Override
@@ -12,6 +11,7 @@ public class ConvictMetronomeApplication extends Application {
         super.onCreate();
         initSettings();
         Log.init(this);
+        Injector.init(this);
     }
 
     private void initSettings() {

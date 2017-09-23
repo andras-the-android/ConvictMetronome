@@ -1,4 +1,4 @@
-package hu.kts.cmetronome;
+package hu.kts.cmetronome.admob;
 
 import com.google.android.gms.ads.AdRequest;
 

@@ -15,21 +15,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
-import hu.kts.cmetronome.AdMobTestDeviceFilteredBuilderFactory;
+import hu.kts.cmetronome.admob.AdMobTestDeviceFilteredBuilderFactory;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
+import hu.kts.cmetronome.admob.AdViewWrapper;
 import hu.kts.cmetronome.appindexing.AppIndexing;
+import hu.kts.cmetronome.di.Injector;
 import hu.kts.cmetronome.ui.settings.SettingsActivity;
+import lombok.Setter;
 
 public class WorkoutActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.adView)
-    AdView adView;
-
     private WorkoutController workoutController;
-    private AppIndexing appIndexing;
-
+    @Setter private AppIndexing appIndexing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +36,12 @@ public class WorkoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
+        Injector.inject(this);
         workoutController = new WorkoutController(this, savedInstanceState);
-        setupAd();
-        appIndexing = AppIndexing.Factory.get(this);
-    }
 
-    private void setupAd() {
-        AdRequest adRequest = AdMobTestDeviceFilteredBuilderFactory.get().build();
-        adView.loadAd(adRequest);
+        getLifecycle().addObserver(new AdViewWrapper(findViewById(R.id.adView)));
+        getLifecycle().addObserver(appIndexing);
+        getLifecycle().addObserver(workoutController);
     }
 
     @OnClick(R.id.rep_counter)
@@ -55,26 +52,6 @@ public class WorkoutActivity extends AppCompatActivity {
     @OnLongClick(R.id.rep_counter)
     public boolean onRepCounterLongClick(View view) {
         return workoutController.onRepCounterLongClick();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        adView.resume();
-    }
-
-    @Override
-    public void onPause() {
-        adView.pause();
-        workoutController.pauseWorkout();
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        workoutController.onDestroy();
-        adView.destroy();
-        super.onDestroy();
     }
 
     @Override
@@ -113,15 +90,4 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutController.saveInstanceState(outState);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        appIndexing.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        appIndexing.onStop();
-    }
 }

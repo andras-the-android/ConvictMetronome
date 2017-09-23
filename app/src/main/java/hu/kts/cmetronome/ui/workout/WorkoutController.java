@@ -1,6 +1,9 @@
 package hu.kts.cmetronome.ui.workout;
 
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -14,7 +17,7 @@ import hu.kts.cmetronome.WorkoutStatus;
 /**
  * Created by andrasnemeth on 25/01/16.
  */
-public class WorkoutController {
+public class WorkoutController implements LifecycleObserver {
 
     private static final String KEY_REP_COUNT = "repCount";
     private static final String KEY_SET_COUNT = "setCount";
@@ -182,10 +185,16 @@ public class WorkoutController {
         help.setEnabled(settings.isShowHelp());
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
         sounds.release();
         stopWatch.stop();
         countdowner.cancel();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    public void onPause() {
+        pauseWorkout();
     }
 
     public void saveInstanceState(Bundle outState) {
