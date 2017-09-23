@@ -31,41 +31,12 @@ public class WorkoutController {
     int setCount = 0;
     private WorkoutStatus workoutStatus;
 
-
     private Stopwatch stopWatch;
     private Sounds sounds;
     private IndicatorAnimation indicatorAnimation;
     private Settings settings;
     private Help help;
     private Countdowner countdowner;
-
-    private IndicatorAnimationCallback indicatorAnimationCallback = new IndicatorAnimationCallback() {
-        @Override
-        public void onDownStarted() {
-            sounds.makeUpSound();
-        }
-
-        @Override
-        public void onRightStarted() {
-
-        }
-
-        @Override
-        public void onUpStarted() {
-            sounds.makeDownSound();
-        }
-
-        @Override
-        public void onLeftStarted() {
-            ++repCount;
-            fillRepCounterTextViewWithTruncatedData();
-        }
-
-        @Override
-        public void cycleFinished() {
-
-        }
-    };
 
     public WorkoutController(Activity activity, Bundle savedInstanceState) {
         this.activity = activity;
@@ -154,9 +125,24 @@ public class WorkoutController {
      */
     private IndicatorAnimation getIndicatorAnimation() {
         if (indicatorAnimation == null) {
-            indicatorAnimation = new IndicatorAnimation(activity, indicatorAnimationCallback);
+            indicatorAnimation = new IndicatorAnimation(activity, this::onIndicatorAnimationEvent);
         }
         return indicatorAnimation;
+    }
+
+    private void onIndicatorAnimationEvent(IndicatorAnimation.Event event) {
+        switch (event) {
+            case DOWN:
+                sounds.makeUpSound();
+                break;
+            case UP:
+                sounds.makeDownSound();
+                break;
+            case LEFT:
+                ++repCount;
+                fillRepCounterTextViewWithTruncatedData();
+                break;
+        }
     }
 
     private void stopSet() {

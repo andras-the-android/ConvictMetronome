@@ -9,6 +9,7 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.functional.Consumer;
 
 /**
  * Created by andrasnemeth on 12/01/16.
@@ -22,7 +23,7 @@ public class IndicatorAnimation {
     @BindView(R.id.metronome_indicator)
     View indicatorView;
 
-    private IndicatorAnimationCallback callback;
+    private Consumer<Event> callback;
     private boolean animationRunning;
     private ObjectAnimator down;
     private ObjectAnimator right;
@@ -41,7 +42,7 @@ public class IndicatorAnimation {
             if (animationRunning) {
                 currentAnimation = getNextAnimation(animation);
                 if (isLastPartOfTheCycle(animation)) {
-                    callback.cycleFinished();
+                    callback.accept(Event.CYCLE_FINISHED);
                 }
                 currentAnimation.start();
             }
@@ -60,13 +61,13 @@ public class IndicatorAnimation {
 
     private void invokeStartCallback(Animator animation) {
         if (animation == down) {
-            callback.onDownStarted();
+            callback.accept(Event.DOWN);
         } else if (animation == right) {
-            callback.onRightStarted();
+            callback.accept(Event.RIGHT);
         } else if (animation == up) {
-            callback.onUpStarted();
+            callback.accept(Event.UP);
         } else if (animation == left) {
-            callback.onLeftStarted();
+            callback.accept(Event.LEFT);
         }
     }
 
@@ -91,7 +92,7 @@ public class IndicatorAnimation {
         indicatorView.setTranslationY(0f);
     }
 
-    public IndicatorAnimation(Activity activity, IndicatorAnimationCallback callback) {
+    public IndicatorAnimation(Activity activity, Consumer<Event> callback) {
         this.callback = callback;
         ButterKnife.bind(this, activity);
 
@@ -125,6 +126,10 @@ public class IndicatorAnimation {
             animationRunning = false;
             currentAnimation.cancel();
         }
+    }
+
+    public enum Event {
+        DOWN, RIGHT, UP, LEFT, CYCLE_FINISHED
     }
 
 
