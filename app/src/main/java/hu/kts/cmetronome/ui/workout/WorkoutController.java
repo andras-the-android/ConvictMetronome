@@ -1,4 +1,4 @@
-package hu.kts.cmetronome.ui.main;
+package hu.kts.cmetronome.ui.workout;
 
 import android.app.Activity;
 import android.os.Bundle;

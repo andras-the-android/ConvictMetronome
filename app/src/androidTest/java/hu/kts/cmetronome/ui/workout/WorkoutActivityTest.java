@@ -1,4 +1,4 @@
-package hu.kts.cmetronome.ui.main;
+package hu.kts.cmetronome.ui.workout;
 
 import android.content.SharedPreferences;
 import android.support.annotation.ColorRes;
@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
-import hu.kts.cmetronome.ui.main.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -46,11 +45,11 @@ import static org.hamcrest.core.Is.is;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class MainActivityTest {
+public class WorkoutActivityTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
-            MainActivity.class);
+    public ActivityTestRule<WorkoutActivity> mActivityRule = new ActivityTestRule<>(
+            WorkoutActivity.class);
 
     @BeforeClass
     public static void setUp() {

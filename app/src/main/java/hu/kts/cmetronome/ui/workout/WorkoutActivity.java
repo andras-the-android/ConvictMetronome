@@ -1,4 +1,4 @@
-package hu.kts.cmetronome.ui.main;
+package hu.kts.cmetronome.ui.workout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.appindexing.AppIndexing;
 import hu.kts.cmetronome.ui.settings.SettingsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class WorkoutActivity extends AppCompatActivity {
 
 
     @BindView(R.id.adView)
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_workout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
         workoutController = new WorkoutController(this, savedInstanceState);

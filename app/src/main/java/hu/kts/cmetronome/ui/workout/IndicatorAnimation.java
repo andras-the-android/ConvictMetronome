@@ -1,4 +1,4 @@
-package hu.kts.cmetronome.ui.main;
+package hu.kts.cmetronome.ui.workout;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
