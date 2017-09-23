@@ -19,16 +19,17 @@ public class Countdowner {
     @BindView(R.id.rep_counter)
     TextView repCounterTextView;
 
-    private final SimpleMethod callback;
+    private final SimpleMethod onFinish;
     private final SimpleMethod onCancel;
     private TimeProvider countDownTimeProvider = new TimeProvider(this::onCountDownTick, this::onCountDownFinished);
-    Settings settings = Settings.INSTANCE;
+    Settings settings;
     private int countDownColor;
     private int normalColor;
 
-    public Countdowner(Activity activity, SimpleMethod onFinish, SimpleMethod onCancel) {
-        this.callback = onFinish;
+    public Countdowner(Activity activity, SimpleMethod onFinish, SimpleMethod onCancel, Settings settings) {
+        this.onFinish = onFinish;
         this.onCancel = onCancel;
+        this.settings = settings;
         ButterKnife.bind(this, activity);
         countDownColor = ContextCompat.getColor(activity, R.color.accent);
         normalColor = ContextCompat.getColor(activity, R.color.secondary_text);
@@ -41,7 +42,7 @@ public class Countdowner {
     public void onCountDownFinished() {
         repCounterTextView.setTextColor(normalColor);
         countDownTimeProvider.stop();
-        callback.call();
+        onFinish.call();
     }
 
     public void start() {

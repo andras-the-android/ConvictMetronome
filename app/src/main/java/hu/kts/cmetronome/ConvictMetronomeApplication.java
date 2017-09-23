@@ -9,12 +9,7 @@ public class ConvictMetronomeApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initSettings();
         Log.init(this);
         Injector.init(this);
-    }
-
-    private void initSettings() {
-        Settings.INSTANCE.init(this);
     }
 }

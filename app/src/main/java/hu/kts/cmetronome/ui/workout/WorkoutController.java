@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
-import android.os.Bundle;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -13,16 +12,9 @@ import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.Sounds;
 import hu.kts.cmetronome.WorkoutStatus;
+import hu.kts.cmetronome.repository.WorkoutRepository;
 
-/**
- * Created by andrasnemeth on 25/01/16.
- */
 public class WorkoutController implements LifecycleObserver {
-
-    private static final String KEY_REP_COUNT = "repCount";
-    private static final String KEY_SET_COUNT = "setCount";
-    private static final String KEY_WORKOUT_STATUS = "workoutStatus";
-    private static final String KEY_STOPWATCH_START = "stopwatchStart";
 
     @BindView(R.id.rep_counter)
     TextView repCounterTextView;
@@ -30,9 +22,7 @@ public class WorkoutController implements LifecycleObserver {
     TextView setCounterTextView;
 
     private Activity activity;
-    int repCount = 0;
-    int setCount = 0;
-    private WorkoutStatus workoutStatus;
+    private final WorkoutRepository repository;
 
     private Stopwatch stopWatch;
     private Sounds sounds;
@@ -41,27 +31,26 @@ public class WorkoutController implements LifecycleObserver {
     private Help help;
     private Countdowner countdowner;
 
-    public WorkoutController(Activity activity, Bundle savedInstanceState) {
+    public WorkoutController(Activity activity, WorkoutRepository workoutRepository, Settings settings) {
         this.activity = activity;
+        this.repository = workoutRepository;
+        this.settings = settings;
         ButterKnife.bind(this, activity);
         help = new Help(activity);
         sounds = new Sounds(activity);
-        countdowner = new Countdowner(activity, this::startWorkout, this::onCountdownCancelled);
+        countdowner = new Countdowner(activity, this::startWorkout, this::onCountdownCancelled, settings);
         stopWatch = new Stopwatch(activity);
-        settings = Settings.INSTANCE;
-        initWorkoutData(savedInstanceState);
+        initWorkoutData();
         initSettingsRelatedParts();
 
     }
 
-    private void initWorkoutData(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            repCount = savedInstanceState.getInt(KEY_REP_COUNT);
-            setCount = savedInstanceState.getInt(KEY_SET_COUNT);
-            WorkoutStatus savedWorkoutStatus = (WorkoutStatus) savedInstanceState.getSerializable(KEY_WORKOUT_STATUS);
+    private void initWorkoutData() {
+        if (repository.getWorkoutStatus() != null) {
+            WorkoutStatus savedWorkoutStatus = repository.getWorkoutStatus();
             setWorkoutStatusAndHelpText(savedWorkoutStatus == WorkoutStatus.IN_PROGRESS || savedWorkoutStatus == WorkoutStatus.COUNTDOWN_IN_PROGRESS? WorkoutStatus.PAUSED : savedWorkoutStatus);
-            if (workoutStatus == WorkoutStatus.BETWEEN_SETS) {
-                stopWatch.start(savedInstanceState.getLong(KEY_STOPWATCH_START));
+            if (repository.getWorkoutStatus() == WorkoutStatus.BETWEEN_SETS) {
+                stopWatch.start(repository.getStopwatchStartTime());
             }
         } else {
             setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
@@ -71,7 +60,7 @@ public class WorkoutController implements LifecycleObserver {
     }
 
     public void onRepCounterClick() {
-        switch (workoutStatus) {
+        switch (repository.getWorkoutStatus()) {
             case BEFORE_START:
             case PAUSED:
             case BETWEEN_SETS: countDownAndStart(); break;
@@ -81,10 +70,10 @@ public class WorkoutController implements LifecycleObserver {
     }
 
     public boolean onRepCounterLongClick() {
-        if (workoutStatus == WorkoutStatus.IN_PROGRESS || workoutStatus == WorkoutStatus.PAUSED) {
+        if (repository.getWorkoutStatus() == WorkoutStatus.IN_PROGRESS || repository.getWorkoutStatus() == WorkoutStatus.PAUSED) {
             stopSet();
             return true;
-        } if (workoutStatus == WorkoutStatus.BETWEEN_SETS) {
+        } if (repository.getWorkoutStatus() == WorkoutStatus.BETWEEN_SETS) {
             resetWorkout();
             return true;
         }
@@ -108,8 +97,8 @@ public class WorkoutController implements LifecycleObserver {
 
 
     private void countDownAndStart() {
-        if (workoutStatus == WorkoutStatus.BETWEEN_SETS) {
-            repCount = 0;
+        if (repository.getWorkoutStatus() == WorkoutStatus.BETWEEN_SETS) {
+            repository.resetRepCounter();
         }
         stopWatch.stop();
         setWorkoutStatusAndHelpText(WorkoutStatus.COUNTDOWN_IN_PROGRESS);
@@ -124,7 +113,6 @@ public class WorkoutController implements LifecycleObserver {
 
     /**
      * Initialization can't be called from onCreate because animation needs the actual size of the elements
-     * @return
      */
     private IndicatorAnimation getIndicatorAnimation() {
         if (indicatorAnimation == null) {
@@ -142,7 +130,7 @@ public class WorkoutController implements LifecycleObserver {
                 sounds.makeDownSound();
                 break;
             case LEFT:
-                ++repCount;
+                repository.increaseRepCounter();
                 fillRepCounterTextViewWithTruncatedData();
                 break;
         }
@@ -154,16 +142,17 @@ public class WorkoutController implements LifecycleObserver {
         sounds.stop();
         countdowner.cancel();
         stopWatch.start();
+        repository.setStopwatchStartTime(stopWatch.getStartTime());
         increaseSetCounter();
     }
 
     private void setWorkoutStatusAndHelpText(WorkoutStatus status) {
-        workoutStatus = status;
+        repository.setWorkoutStatus(status);
         help.setHelpTextByWorkoutStatus(status);
     }
 
     private void increaseSetCounter() {
-        ++setCount;
+        repository.increaseSetCounter();
         fillSetCounterTextViewWithTruncatedData();
     }
 
@@ -171,13 +160,8 @@ public class WorkoutController implements LifecycleObserver {
     private void resetWorkout() {
         setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START);
         stopWatch.stop();
-        resetCounters();
-    }
-
-    private void resetCounters() {
-        setCount = 0;
+        repository.resetCounters();
         fillSetCounterTextViewWithTruncatedData();
-        repCount = 0;
         fillRepCounterTextViewWithTruncatedData();
     }
 
@@ -197,24 +181,17 @@ public class WorkoutController implements LifecycleObserver {
         pauseWorkout();
     }
 
-    public void saveInstanceState(Bundle outState) {
-        outState.putInt(KEY_REP_COUNT, repCount);
-        outState.putInt(KEY_SET_COUNT, setCount);
-        outState.putSerializable(KEY_WORKOUT_STATUS, workoutStatus);
-        outState.putLong(KEY_STOPWATCH_START, stopWatch.getStartTime());
-    }
-
     /**
      * counter should contain maximum 2 digits
      */
     private void fillRepCounterTextViewWithTruncatedData() {
-        repCounterTextView.setText(String.valueOf(repCount % 100));
+        repCounterTextView.setText(String.valueOf(repository.getRepCount() % 100));
     }
 
     /**
      * counter should contain maximum 2 digits
      */
     private void fillSetCounterTextViewWithTruncatedData() {
-        setCounterTextView.setText(String.valueOf(setCount % 100));
+        setCounterTextView.setText(String.valueOf(repository.getSetCount() % 100));
     }
 }

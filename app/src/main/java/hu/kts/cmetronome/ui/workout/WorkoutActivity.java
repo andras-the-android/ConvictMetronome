@@ -27,7 +27,7 @@ import lombok.Setter;
 public class WorkoutActivity extends AppCompatActivity {
 
 
-    private WorkoutController workoutController;
+    @Setter private WorkoutController workoutController;
     @Setter private AppIndexing appIndexing;
 
     @Override
@@ -37,7 +37,6 @@ public class WorkoutActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ButterKnife.bind(this);
         Injector.inject(this);
-        workoutController = new WorkoutController(this, savedInstanceState);
 
         getLifecycle().addObserver(new AdViewWrapper(findViewById(R.id.adView)));
         getLifecycle().addObserver(appIndexing);
@@ -82,12 +81,6 @@ public class WorkoutActivity extends AppCompatActivity {
         if (requestCode == Settings.REQUEST_CODE && resultCode == RESULT_OK) {
             workoutController.initSettingsRelatedParts();
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        workoutController.saveInstanceState(outState);
     }
 
 }
