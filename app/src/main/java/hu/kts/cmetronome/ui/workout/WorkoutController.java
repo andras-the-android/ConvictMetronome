@@ -178,7 +178,9 @@ public class WorkoutController implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void onPause() {
-        pauseWorkout();
+        if (repository.getWorkoutStatus() == WorkoutStatus.IN_PROGRESS || repository.getWorkoutStatus() == WorkoutStatus.COUNTDOWN_IN_PROGRESS) {
+            pauseWorkout();
+        }
     }
 
     /**
