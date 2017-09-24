@@ -1,6 +1,6 @@
 package hu.kts.cmetronome.ui.workout;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -8,12 +8,10 @@ import java.util.Formatter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hu.kts.cmetronome.Log;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.TimeProvider;
 
-/**
- * Created by andrasnemeth on 12/01/16.
- */
 public class Stopwatch {
 
     @BindView(R.id.stopwarch)
@@ -21,10 +19,12 @@ public class Stopwatch {
 
     StringBuilder sb = new StringBuilder();
     Formatter formatter = new Formatter(sb);
-    private TimeProvider timeProvider = new TimeProvider(this::onStopwatchTick, null);
+    private TimeProvider timeProvider;
 
-    public Stopwatch(Activity activity) {
+    public Stopwatch(AppCompatActivity activity, TimeProvider timeProvider) {
+        this.timeProvider = timeProvider;
         ButterKnife.bind(this, activity);
+        timeProvider.observe(activity, this::onStopwatchTick);
     }
 
     public void start() {

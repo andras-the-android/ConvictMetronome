@@ -59,39 +59,6 @@ public class IndicatorAnimation {
         }
     };
 
-    private void invokeStartCallback(Animator animation) {
-        if (animation == down) {
-            callback.accept(Event.DOWN);
-        } else if (animation == right) {
-            callback.accept(Event.RIGHT);
-        } else if (animation == up) {
-            callback.accept(Event.UP);
-        } else if (animation == left) {
-            callback.accept(Event.LEFT);
-        }
-    }
-
-    private ObjectAnimator getNextAnimation(Animator animation) {
-        if (animation == down) {
-            return right;
-        } else if (animation == right) {
-            return up;
-        } else if (animation == up) {
-            return left;
-        } else {
-            return down;
-        }
-    }
-
-    private boolean isLastPartOfTheCycle(Animator animation) {
-        return animation == left;
-    }
-
-    private void resetIndicatorPosition() {
-        indicatorView.setTranslationX(0f);
-        indicatorView.setTranslationY(0f);
-    }
-
     public IndicatorAnimation(Activity activity, Consumer<Event> callback) {
         this.callback = callback;
         ButterKnife.bind(this, activity);
@@ -126,6 +93,39 @@ public class IndicatorAnimation {
             animationRunning = false;
             currentAnimation.cancel();
         }
+    }
+
+    private void invokeStartCallback(Animator animation) {
+        if (animation == down) {
+            callback.accept(Event.DOWN);
+        } else if (animation == right) {
+            callback.accept(Event.RIGHT);
+        } else if (animation == up) {
+            callback.accept(Event.UP);
+        } else if (animation == left) {
+            callback.accept(Event.LEFT);
+        }
+    }
+
+    private ObjectAnimator getNextAnimation(Animator animation) {
+        if (animation == down) {
+            return right;
+        } else if (animation == right) {
+            return up;
+        } else if (animation == up) {
+            return left;
+        } else {
+            return down;
+        }
+    }
+
+    private boolean isLastPartOfTheCycle(Animator animation) {
+        return animation == left;
+    }
+
+    private void resetIndicatorPosition() {
+        indicatorView.setTranslationX(0f);
+        indicatorView.setTranslationY(0f);
     }
 
     public enum Event {

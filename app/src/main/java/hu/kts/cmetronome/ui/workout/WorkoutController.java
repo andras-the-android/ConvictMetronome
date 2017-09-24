@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -11,6 +12,7 @@ import butterknife.ButterKnife;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.Sounds;
+import hu.kts.cmetronome.TimeProvider;
 import hu.kts.cmetronome.WorkoutStatus;
 import hu.kts.cmetronome.repository.WorkoutRepository;
 
@@ -31,15 +33,20 @@ public class WorkoutController implements LifecycleObserver {
     private Help help;
     private Countdowner countdowner;
 
-    public WorkoutController(Activity activity, WorkoutRepository workoutRepository, Settings settings) {
+    public WorkoutController(AppCompatActivity activity,
+                             WorkoutRepository workoutRepository,
+                             Settings settings,
+                             Sounds sounds,
+                             TimeProvider timeProviderStopwatch,
+                             TimeProvider timeProviderCountdowner) {
         this.activity = activity;
         this.repository = workoutRepository;
         this.settings = settings;
+        this.sounds = sounds;
         ButterKnife.bind(this, activity);
         help = new Help(activity);
-        sounds = new Sounds(activity);
-        countdowner = new Countdowner(activity, this::startWorkout, this::onCountdownCancelled, settings);
-        stopWatch = new Stopwatch(activity);
+        countdowner = new Countdowner(activity, settings, timeProviderCountdowner).setOnFinish(this::startWorkout).setOnCancel(this::onCountdownCancelled);
+        stopWatch = new Stopwatch(activity, timeProviderStopwatch);
         initWorkoutData();
         initSettingsRelatedParts();
 
@@ -171,7 +178,6 @@ public class WorkoutController implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        sounds.release();
         stopWatch.stop();
         countdowner.cancel();
     }
@@ -196,4 +202,5 @@ public class WorkoutController implements LifecycleObserver {
     private void fillSetCounterTextViewWithTruncatedData() {
         setCounterTextView.setText(String.valueOf(repository.getSetCount() % 100));
     }
+
 }

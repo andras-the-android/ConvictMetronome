@@ -1,7 +1,7 @@
 package hu.kts.cmetronome.ui.workout;
 
-import android.app.Activity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -11,47 +11,53 @@ import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.TimeProvider;
 import hu.kts.cmetronome.functional.SimpleMethod;
 
-/**
- * Created by andrasnemeth on 25/01/16.
- */
 public class Countdowner {
 
     @BindView(R.id.rep_counter)
     TextView repCounterTextView;
 
-    private final SimpleMethod onFinish;
-    private final SimpleMethod onCancel;
-    private TimeProvider countDownTimeProvider = new TimeProvider(this::onCountDownTick, this::onCountDownFinished);
+    private SimpleMethod onFinish;
+    private SimpleMethod onCancel;
+    private TimeProvider timeProvider;
     Settings settings;
     private int countDownColor;
     private int normalColor;
 
-    public Countdowner(Activity activity, SimpleMethod onFinish, SimpleMethod onCancel, Settings settings) {
-        this.onFinish = onFinish;
+    public Countdowner(AppCompatActivity activity, Settings settings, TimeProvider timeProvider) {
         this.onCancel = onCancel;
         this.settings = settings;
+        this.timeProvider = timeProvider;
         ButterKnife.bind(this, activity);
         countDownColor = ContextCompat.getColor(activity, R.color.accent);
         normalColor = ContextCompat.getColor(activity, R.color.secondary_text);
+        timeProvider.observe(activity, this::onCountDownTick);
     }
 
-    public void onCountDownTick(long remainingInSeconds) {
-        repCounterTextView.setText(String.valueOf(remainingInSeconds));
+    public Countdowner setOnFinish(SimpleMethod onFinish) {
+        this.onFinish = onFinish;
+        return this;
     }
 
-    public void onCountDownFinished() {
-        repCounterTextView.setTextColor(normalColor);
-        countDownTimeProvider.stop();
-        onFinish.call();
+    public Countdowner setOnCancel(SimpleMethod onCancel) {
+        this.onCancel = onCancel;
+        return this;
+    }
+
+    public void onCountDownTick(long remainingSeconds) {
+        repCounterTextView.setText(String.valueOf(remainingSeconds));
+        if (remainingSeconds == 0) {
+            repCounterTextView.setTextColor(normalColor);
+            onFinish.call();
+        }
     }
 
     public void start() {
         repCounterTextView.setTextColor(countDownColor);
-        countDownTimeProvider.startDown(settings.getCountdownStartValue());
+        timeProvider.startDown(settings.getCountdownStartValue());
     }
 
     public void cancel() {
-        countDownTimeProvider.stop();
+        timeProvider.stop();
         repCounterTextView.setTextColor(normalColor);
         onCancel.call();
     }

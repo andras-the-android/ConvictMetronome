@@ -4,9 +4,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
-/**
- * Created by andrasnemeth on 12/01/16.
- */
 public class Sounds {
 
     private SoundPool soundPool;
@@ -36,11 +33,5 @@ public class Sounds {
     public void stop() {
         soundPool.stop(currentSoundId);
     }
-
-    public void release() {
-        soundPool.release();
-        soundPool = null;
-    }
-
 
 }

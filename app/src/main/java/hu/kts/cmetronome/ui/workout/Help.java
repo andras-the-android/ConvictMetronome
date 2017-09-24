@@ -9,9 +9,6 @@ import butterknife.ButterKnife;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.WorkoutStatus;
 
-/**
- * Created by andrasnemeth on 25/01/16.
- */
 public class Help {
 
     @BindView(R.id.help)

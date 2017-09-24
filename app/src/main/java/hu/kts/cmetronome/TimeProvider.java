@@ -3,41 +3,20 @@ package hu.kts.cmetronome;
 import android.os.Handler;
 import android.util.Log;
 
-import hu.kts.cmetronome.functional.LongConsumer;
-import hu.kts.cmetronome.functional.SimpleMethod;
+import hu.kts.cmetronome.architetcture.SingleLiveEvent;
 
-/**
- * Created by andrasnemeth on 11/01/16.
- */
-public class TimeProvider {
+public class TimeProvider extends SingleLiveEvent<Long> {
 
     public static final int DELAY_MILLIS = 1000;
-    private static final String TAG = "TimeProvider";
 
-
-    private LongConsumer callback;
-    private SimpleMethod countDownCallback;
-    private boolean inProgress;
+    private State state = State.STOPPED;
     private Handler handler = new Handler();
     private int countDownStartValue = -1;
     private long count;
     private long startTime;
 
-    public TimeProvider(LongConsumer callback, SimpleMethod countDownCallback) {
-        this.callback = callback;
-        this.countDownCallback = countDownCallback;
-    }
-
     public synchronized void startUp() {
         initCount();
-    }
-
-    private void initCount() {
-        checkInProgress();
-        startTime = System.currentTimeMillis();
-        inProgress = true;
-        count = 0;
-        startCycle();
     }
 
     public synchronized void startDown(int startValue) {
@@ -47,41 +26,38 @@ public class TimeProvider {
     }
 
     public synchronized void stop() {
-        inProgress = false;
+        state = State.STOPPED;
     }
 
     public synchronized void continueSeamlesslyUp(long originalStartTime) {
-        checkInProgress();
-        startTime = originalStartTime;
-        long timeSinceOriginalStart = System.currentTimeMillis() - originalStartTime;
-        count = timeSinceOriginalStart / DELAY_MILLIS;
-        inProgress = true;
+        if (state == State.STOPPED) {
+            startTime = originalStartTime;
+            state = State.IN_PROGRESS;
+            startCycle();
+        }
+    }
+
+    private void initCount() {
+        startTime = System.currentTimeMillis();
+        state = State.IN_PROGRESS;
         startCycle();
     }
 
     private void startCycle() {
-        if (inProgress) {
+        if (state == State.IN_PROGRESS) {
+            long t = calcCallbackValue();
+            setValue(t);
             if (isCountDownLastRound()) {
-                countDownCallback.call();
+                state = State.STOPPED;
             } else {
-                callback.accept(calcCallbackValue());
                 handler.postDelayed(this::startCycle, getDelayMillis());
-                ++count;
             }
         }
     }
 
     private long getDelayMillis() {
         long timestampOfDesiredNextTick = startTime + ((count + 1) * DELAY_MILLIS);
-        long result = timestampOfDesiredNextTick - System.currentTimeMillis();
-        Log.d(TAG, "getDelayMillis: " + result);
-        return result;
-    }
-
-    private void checkInProgress() {
-        if (inProgress) {
-            throw new IllegalStateException("Time provider already running");
-        }
+        return timestampOfDesiredNextTick - System.currentTimeMillis();
     }
 
     private void checkCountdownStartValue(int startValue) {
@@ -91,6 +67,7 @@ public class TimeProvider {
     }
 
     private long calcCallbackValue() {
+        count = (System.currentTimeMillis() - startTime) / DELAY_MILLIS;
         return isCountDown() ? countDownStartValue - count : count;
     }
 
@@ -104,5 +81,30 @@ public class TimeProvider {
 
     public long getStartTime() {
         return startTime;
+    }
+
+    @Override
+    protected void onActive() {
+        //invoked twice somehow
+        if (state == State.INACTIVE) {
+            state = State.IN_PROGRESS;
+            startCycle();
+        }
+    }
+
+    @Override
+    protected void onInactive() {
+        if (state == State.IN_PROGRESS) {
+            state = State.INACTIVE;
+        }
+    }
+
+    /**
+     * Stopped when someone called stop manually or never started.
+     * Inactive when the caller activity is in background but progress
+     * will continue automatically when it become to foreground again.
+     */
+    private enum State {
+        STOPPED, INACTIVE, IN_PROGRESS
     }
 }
