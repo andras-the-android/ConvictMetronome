@@ -44,6 +44,7 @@
             android:textSize="@dimen/rep_counter_size"
             android:textStyle="bold"
             android:background="?attr/selectableItemBackground"
+            android:includeFontPadding="false"
             android:gravity="center"/>
 
         <TextView
@@ -63,15 +64,15 @@
             android:id="@+id/stopwarch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/indicator_diameter"
-            android:layout_marginRight="@dimen/indicator_diameter"
-            android:textColor="@color/accent"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/rep_counter"
+            android:layout_alignLeft="@+id/set_counter_label"
+            android:layout_alignStart="@+id/set_counter_label"
+            android:layout_below="@+id/rep_counter"
             android:gravity="center"
-            tools:text="00:00"
+            android:textColor="@color/accent"
             android:textSize="@dimen/stopwatch_text_size"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            android:includeFontPadding="false"
+            tools:text="00:00" />
 
         <TextView
             android:id="@+id/set_counter_label"
