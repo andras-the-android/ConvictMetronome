@@ -10,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import hu.kts.cmetronome.Log;
 import hu.kts.cmetronome.R;
+import hu.kts.cmetronome.Sounds;
 import hu.kts.cmetronome.TimeProvider;
 
 public class Stopwatch {
@@ -20,9 +21,11 @@ public class Stopwatch {
     StringBuilder sb = new StringBuilder();
     Formatter formatter = new Formatter(sb);
     private TimeProvider timeProvider;
+    private final Sounds sounds;
 
-    public Stopwatch(AppCompatActivity activity, TimeProvider timeProvider) {
+    public Stopwatch(AppCompatActivity activity, TimeProvider timeProvider, Sounds sounds) {
         this.timeProvider = timeProvider;
+        this.sounds = sounds;
         ButterKnife.bind(this, activity);
         timeProvider.observe(activity, this::onStopwatchTick);
     }
@@ -44,6 +47,9 @@ public class Stopwatch {
 
     private void onStopwatchTick(long totalSeconds) {
         stopwatchTextView.setText(format(totalSeconds));
+        if (totalSeconds > 0 && totalSeconds % 60 == 0) {
+            sounds.beep();
+        }
     }
 
 

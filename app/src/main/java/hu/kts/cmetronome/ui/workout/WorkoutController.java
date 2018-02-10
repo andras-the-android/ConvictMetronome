@@ -46,7 +46,7 @@ public class WorkoutController implements LifecycleObserver {
         ButterKnife.bind(this, activity);
         help = new Help(activity);
         countdowner = new Countdowner(activity, settings, timeProviderCountdowner).setOnFinish(this::startWorkout).setOnCancel(this::onCountdownCancelled);
-        stopWatch = new Stopwatch(activity, timeProviderStopwatch);
+        stopWatch = new Stopwatch(activity, timeProviderStopwatch, sounds);
         initWorkoutData();
         initSettingsRelatedParts();
 
