@@ -2,7 +2,7 @@ apply plugin: "com.android.application"
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "hu.kts.cmetronome"
@@ -53,8 +53,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads:$play_services_version"
     implementation "com.google.android.gms:play-services-analytics:$play_services_version"
     implementation "com.google.firebase:firebase-appindexing:$play_services_version"
-    implementation "android.arch.lifecycle:extensions:1.1.0"
-    annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
     compileOnly "org.projectlombok:lombok:1.16.18"
     annotationProcessor "org.projectlombok:lombok:1.16.18"
 
@@ -63,9 +63,9 @@ dependencies {
 
     // Force usage of support annotations in the test app, since it is internally used by the runner module.
     androidTestImplementation "com.android.support:support-annotations:$support_lib_version"
-    androidTestImplementation "com.android.support.test:runner:1.0.1"
-    androidTestImplementation "com.android.support.test:rules:1.0.1"
-    androidTestImplementation ("com.android.support.test.espresso:espresso-core:2.2.1") {
+    androidTestImplementation "com.android.support.test:runner:1.0.2"
+    androidTestImplementation "com.android.support.test:rules:1.0.2"
+    androidTestImplementation ("com.android.support.test.espresso:espresso-core:3.0.2") {
         exclude module: "support-annotations"
     }
 }
