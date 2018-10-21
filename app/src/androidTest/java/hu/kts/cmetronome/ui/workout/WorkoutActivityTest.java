@@ -14,7 +14,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,13 +37,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.core.Is.is;
 
 /**
  * Created by andrasnemeth on 19/02/16.
  */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class WorkoutActivityTest {
 
     @Rule

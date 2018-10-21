@@ -12,4 +12,5 @@
     <string name="settings_countdown_start_value">Countdown from</string>
     <string name="settings_diagnostics">Anonymous diagnostics</string>
     <string name="settings_diagnostics_message">This feature provides anonymous information which will improve user experience and help uncover bugs. Please help the developer by enabling this function.</string>
+    <string name="admob_app_id">ca-app-pub-3891048739907811~3412266686</string>
 </resources>

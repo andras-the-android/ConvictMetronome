@@ -14,7 +14,6 @@ import butterknife.OnLongClick;
 import hu.kts.cmetronome.R;
 import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.admob.AdViewWrapper;
-import hu.kts.cmetronome.appindexing.AppIndexing;
 import hu.kts.cmetronome.di.Injector;
 import hu.kts.cmetronome.ui.settings.SettingsActivity;
 import lombok.Setter;
@@ -23,7 +22,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     @Setter private WorkoutController workoutController;
-    @Setter private AppIndexing appIndexing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +32,6 @@ public class WorkoutActivity extends AppCompatActivity {
         Injector.inject(this);
 
         getLifecycle().addObserver(new AdViewWrapper(findViewById(R.id.adView)));
-        getLifecycle().addObserver(appIndexing);
         getLifecycle().addObserver(workoutController);
     }
 
