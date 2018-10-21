@@ -1,15 +1,13 @@
 package hu.kts.cmetronome.repository;
 
 import hu.kts.cmetronome.WorkoutStatus;
-import lombok.Getter;
-import lombok.Setter;
 
 public class WorkoutRepository {
 
-    @Getter int repCount = 0;
-    @Getter int setCount = 0;
-    @Getter @Setter private WorkoutStatus workoutStatus;
-    @Getter @Setter private long stopwatchStartTime;
+    int repCount = 0;
+    int setCount = 0;
+    private WorkoutStatus workoutStatus;
+    private long stopwatchStartTime;
 
     public void increaseRepCounter() {
         ++repCount;
@@ -27,5 +25,29 @@ public class WorkoutRepository {
 
     public void resetRepCounter() {
         repCount = 0;
+    }
+
+    public int getRepCount() {
+        return repCount;
+    }
+
+    public int getSetCount() {
+        return setCount;
+    }
+
+    public WorkoutStatus getWorkoutStatus() {
+        return workoutStatus;
+    }
+
+    public long getStopwatchStartTime() {
+        return stopwatchStartTime;
+    }
+
+    public void setWorkoutStatus(WorkoutStatus workoutStatus) {
+        this.workoutStatus = workoutStatus;
+    }
+
+    public void setStopwatchStartTime(long stopwatchStartTime) {
+        this.stopwatchStartTime = stopwatchStartTime;
     }
 }

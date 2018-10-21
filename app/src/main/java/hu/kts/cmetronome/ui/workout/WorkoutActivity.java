@@ -16,12 +16,11 @@ import hu.kts.cmetronome.Settings;
 import hu.kts.cmetronome.admob.AdViewWrapper;
 import hu.kts.cmetronome.di.Injector;
 import hu.kts.cmetronome.ui.settings.SettingsActivity;
-import lombok.Setter;
 
 public class WorkoutActivity extends AppCompatActivity {
 
 
-    @Setter private WorkoutController workoutController;
+    private WorkoutController workoutController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,4 +74,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
+    public void setWorkoutController(WorkoutController workoutController) {
+        this.workoutController = workoutController;
+    }
 }
