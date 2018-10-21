@@ -1,0 +1,59 @@
+package hu.kts.cmetronome.ui.workout
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.WindowManager
+import hu.kts.cmetronome.R
+import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.admob.AdViewWrapper
+import hu.kts.cmetronome.di.Injector
+import hu.kts.cmetronome.ui.settings.SettingsActivity
+import kotlinx.android.synthetic.main.activity_workout.*
+
+class WorkoutActivity : AppCompatActivity() {
+
+
+    lateinit var workoutController: WorkoutController
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_workout)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        Injector.inject(this)
+
+        lifecycle.addObserver(AdViewWrapper(adView))
+        lifecycle.addObserver(workoutController)
+        
+        repCounterTextView.setOnClickListener { workoutController.onRepCounterClick() }
+        repCounterTextView.setOnLongClickListener { workoutController.onRepCounterLongClick() }
+    }
+    
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_settings) {
+            openSettings()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun openSettings() {
+        startActivityForResult(Intent(this, SettingsActivity::class.java), Settings.REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Settings.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            workoutController.initSettingsRelatedParts()
+        }
+    }
+}

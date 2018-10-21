@@ -8,7 +8,7 @@
     tools:context=".ui.workout.WorkoutActivity">
 
     <RelativeLayout
-        android:id="@+id/metronome"
+        android:id="@+id/metronomeView"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="1"
@@ -26,14 +26,14 @@
 
         <View
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/metronome_indicator"
+            android:id="@+id/indicatorView"
             android:layout_width="@dimen/indicator_diameter"
             android:layout_height="@dimen/indicator_diameter"
             android:background="@drawable/metronome_indicator"
             android:elevation="10dp"/>
 
         <TextView
-            android:id="@+id/rep_counter"
+            android:id="@+id/repCounterTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -48,25 +48,25 @@
             android:gravity="center"/>
 
         <TextView
-            android:id="@+id/help"
+            android:id="@+id/helpTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/indicator_diameter"
             android:layout_marginRight="@dimen/indicator_diameter"
             android:textColor="@color/accent"
             android:layout_centerHorizontal="true"
-            android:layout_above="@id/rep_counter"
+            android:layout_above="@id/repCounterTextView"
             android:gravity="center"
             tools:text="@string/help_in_progress"
             android:textSize="@dimen/help_text_size"/>
 
         <TextView
-            android:id="@+id/stopwarch"
+            android:id="@+id/stopwatchTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/set_counter_label"
             android:layout_alignStart="@+id/set_counter_label"
-            android:layout_below="@+id/rep_counter"
+            android:layout_below="@+id/repCounterTextView"
             android:gravity="center"
             android:textColor="@color/accent"
             android:textSize="@dimen/stopwatch_text_size"
@@ -82,12 +82,12 @@
             android:layout_marginStart="@dimen/indicator_diameter"
             android:textColor="@color/accent"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/stopwarch"
+            android:layout_below="@id/stopwatchTextView"
             android:text="@string/set_counter_label"
             android:textSize="@dimen/help_text_size"/>
 
         <TextView
-            android:id="@+id/set_counter"
+            android:id="@+id/setCounterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -96,7 +96,7 @@
             android:layout_marginEnd="@dimen/indicator_diameter"
             android:textColor="@color/secondary_text"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/stopwarch"
+            android:layout_below="@id/stopwatchTextView"
             android:layout_toRightOf="@+id/set_counter_label"
             android:layout_toEndOf="@+id/set_counter_label"
             android:textSize="@dimen/help_text_size"/>
