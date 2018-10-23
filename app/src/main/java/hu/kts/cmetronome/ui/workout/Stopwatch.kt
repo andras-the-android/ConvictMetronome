@@ -1,8 +1,8 @@
 package hu.kts.cmetronome.ui.workout
 
-import android.arch.lifecycle.Observer
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import hu.kts.cmetronome.Sounds
 import hu.kts.cmetronome.TimeProvider
 import kotlinx.android.synthetic.main.activity_workout.*

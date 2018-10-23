@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceFragmentCompat
 import hu.kts.cmetronome.Log
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings

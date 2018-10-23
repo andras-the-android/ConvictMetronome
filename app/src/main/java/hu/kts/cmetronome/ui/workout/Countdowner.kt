@@ -1,8 +1,8 @@
 package hu.kts.cmetronome.ui.workout
 
-import android.arch.lifecycle.Observer
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.TimeProvider
