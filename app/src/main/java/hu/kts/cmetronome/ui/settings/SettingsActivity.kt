@@ -64,7 +64,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             addPreferencesFromResource(R.xml.preferences)
         }
 
-        override fun onCreatePreferences(bundle: Bundle, s: String) {
+        override fun onCreatePreferences(bundle: Bundle?, s: String?) {
 
         }
     }
