@@ -11,7 +11,7 @@ class ConvictMetronomeApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Injector.init(this)
-        Log.init(this)
+//        CmLog.init(this)
         MobileAds.initialize(this, getString(R.string.admob_app_id))
     }
 }

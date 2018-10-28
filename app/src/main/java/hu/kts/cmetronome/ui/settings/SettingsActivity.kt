@@ -7,19 +7,22 @@ import android.preference.PreferenceManager
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.CheckBoxPreference
 import androidx.preference.PreferenceFragmentCompat
-import hu.kts.cmetronome.Log
+import hu.kts.cmetronome.CmLog
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
 
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var settingsChanged = false
+    private lateinit var fragment: CmPreferenceFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction().replace(android.R.id.content, MyPreferenceFragment()).commit()
+            fragment = CmPreferenceFragment()
+            supportFragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit()
         }
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -30,17 +33,28 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         super.onDestroy()
     }
 
-    private fun handleDiagnosticChange(enabled: Boolean) {
-        Log.enableTracker(this, enabled)
+    private fun handleDiagnosticChange(sharedPreferences: SharedPreferences) {
+        val enabled = sharedPreferences.getBoolean(Settings.KEY_USE_DIAGNOSTICS, true)
+        CmLog.enableTracker(this, enabled)
         if (!enabled) {
-            AlertDialog.Builder(this).setMessage(R.string.settings_diagnostics_message).setPositiveButton(android.R.string.ok) { dialog, which -> }.show()
+            AlertDialog.Builder(this)
+                    .setMessage(R.string.settings_diagnostics_message)
+                    .setPositiveButton(R.string.settings_diagnostics_keep) { _, _ ->
+                        sharedPreferences.edit().putBoolean(Settings.KEY_USE_DIAGNOSTICS, true).apply()
+                        CmLog.enableTracker(this, true)
+                        (fragment.findPreference("useDiagnostics") as CheckBoxPreference).isChecked = true
+                    }
+                    .setNegativeButton(R.string.settings_diagnostics_turn_off) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         settingsChanged = true
         if (Settings.KEY_USE_DIAGNOSTICS == key) {
-            handleDiagnosticChange(sharedPreferences.getBoolean(Settings.KEY_USE_DIAGNOSTICS, true))
+            handleDiagnosticChange(sharedPreferences)
         }
     }
 
@@ -58,7 +72,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         return super.onOptionsItemSelected(item)
     }
 
-    class MyPreferenceFragment : PreferenceFragmentCompat() {
+    class CmPreferenceFragment : PreferenceFragmentCompat() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.preferences)
