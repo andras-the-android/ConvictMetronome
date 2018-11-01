@@ -11,8 +11,8 @@ android {
         applicationId "hu.kts.cmetronome"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.0.e43e645"
+        versionCode 8
+        versionName "1.0.fcfb762"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
