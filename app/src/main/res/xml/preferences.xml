@@ -14,4 +14,8 @@
         <!--android:key="useDiagnostics"-->
         <!--android:title="@string/settings_diagnostics"-->
         <!--android:defaultValue="true" />-->
+    <Preference android:title="@string/privacy_policy" >
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/guni82hu/ConvictMetronome/blob/master/privacy_policy.md" />
+    </Preference>
 </PreferenceScreen>
