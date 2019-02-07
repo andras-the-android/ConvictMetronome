@@ -3,6 +3,7 @@ package hu.kts.cmetronome
 import android.os.Handler
 import android.os.SystemClock
 import hu.kts.cmetronome.architetcture.SingleLiveEvent
+import java.util.concurrent.TimeUnit
 
 class TimeProvider : SingleLiveEvent<Long>() {
 
@@ -15,7 +16,7 @@ class TimeProvider : SingleLiveEvent<Long>() {
 
     private val delayMillis: Long
         get() {
-            val timestampOfDesiredNextTick = startTime + (count + 1) * DELAY_MILLIS
+            val timestampOfDesiredNextTick = startTime + TimeUnit.SECONDS.toMillis(count + 1)
             return timestampOfDesiredNextTick - SystemClock.elapsedRealtime()
         }
 
@@ -76,7 +77,10 @@ class TimeProvider : SingleLiveEvent<Long>() {
     }
 
     private fun calcCallbackValue(): Long {
-        count = (SystemClock.elapsedRealtime() - startTime) / DELAY_MILLIS
+        val elapsedTimeMillis = SystemClock.elapsedRealtime() - startTime
+        count = TimeUnit.MILLISECONDS.toSeconds(elapsedTimeMillis)
+        //TimeUnit always rounds down and sometimes this causes that the same number comes twice. This way we compensate it.
+        if (elapsedTimeMillis % 1000 >= 500) ++count
         return if (isCountDown) countDownStartValue - count else count
     }
 
@@ -101,10 +105,5 @@ class TimeProvider : SingleLiveEvent<Long>() {
      */
     private enum class State {
         STOPPED, INACTIVE, IN_PROGRESS
-    }
-
-    companion object {
-
-        const val DELAY_MILLIS = 1000
     }
 }

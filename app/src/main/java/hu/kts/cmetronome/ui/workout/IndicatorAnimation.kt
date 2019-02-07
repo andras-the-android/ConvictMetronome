@@ -1,6 +1,5 @@
 package hu.kts.cmetronome.ui.workout
 
-import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.app.Activity
 import hu.kts.cmetronome.R
@@ -9,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_workout.*
 /**
  * AnimatorSet is avoided because it behaved strange on cancel.
  */
-class IndicatorAnimation(private val activity: Activity, private val callback: (Event) -> Unit) {
+class IndicatorAnimation(private val activity: Activity) {
 
     private var animationRunning: Boolean = false
     private val down: ObjectAnimator
@@ -17,92 +16,67 @@ class IndicatorAnimation(private val activity: Activity, private val callback: (
     private val up: ObjectAnimator
     private val left: ObjectAnimator
     private var currentAnimation: ObjectAnimator? = null
-
-    private val animatorListener = object : Animator.AnimatorListener {
-        override fun onAnimationStart(animation: Animator) {
-            invokeStartCallback(animation)
-        }
-
-        override fun onAnimationEnd(animation: Animator) {
-            if (animationRunning) {
-                currentAnimation = getNextAnimation(animation)
-                if (isLastPartOfTheCycle(animation)) {
-                    callback(Event.CYCLE_FINISHED)
-                }
-                currentAnimation?.start()
-            }
-        }
-
-        override fun onAnimationCancel(animation: Animator) {
-            resetIndicatorPosition()
-        }
-
-        override fun onAnimationRepeat(animation: Animator) {
-        }
-    }
+    private val longPath: Float
+    private val shortPath: Float
 
     init {
         val resources = activity.resources
         val indicatorDiameter = resources.getDimensionPixelSize(R.dimen.indicator_diameter).toFloat()
         val metronomePadding = resources.getDimensionPixelSize(R.dimen.metronome_padding).toFloat() * 2
-        val longPath = activity.metronomeView.height.toFloat() - indicatorDiameter - metronomePadding
-        val shortPath = activity.metronomeView.width.toFloat() - indicatorDiameter - metronomePadding
+        longPath = activity.metronomeView.height.toFloat() - indicatorDiameter - metronomePadding
+        shortPath = activity.metronomeView.width.toFloat() - indicatorDiameter - metronomePadding
 
         down = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, longPath).setDuration(2000)
-        down.addListener(animatorListener)
 
         right = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", 0f, shortPath).setDuration(1000)
-        right.addListener(animatorListener)
 
         up = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", longPath, 0f).setDuration(2000)
-        up.addListener(animatorListener)
 
         left = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", shortPath, 0f).setDuration(1000)
-        left.addListener(animatorListener)
     }
 
-    fun start() {
+    fun start(direction: Direction) {
+        cancel()
         animationRunning = true
-        currentAnimation = down
+        when (direction) {
+            Direction.DOWN -> moveIndicator(0f, 0f)
+            Direction.RIGHT -> moveIndicator(0f, longPath)
+            Direction.UP -> moveIndicator(shortPath, longPath)
+            Direction.LEFT -> moveIndicator(shortPath, 0f)
+        }
+        currentAnimation = when (direction) {
+            Direction.DOWN -> down
+            Direction.RIGHT -> right
+            Direction.UP -> up
+            Direction.LEFT -> left
+        }
+
         currentAnimation?.start()
     }
 
     fun stop() {
+        cancel()
+        resetIndicatorPosition()
+    }
+
+    private fun cancel() {
         if (animationRunning) {
             animationRunning = false
             currentAnimation?.cancel()
         }
     }
 
-    private fun invokeStartCallback(animation: Animator) {
-        when {
-            animation === down -> callback(Event.DOWN)
-            animation === right -> callback(Event.RIGHT)
-            animation === up -> callback(Event.UP)
-            animation === left -> callback(Event.LEFT)
-        }
-    }
-
-    private fun getNextAnimation(animation: Animator): ObjectAnimator {
-        return when {
-            animation === down -> right
-            animation === right -> up
-            animation === up -> left
-            else -> down
-        }
-    }
-
-    private fun isLastPartOfTheCycle(animation: Animator): Boolean {
-        return animation === left
-    }
-
     private fun resetIndicatorPosition() {
-        activity.indicatorView.translationX = 0f
-        activity.indicatorView.translationY = 0f
+        moveIndicator(0f, 0f)
     }
 
-    enum class Event {
-        DOWN, RIGHT, UP, LEFT, CYCLE_FINISHED
+    private fun moveIndicator(x: Float, y: Float) {
+        activity.indicatorView.translationX = x
+        activity.indicatorView.translationY = y
+    }
+
+    enum class Direction {
+        DOWN, RIGHT, UP, LEFT
     }
 
 

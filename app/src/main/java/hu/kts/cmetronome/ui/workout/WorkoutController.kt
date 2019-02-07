@@ -3,6 +3,7 @@ package hu.kts.cmetronome.ui.workout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.Observer
 import androidx.lifecycle.OnLifecycleEvent
 import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.Sounds
@@ -15,6 +16,7 @@ class WorkoutController(private val activity: AppCompatActivity,
                         private val repository: WorkoutRepository,
                         private val settings: Settings,
                         private val sounds: Sounds,
+                        private val timeProviderRep: TimeProvider,
                         timeProviderStopwatch: TimeProvider,
                         timeProviderCountdowner: TimeProvider) : LifecycleObserver {
 
@@ -26,6 +28,7 @@ class WorkoutController(private val activity: AppCompatActivity,
     init {
         initWorkoutData()
         initSettingsRelatedParts()
+        timeProviderRep.observe(activity, Observer { count -> onRepTimeProviderTick(count) })
     }
 
     private fun initWorkoutData() {
@@ -74,6 +77,7 @@ class WorkoutController(private val activity: AppCompatActivity,
 
     private fun resetIndicator() {
         getIndicatorAnimation().stop()
+        timeProviderRep.stop()
     }
 
 
@@ -89,7 +93,7 @@ class WorkoutController(private val activity: AppCompatActivity,
     private fun startWorkout() {
         setWorkoutStatusAndHelpText(WorkoutStatus.IN_PROGRESS)
         fillRepCounterTextViewWithTruncatedData()
-        getIndicatorAnimation().start()
+        timeProviderRep.startUp()
     }
 
     /**
@@ -97,21 +101,28 @@ class WorkoutController(private val activity: AppCompatActivity,
      */
     private fun getIndicatorAnimation(): IndicatorAnimation {
         if (indicatorAnimation == null) {
-            indicatorAnimation = IndicatorAnimation(activity, this::onIndicatorAnimationEvent)
+            indicatorAnimation = IndicatorAnimation(activity)
         }
         return indicatorAnimation!!
     }
 
-    private fun onIndicatorAnimationEvent(event: IndicatorAnimation.Event) {
-        @Suppress("NON_EXHAUSTIVE_WHEN")
-        when (event) {
-            IndicatorAnimation.Event.DOWN -> sounds.makeUpSound()
-            IndicatorAnimation.Event.UP -> sounds.makeDownSound()
-            IndicatorAnimation.Event.LEFT -> {
+    private fun onRepTimeProviderTick(count: Long) {
+        val upDownSecs = 2L
+        val holdSecs = 1L
+        val completeRepDuration = (upDownSecs + holdSecs) * 2
+        val repState = count % completeRepDuration
+        val animation = getIndicatorAnimation()
+        when (repState) {
+            0L -> {sounds.makeUpSound(); animation.start(IndicatorAnimation.Direction.DOWN);}
+            upDownSecs -> {animation.start(IndicatorAnimation.Direction.RIGHT);}
+            upDownSecs + holdSecs -> {sounds.makeDownSound(); animation.start(IndicatorAnimation.Direction.UP);}
+            upDownSecs + holdSecs + upDownSecs -> {
+                animation.start(IndicatorAnimation.Direction.LEFT)
                 repository.increaseRepCounter()
                 fillRepCounterTextViewWithTruncatedData()
             }
         }
+
     }
 
     private fun stopSet() {

@@ -16,6 +16,7 @@ object Injector {
 
     private lateinit var workoutRepository: WorkoutRepository
     private lateinit var sounds: Sounds
+    private lateinit var timeProviderRep: TimeProvider
     private lateinit var timeProviderStopwatch: TimeProvider
     private lateinit var timeProviderCountdowner: TimeProvider
 
@@ -23,12 +24,13 @@ object Injector {
         settings = Settings(context)
         workoutRepository = WorkoutRepository()
         sounds = Sounds(context)
+        timeProviderRep = TimeProvider()
         timeProviderStopwatch = TimeProvider()
         timeProviderCountdowner = TimeProvider()
     }
 
     fun inject(workoutActivity: WorkoutActivity) {
-        workoutActivity.workoutController = WorkoutController(workoutActivity, workoutRepository, settings, sounds, timeProviderStopwatch, timeProviderCountdowner)
+        workoutActivity.workoutController = WorkoutController(workoutActivity, workoutRepository, settings, sounds, timeProviderRep, timeProviderStopwatch, timeProviderCountdowner)
     }
 
 }
