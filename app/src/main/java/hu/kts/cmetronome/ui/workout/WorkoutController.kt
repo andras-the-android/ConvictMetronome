@@ -11,6 +11,7 @@ import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.WorkoutStatus
 import hu.kts.cmetronome.repository.WorkoutRepository
 import kotlinx.android.synthetic.main.activity_workout.*
+import java.util.concurrent.TimeUnit
 
 class WorkoutController(private val activity: AppCompatActivity,
                         private val repository: WorkoutRepository,
@@ -101,22 +102,22 @@ class WorkoutController(private val activity: AppCompatActivity,
      */
     private fun getIndicatorAnimation(): IndicatorAnimation {
         if (indicatorAnimation == null) {
-            indicatorAnimation = IndicatorAnimation(activity)
+            indicatorAnimation = IndicatorAnimation(activity, settings)
         }
         return indicatorAnimation!!
     }
 
     private fun onRepTimeProviderTick(count: Long) {
-        val upDownSecs = 2L
-        val holdSecs = 1L
-        val completeRepDuration = (upDownSecs + holdSecs) * 2
-        val repState = count % completeRepDuration
+        val upDownMillis = settings.repUpDownTime
+        val pauseMillis = settings.repPauseTime
+        val completeRepDuration = (upDownMillis + pauseMillis) * 2
+        val repState = (TimeUnit.SECONDS.toMillis(count) / 2) % completeRepDuration
         val animation = getIndicatorAnimation()
         when (repState) {
             0L -> {sounds.makeUpSound(); animation.start(IndicatorAnimation.Direction.DOWN);}
-            upDownSecs -> {animation.start(IndicatorAnimation.Direction.RIGHT);}
-            upDownSecs + holdSecs -> {sounds.makeDownSound(); animation.start(IndicatorAnimation.Direction.UP);}
-            upDownSecs + holdSecs + upDownSecs -> {
+            upDownMillis -> {animation.start(IndicatorAnimation.Direction.RIGHT);}
+            upDownMillis + pauseMillis -> {sounds.makeDownSound(); animation.start(IndicatorAnimation.Direction.UP);}
+            upDownMillis + pauseMillis + upDownMillis -> {
                 animation.start(IndicatorAnimation.Direction.LEFT)
                 repository.increaseRepCounter()
                 fillRepCounterTextViewWithTruncatedData()

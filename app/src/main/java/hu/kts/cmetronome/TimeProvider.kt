@@ -3,9 +3,8 @@ package hu.kts.cmetronome
 import android.os.Handler
 import android.os.SystemClock
 import hu.kts.cmetronome.architetcture.SingleLiveEvent
-import java.util.concurrent.TimeUnit
 
-class TimeProvider : SingleLiveEvent<Long>() {
+class TimeProvider(private val delayMillis: Long = 1000) : SingleLiveEvent<Long>() {
 
     private var state = State.STOPPED
     private val handler = Handler()
@@ -14,10 +13,11 @@ class TimeProvider : SingleLiveEvent<Long>() {
     var startTime: Long = 0
         private set
 
-    private val delayMillis: Long
+    private val nextTickDelayMillis: Long
         get() {
-            val timestampOfDesiredNextTick = startTime + TimeUnit.SECONDS.toMillis(count + 1)
-            return timestampOfDesiredNextTick - SystemClock.elapsedRealtime()
+            val timestampOfDesiredNextTick = startTime + count * delayMillis + delayMillis
+            val now = SystemClock.elapsedRealtime()
+            return timestampOfDesiredNextTick - now
         }
 
     private val isCountDown: Boolean
@@ -65,7 +65,7 @@ class TimeProvider : SingleLiveEvent<Long>() {
             if (isCountDownLastRound) {
                 state = State.STOPPED
             } else {
-                handler.postDelayed({ this.startCycle() }, delayMillis)
+                handler.postDelayed({ this.startCycle() }, nextTickDelayMillis)
             }
         }
     }
@@ -78,9 +78,9 @@ class TimeProvider : SingleLiveEvent<Long>() {
 
     private fun calcCallbackValue(): Long {
         val elapsedTimeMillis = SystemClock.elapsedRealtime() - startTime
-        count = TimeUnit.MILLISECONDS.toSeconds(elapsedTimeMillis)
-        //TimeUnit always rounds down and sometimes this causes that the same number comes twice. This way we compensate it.
-        if (elapsedTimeMillis % 1000 >= 500) ++count
+        count = elapsedTimeMillis / delayMillis
+        //Division always rounds down and sometimes this causes that the same number comes twice. This way we compensate it.
+        if (elapsedTimeMillis % delayMillis >= (delayMillis / 2)) ++count
         return if (isCountDown) countDownStartValue - count else count
     }
 

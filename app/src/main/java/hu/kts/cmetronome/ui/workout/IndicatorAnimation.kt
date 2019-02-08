@@ -3,12 +3,13 @@ package hu.kts.cmetronome.ui.workout
 import android.animation.ObjectAnimator
 import android.app.Activity
 import hu.kts.cmetronome.R
+import hu.kts.cmetronome.Settings
 import kotlinx.android.synthetic.main.activity_workout.*
 
 /**
  * AnimatorSet is avoided because it behaved strange on cancel.
  */
-class IndicatorAnimation(private val activity: Activity) {
+class IndicatorAnimation(private val activity: Activity, private val settings: Settings) {
 
     private var animationRunning: Boolean = false
     private val down: ObjectAnimator
@@ -26,13 +27,13 @@ class IndicatorAnimation(private val activity: Activity) {
         longPath = activity.metronomeView.height.toFloat() - indicatorDiameter - metronomePadding
         shortPath = activity.metronomeView.width.toFloat() - indicatorDiameter - metronomePadding
 
-        down = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, longPath).setDuration(2000)
+        down = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, longPath).setDuration(settings.repUpDownTime)
 
-        right = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", 0f, shortPath).setDuration(1000)
+        right = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", 0f, shortPath).setDuration(settings.repPauseTime)
 
-        up = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", longPath, 0f).setDuration(2000)
+        up = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", longPath, 0f).setDuration(settings.repUpDownTime)
 
-        left = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", shortPath, 0f).setDuration(1000)
+        left = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", shortPath, 0f).setDuration(settings.repPauseTime)
     }
 
     fun start(direction: Direction) {
