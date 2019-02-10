@@ -29,6 +29,10 @@ class Settings(context: Context) {
 
     var repPauseTime: Long = 0
 
+    fun addListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+    }
+
     private fun onPreferencesChanged(key: String) {
         when (key) {
             KEY_REP_UP_DOWN_TIME -> repUpDownTime = sharedPreferences.getString(KEY_REP_UP_DOWN_TIME, "2000")?.toLong() ?: 2000

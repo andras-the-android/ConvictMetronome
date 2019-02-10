@@ -47,6 +47,7 @@ class WorkoutController(private val activity: AppCompatActivity,
     }
 
     fun onRepCounterClick() {
+//        sounds.makeUpSound()
         when (repository.workoutStatus) {
             WorkoutStatus.BEFORE_START, WorkoutStatus.PAUSED, WorkoutStatus.BETWEEN_SETS -> countDownAndStart()
             WorkoutStatus.COUNTDOWN_IN_PROGRESS, WorkoutStatus.IN_PROGRESS -> pauseWorkout()

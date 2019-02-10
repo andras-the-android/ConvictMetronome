@@ -23,7 +23,7 @@ object Injector {
     fun init(context: Application) {
         settings = Settings(context)
         workoutRepository = WorkoutRepository()
-        sounds = Sounds(context, settings)
+        sounds = Sounds(settings)
         timeProviderRep = TimeProvider(500)
         timeProviderStopwatch = TimeProvider()
         timeProviderCountdowner = TimeProvider()
