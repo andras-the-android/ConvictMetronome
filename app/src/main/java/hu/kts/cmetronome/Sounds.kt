@@ -5,6 +5,8 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.media.ToneGenerator
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Suppress("JoinDeclarationAndAssignment")
 class Sounds(private val settings: Settings) {
@@ -41,7 +43,7 @@ class Sounds(private val settings: Settings) {
     }
 
     private fun createSoundArray() {
-        Thread(Runnable {
+        GlobalScope.launch{
             val durationMillis = settings.repUpDownTime.toInt()
             val sampleCount = durationMillis * SAMPLE_RATE / 1000
             sampleArrayUp = ShortArray(sampleCount)
@@ -63,12 +65,12 @@ class Sounds(private val settings: Settings) {
                 sampleArrayUp[i] = (sample * java.lang.Short.MAX_VALUE).toShort()
                 sampleArrayDown[sampleCount - i - 1] = sampleArrayUp[i]
             }
-        }).start()
+        }
 
     }
 
     private fun playSound(up: Boolean) {
-        Thread(Runnable {
+        GlobalScope.launch {
             // AudioTrack definition
             val bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE,
                     AudioFormat.CHANNEL_OUT_MONO,
@@ -84,7 +86,7 @@ class Sounds(private val settings: Settings) {
             audioTrack!!.write(if (up) sampleArrayUp else sampleArrayDown, 0, sampleArrayUp.size)
 
             tryStop()
-        }).start()
+        }
     }
 
     private fun tryStop() {
