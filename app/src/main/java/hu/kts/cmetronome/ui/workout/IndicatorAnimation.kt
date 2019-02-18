@@ -27,13 +27,13 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
         longPath = activity.metronomeView.height.toFloat() - indicatorDiameter - metronomePadding
         shortPath = activity.metronomeView.width.toFloat() - indicatorDiameter - metronomePadding
 
-        down = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, longPath).setDuration(settings.repUpDownTime)
+        down = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, longPath)
 
-        right = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", 0f, shortPath).setDuration(settings.repPauseTime)
+        right = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", 0f, shortPath)
 
-        up = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", longPath, 0f).setDuration(settings.repUpDownTime)
+        up = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", longPath, 0f)
 
-        left = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", shortPath, 0f).setDuration(settings.repPauseTime)
+        left = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", shortPath, 0f)
     }
 
     fun start(direction: Direction) {
@@ -46,10 +46,10 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
             Direction.LEFT -> moveIndicator(shortPath, 0f)
         }
         currentAnimation = when (direction) {
-            Direction.DOWN -> down
-            Direction.RIGHT -> right
-            Direction.UP -> up
-            Direction.LEFT -> left
+            Direction.DOWN -> down.setDuration(settings.repUpDownTime)
+            Direction.RIGHT -> right.setDuration(settings.repPauseTime)
+            Direction.UP -> up.setDuration(settings.repUpDownTime)
+            Direction.LEFT -> left.setDuration(settings.repPauseTime)
         }
 
         currentAnimation?.start()
