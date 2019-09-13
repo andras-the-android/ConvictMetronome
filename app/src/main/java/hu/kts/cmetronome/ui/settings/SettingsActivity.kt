@@ -42,7 +42,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
                     .setPositiveButton(R.string.settings_diagnostics_keep) { _, _ ->
                         sharedPreferences.edit().putBoolean(Settings.KEY_USE_DIAGNOSTICS, true).apply()
                         CmLog.enableTracker(this, true)
-                        (fragment.findPreference("useDiagnostics") as CheckBoxPreference).isChecked = true
+                        fragment.findPreference<CheckBoxPreference>("useDiagnostics")?.isChecked = true
                     }
                     .setNegativeButton(R.string.settings_diagnostics_turn_off) { dialog, _ ->
                         dialog.dismiss()
