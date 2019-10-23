@@ -44,7 +44,7 @@ class Sounds(private val settings: Settings) {
 
     private fun createSoundArray() {
         GlobalScope.launch{
-            val durationMillis = settings.repUpDownTime.toInt()
+            val durationMillis = settings.repUpTime.toInt()
             val sampleCount = durationMillis * SAMPLE_RATE / 1000
             sampleArrayUp = ShortArray(sampleCount)
             sampleArrayDown = ShortArray(sampleCount)

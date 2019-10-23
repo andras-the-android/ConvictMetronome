@@ -46,10 +46,10 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
             Direction.LEFT -> moveIndicator(shortPath, 0f)
         }
         currentAnimation = when (direction) {
-            Direction.DOWN -> down.setDuration(settings.repUpDownTime)
-            Direction.RIGHT -> right.setDuration(settings.repPauseTime)
-            Direction.UP -> up.setDuration(settings.repUpDownTime)
-            Direction.LEFT -> left.setDuration(settings.repPauseTime)
+            Direction.DOWN -> down.setDuration(settings.repUpTime)
+            Direction.RIGHT -> right.setDuration(settings.repPause1Time)
+            Direction.UP -> up.setDuration(settings.repDownTime)
+            Direction.LEFT -> left.setDuration(settings.repPause2Time)
         }
 
         currentAnimation?.start()

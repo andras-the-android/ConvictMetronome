@@ -109,8 +109,8 @@ class WorkoutController(private val activity: AppCompatActivity,
     }
 
     private fun onRepTimeProviderTick(count: Long) {
-        val upDownMillis = settings.repUpDownTime
-        val pauseMillis = settings.repPauseTime
+        val upDownMillis = settings.repUpTime
+        val pauseMillis = settings.repPause1Time
         val completeRepDuration = (upDownMillis + pauseMillis) * 2
         val repState = (TimeUnit.SECONDS.toMillis(count) / 2) % completeRepDuration
         val animation = getIndicatorAnimation()

@@ -11,17 +11,29 @@
         android:entryValues="@array/settings_countdown_start_values"
         android:defaultValue="3" />
     <ListPreference
-        android:key="repUpDownTime"
-        android:title="@string/settings_rep_up_down_time"
-        android:entries="@array/settings_rep_up_down_time_titles"
-        android:entryValues="@array/settings_rep_up_down_time_values"
+        android:key="repUpTime"
+        android:title="@string/settings_rep_up_time"
+        android:entries="@array/settings_rep_time_odd_titles"
+        android:entryValues="@array/settings_rep_time_odd_values"
         android:defaultValue="2000" />
     <ListPreference
-        android:key="repPauseTime"
-        android:title="@string/settings_rep_pause_time"
-        android:entries="@array/settings_rep_pause_time_titles"
-        android:entryValues="@array/settings_rep_pause_time_values"
+        android:key="repPause1Time"
+        android:title="@string/settings_rep_pause_1_time"
+        android:entries="@array/settings_rep_time_odd_titles"
+        android:entryValues="@array/settings_rep_time_odd_values"
         android:defaultValue="1000" />
+    <ListPreference
+        android:key="repDownTime"
+        android:title="@string/settings_rep_down_time"
+        android:entries="@array/settings_rep_time_down_titles"
+        android:entryValues="@array/settings_rep_time_even_values"
+        android:defaultValue="-1" />
+    <ListPreference
+        android:key="repPause2Time"
+        android:title="@string/settings_rep_pause_2_time"
+        android:entries="@array/settings_rep_time_pause_2_titles"
+        android:entryValues="@array/settings_rep_time_even_values"
+        android:defaultValue="-1" />
     <!--<CheckBoxPreference-->
         <!--android:key="useDiagnostics"-->
         <!--android:title="@string/settings_diagnostics"-->

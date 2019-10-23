@@ -12,8 +12,10 @@ class Settings(context: Context) {
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-        onPreferencesChanged(KEY_REP_UP_DOWN_TIME)
-        onPreferencesChanged(KEY_REP_PAUSE_TIME)
+        onPreferencesChanged(KEY_REP_UP_TIME)
+        onPreferencesChanged(KEY_REP_PAUSE_1_TIME)
+        onPreferencesChanged(KEY_REP_DOWN_TIME)
+        onPreferencesChanged(KEY_REP_PAUSE_2_TIME)
     }
 
     val isShowHelp: Boolean
@@ -25,9 +27,10 @@ class Settings(context: Context) {
     val isAnalyticsEnabled: Boolean
         get() = sharedPreferences.getBoolean(KEY_USE_DIAGNOSTICS, true)
 
-    var repUpDownTime: Long = 0
-
-    var repPauseTime: Long = 0
+    var repUpTime: Long = 0
+    var repPause1Time: Long = 0
+    var repDownTime: Long = 0
+    var repPause2Time: Long = 0
 
     fun addListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
@@ -35,8 +38,28 @@ class Settings(context: Context) {
 
     private fun onPreferencesChanged(key: String) {
         when (key) {
-            KEY_REP_UP_DOWN_TIME -> repUpDownTime = sharedPreferences.getString(KEY_REP_UP_DOWN_TIME, "2000")?.toLong() ?: 2000
-            KEY_REP_PAUSE_TIME -> repPauseTime = sharedPreferences.getString(KEY_REP_PAUSE_TIME, "1000")?.toLong() ?: 1000
+            KEY_REP_UP_TIME -> {
+                repUpTime = sharedPreferences.getString(KEY_REP_UP_TIME, "2000")?.toLong() ?: 2000
+                if (sharedPreferences.getString(KEY_REP_DOWN_TIME, KEY_SAME_AS) == KEY_SAME_AS) repDownTime = repUpTime
+            }
+            KEY_REP_PAUSE_1_TIME -> {
+                repPause1Time = sharedPreferences.getString(KEY_REP_PAUSE_1_TIME, "1000")?.toLong() ?: 1000
+                if (sharedPreferences.getString(KEY_REP_PAUSE_2_TIME, KEY_SAME_AS) == KEY_SAME_AS) repPause2Time = repPause1Time
+            }
+            KEY_REP_DOWN_TIME -> {
+                repDownTime = if (sharedPreferences.getString(KEY_REP_DOWN_TIME, KEY_SAME_AS) == KEY_SAME_AS) {
+                    repUpTime
+                } else {
+                    sharedPreferences.getString(KEY_REP_DOWN_TIME, "2000")?.toLong() ?: 2000
+                }
+            }
+            KEY_REP_PAUSE_2_TIME -> {
+                repPause1Time = if (sharedPreferences.getString(KEY_REP_PAUSE_2_TIME, KEY_SAME_AS) == KEY_SAME_AS) {
+                    repPause1Time
+                } else {
+                    sharedPreferences.getString(KEY_REP_PAUSE_2_TIME, "1000")?.toLong() ?: 1000
+                }
+            }
         }
     }
 
@@ -48,7 +71,12 @@ class Settings(context: Context) {
         const val KEY_COUNTDOWN_START_VALUE = "countdownStartValue"
         const val KEY_USE_DIAGNOSTICS = "useDiagnostics"
         const val KEY_REP_UP_DOWN_TIME = "repUpDownTime"
+        const val KEY_REP_UP_TIME = "repUpTime"
+        const val KEY_REP_DOWN_TIME = "repDownTime"
         const val KEY_REP_PAUSE_TIME = "repPauseTime"
+        const val KEY_REP_PAUSE_1_TIME = "repPause1Time"
+        const val KEY_REP_PAUSE_2_TIME = "repPause2Time"
+        const val KEY_SAME_AS = "-1"
     }
 
 }

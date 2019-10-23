@@ -11,6 +11,7 @@
         <item name="android:divider">@color/divider</item>
         <item name="android:icon">@color/icons</item>
         <item name="preferenceTheme">@style/AppPreferencesTheme</item>
+        <item name="android:forceDarkAllowed">true</item>
     </style>
 
     <style name="AppPreferencesTheme" parent="PreferenceThemeOverlay">
