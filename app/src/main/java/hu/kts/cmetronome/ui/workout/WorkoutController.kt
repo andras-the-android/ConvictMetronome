@@ -1,5 +1,6 @@
 package hu.kts.cmetronome.ui.workout
 
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -25,6 +26,8 @@ class WorkoutController(private val activity: AppCompatActivity,
     private var indicatorAnimation: IndicatorAnimation? = null
     private val help: Help = Help(activity)
     private val countdowner = Countdowner(activity, settings, timeProviderCountdowner, onFinish = this::startWorkout, onCancel = this::onCountdownCancelled)
+
+    private val directionOrder = arrayOf(IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT, IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT)
 
     init {
         initWorkoutData()
@@ -109,23 +112,54 @@ class WorkoutController(private val activity: AppCompatActivity,
     }
 
     private fun onRepTimeProviderTick(count: Long) {
-        val upDownMillis = settings.repUpTime
-        val pauseMillis = settings.repPause1Time
-        val completeRepDuration = (upDownMillis + pauseMillis) * 2
-        val repState = (TimeUnit.SECONDS.toMillis(count) / 2) % completeRepDuration
-        val animation = getIndicatorAnimation()
-        when (repState) {
-            0L -> {sounds.makeUpSound(); animation.start(IndicatorAnimation.Direction.DOWN);}
-            upDownMillis -> {animation.start(IndicatorAnimation.Direction.RIGHT);}
-            upDownMillis + pauseMillis -> {sounds.makeDownSound(); animation.start(IndicatorAnimation.Direction.UP);}
-            upDownMillis + pauseMillis + upDownMillis -> {
-                animation.start(IndicatorAnimation.Direction.LEFT)
-                repository.increaseRepCounter()
-                fillRepCounterTextViewWithTruncatedData()
+        getNextDirection(count)?.let {
+            Log.d(TAG, "${count / 2} -> $it")
+            val animation = getIndicatorAnimation()
+            when (it) {
+                IndicatorAnimation.Direction.DOWN -> {
+                    sounds.makeUpSound()
+                    animation.start(IndicatorAnimation.Direction.DOWN)
+                }
+                IndicatorAnimation.Direction.RIGHT ->
+                    animation.start(IndicatorAnimation.Direction.RIGHT)
+                IndicatorAnimation.Direction.UP -> {
+                    sounds.makeDownSound()
+                    animation.start(IndicatorAnimation.Direction.UP)
+                }
+                IndicatorAnimation.Direction.LEFT -> {
+                    animation.start(IndicatorAnimation.Direction.LEFT)
+                    repository.increaseRepCounter()
+                    fillRepCounterTextViewWithTruncatedData()
+                }
             }
         }
-
     }
+
+    private fun getNextDirection(count: Long): IndicatorAnimation.Direction? {
+        val completeRepDuration = settings.repUpTime + settings.repPause1Time + settings.repDownTime + settings.repPause2Time
+        val elapsedMilliesInCurrentRep = (TimeUnit.SECONDS.toMillis(count) / 2) % completeRepDuration
+
+        var i = 0
+        var nextDirectionChange = 0L
+        while (nextDirectionChange < elapsedMilliesInCurrentRep) {
+            nextDirectionChange += getTimeForDirection(directionOrder[i++])
+        }
+
+        while (i < directionOrder.size && getTimeForDirection(directionOrder[i]) == 0L) ++i
+
+        return when (elapsedMilliesInCurrentRep) {
+            nextDirectionChange -> directionOrder[i]
+            else -> null
+        }
+    }
+
+    private fun getTimeForDirection(direction: IndicatorAnimation.Direction): Long =
+            when (direction) {
+                IndicatorAnimation.Direction.DOWN -> settings.repUpTime
+                IndicatorAnimation.Direction.RIGHT -> settings.repPause1Time
+                IndicatorAnimation.Direction.UP -> settings.repDownTime
+                IndicatorAnimation.Direction.LEFT -> settings.repPause2Time
+            }
 
     private fun stopSet() {
         setWorkoutStatusAndHelpText(WorkoutStatus.BETWEEN_SETS)
@@ -185,6 +219,10 @@ class WorkoutController(private val activity: AppCompatActivity,
      */
     private fun fillSetCounterTextViewWithTruncatedData() {
         activity.setCounterTextView.text = (repository.setCount % 100).toString()
+    }
+
+    companion object {
+        const val TAG = "WorkoutController"
     }
 
 }
