@@ -7,6 +7,7 @@ import android.media.AudioTrack
 import android.media.ToneGenerator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Short
 
 @Suppress("JoinDeclarationAndAssignment")
 class Sounds(private val settings: Settings) {
@@ -16,12 +17,12 @@ class Sounds(private val settings: Settings) {
     private var sampleArrayUp = ShortArray(0)
     private var sampleArrayDown = ShortArray(0)
     //we have to hold a reference to this or else it'd be gc-d
-    private val settingsListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> if (key == Settings.KEY_REP_UP_DOWN_TIME) createSoundArray()}
+    private val settingsListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> if (key == Settings.KEY_REP_UP_DOWN_TIME) generateUpDownSounds()}
 
     init {
         toneGenerator = ToneGenerator(AudioManager.STREAM_ALARM, 100)
         settings.addListener(settingsListener)
-        createSoundArray()
+        generateUpDownSounds()
     }
 
     fun makeUpSound() {
@@ -42,34 +43,37 @@ class Sounds(private val settings: Settings) {
         toneGenerator.startTone(ToneGenerator.TONE_CDMA_ABBR_ALERT, 150)
     }
 
-    private fun createSoundArray() {
+    private fun generateUpDownSounds() {
         GlobalScope.launch{
-            val durationMillis = settings.repUpTime.toInt()
-            val sampleCount = durationMillis * SAMPLE_RATE / 1000
-            sampleArrayUp = ShortArray(sampleCount)
-            sampleArrayDown = ShortArray(sampleCount)
-
-            val frequencyIncrement = BASE_FREQUENCY / sampleArrayUp.size
-
-            var frequency = BASE_FREQUENCY
-            for (i in sampleArrayUp.indices) {
-                frequency += frequencyIncrement
-                var sample = Math.sin(2.0 * Math.PI * i.toDouble() / (SAMPLE_RATE / frequency)) * DISTORTION_AMOUNT
-                //inverting the peak of the sine wave
-                if (sample > 1) {
-                    sample = 1 - (sample - 1)
-                }
-                if (sample < -1) {
-                    sample = -1 - (sample + 1)
-                }
-                sampleArrayUp[i] = (sample * java.lang.Short.MAX_VALUE).toShort()
-                sampleArrayDown[sampleCount - i - 1] = sampleArrayUp[i]
-            }
+            sampleArrayUp = generateSoundArray(settings.repUpTime.toInt(), true)
+            sampleArrayDown = generateSoundArray(settings.repDownTime.toInt(),false)
         }
+    }
 
+    private fun generateSoundArray(durationMillis: Int, up: Boolean): ShortArray {
+        val sampleCount = durationMillis * SAMPLE_RATE / 1000
+        val result = ShortArray(sampleCount)
+        val frequencyIncrement = BASE_FREQUENCY / result.size
+        var frequency = BASE_FREQUENCY
+
+        for (i in result.indices) {
+            frequency += frequencyIncrement
+            var sample = Math.sin(2.0 * Math.PI * i.toDouble() / (SAMPLE_RATE / frequency)) * DISTORTION_AMOUNT
+            //inverting the peak of the sine wave
+            if (sample > 1) {
+                sample = 1 - (sample - 1)
+            }
+            if (sample < -1) {
+                sample = -1 - (sample + 1)
+            }
+            val index = if (up) i else sampleCount - i - 1
+            result[index] = (sample * Short.MAX_VALUE).toShort()
+        }
+        return result
     }
 
     private fun playSound(up: Boolean) {
+        tryStop()
         GlobalScope.launch {
             // AudioTrack definition
             val bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE,
@@ -83,19 +87,19 @@ class Sounds(private val settings: Settings) {
 
             audioTrack!!.setStereoVolume(AudioTrack.getMaxVolume(), AudioTrack.getMaxVolume())
             audioTrack!!.play()
-            audioTrack!!.write(if (up) sampleArrayUp else sampleArrayDown, 0, sampleArrayUp.size)
+            audioTrack!!.write(if (up) sampleArrayUp else sampleArrayDown, 0, if (up) sampleArrayUp.size else sampleArrayDown.size)
 
             tryStop()
         }
     }
 
     private fun tryStop() {
-        if (audioTrack!!.playState != AudioTrack.PLAYSTATE_STOPPED) {
-
-            audioTrack!!.stop()
-            audioTrack!!.release()
+        audioTrack?.run {
+            if (playState != AudioTrack.PLAYSTATE_STOPPED) {
+                stop()
+                release()
+            }
         }
-
     }
 
     companion object {
