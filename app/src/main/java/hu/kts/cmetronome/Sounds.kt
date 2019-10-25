@@ -17,7 +17,9 @@ class Sounds(private val settings: Settings) {
     private var sampleArrayUp = ShortArray(0)
     private var sampleArrayDown = ShortArray(0)
     //we have to hold a reference to this or else it'd be gc-d
-    private val settingsListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> if (key == Settings.KEY_REP_UP_DOWN_TIME) generateUpDownSounds()}
+    private val settingsListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == Settings.KEY_REP_UP_TIME || key == Settings.KEY_REP_DOWN_TIME) generateUpDownSounds()
+    }
 
     init {
         toneGenerator = ToneGenerator(AudioManager.STREAM_ALARM, 100)
