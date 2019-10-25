@@ -3,8 +3,9 @@ package hu.kts.cmetronome
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.widget.Toast
 
-class Settings(context: Context) {
+class Settings(private val context: Context) {
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     //we have to hold a reference to this or else it'd be gc-d
@@ -41,6 +42,7 @@ class Settings(context: Context) {
             KEY_REP_UP_TIME -> {
                 repUpTime = sharedPreferences.getString(KEY_REP_UP_TIME, "2000")?.toLong() ?: 2000
                 if (sharedPreferences.getString(KEY_REP_DOWN_TIME, KEY_SAME_AS) == KEY_SAME_AS) repDownTime = repUpTime
+                checkRepLength()
             }
             KEY_REP_PAUSE_1_TIME -> {
                 repPause1Time = sharedPreferences.getString(KEY_REP_PAUSE_1_TIME, "1000")?.toLong() ?: 1000
@@ -52,6 +54,7 @@ class Settings(context: Context) {
                 } else {
                     sharedPreferences.getString(KEY_REP_DOWN_TIME, "2000")?.toLong() ?: 2000
                 }
+                checkRepLength()
             }
             KEY_REP_PAUSE_2_TIME -> {
                 repPause1Time = if (sharedPreferences.getString(KEY_REP_PAUSE_2_TIME, KEY_SAME_AS) == KEY_SAME_AS) {
@@ -60,6 +63,12 @@ class Settings(context: Context) {
                     sharedPreferences.getString(KEY_REP_PAUSE_2_TIME, "1000")?.toLong() ?: 1000
                 }
             }
+        }
+    }
+
+    private fun checkRepLength() {
+        if (repDownTime + repUpTime == 0L) {
+            Toast.makeText(context, context.getString(R.string.rep_is_empty_message), Toast.LENGTH_SHORT).show()
         }
     }
 

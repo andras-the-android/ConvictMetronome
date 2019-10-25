@@ -1,15 +1,13 @@
 package hu.kts.cmetronome.ui.workout
 
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.OnLifecycleEvent
-import hu.kts.cmetronome.Settings
-import hu.kts.cmetronome.Sounds
-import hu.kts.cmetronome.TimeProvider
-import hu.kts.cmetronome.WorkoutStatus
+import hu.kts.cmetronome.*
 import hu.kts.cmetronome.repository.WorkoutRepository
 import kotlinx.android.synthetic.main.activity_workout.*
 import java.util.concurrent.TimeUnit
@@ -87,6 +85,10 @@ class WorkoutController(private val activity: AppCompatActivity,
 
 
     private fun countDownAndStart() {
+        if (settings.repDownTime + settings.repUpTime == 0L) {
+            Toast.makeText(activity, activity.getString(R.string.rep_is_empty_message), Toast.LENGTH_SHORT).show()
+            return
+        }
         if (repository.workoutStatus == WorkoutStatus.BETWEEN_SETS) {
             repository.resetRepCounter()
         }
