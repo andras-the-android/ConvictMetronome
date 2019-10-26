@@ -1,6 +1,5 @@
 package hu.kts.cmetronome.ui.workout
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -8,7 +7,6 @@ import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.admob.AdViewWrapper
 import hu.kts.cmetronome.di.Injector
 import hu.kts.cmetronome.ui.settings.SettingsActivity
@@ -47,13 +45,6 @@ class WorkoutActivity : AppCompatActivity() {
     }
 
     private fun openSettings() {
-        startActivityForResult(Intent(this, SettingsActivity::class.java), Settings.REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Settings.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            workoutController.initSettingsRelatedParts()
-        }
+        startActivity(Intent(this, SettingsActivity::class.java))
     }
 }

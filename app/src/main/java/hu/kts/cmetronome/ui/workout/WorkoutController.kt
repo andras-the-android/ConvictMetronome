@@ -1,5 +1,6 @@
 package hu.kts.cmetronome.ui.workout
 
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,11 +27,14 @@ class WorkoutController(private val activity: AppCompatActivity,
     private val countdowner = Countdowner(activity, settings, timeProviderCountdowner, onFinish = this::startWorkout, onCancel = this::onCountdownCancelled)
 
     private val directionOrder = arrayOf(IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT, IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT)
+    //we have to hold a reference to this or else it'd be gc-d
+    private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }
 
     init {
         initWorkoutData()
-        initSettingsRelatedParts()
         timeProviderRep.observe(activity, Observer { count -> onRepTimeProviderTick(count) })
+        settings.addListener(listener)
+        help.setEnabled(settings.isShowHelp)
     }
 
     private fun initWorkoutData() {
@@ -47,8 +51,13 @@ class WorkoutController(private val activity: AppCompatActivity,
         fillSetCounterTextViewWithTruncatedData()
     }
 
+    private fun onSettingsChanged(key: String?) {
+        if (key == Settings.KEY_SHOW_HELP) {
+            help.setEnabled(settings.isShowHelp)
+        }
+    }
+
     fun onRepCounterClick() {
-//        sounds.makeUpSound()
         when (repository.workoutStatus) {
             WorkoutStatus.BEFORE_START, WorkoutStatus.PAUSED, WorkoutStatus.BETWEEN_SETS -> countDownAndStart()
             WorkoutStatus.COUNTDOWN_IN_PROGRESS, WorkoutStatus.IN_PROGRESS -> pauseWorkout()
@@ -134,22 +143,23 @@ class WorkoutController(private val activity: AppCompatActivity,
                     fillRepCounterTextViewWithTruncatedData()
                 }
             }
+
         }
     }
 
     private fun getNextDirection(count: Long): IndicatorAnimation.Direction? {
         val completeRepDuration = settings.repUpTime + settings.repPause1Time + settings.repDownTime + settings.repPause2Time
-        val elapsedMilliesInCurrentRep = (TimeUnit.SECONDS.toMillis(count) / 2) % completeRepDuration
+        val elapsedMillisInCurrentRep = (TimeUnit.SECONDS.toMillis(count) / 2) % completeRepDuration
 
         var i = 0
         var nextDirectionChange = 0L
-        while (nextDirectionChange < elapsedMilliesInCurrentRep) {
+        while (nextDirectionChange < elapsedMillisInCurrentRep) {
             nextDirectionChange += getTimeForDirection(directionOrder[i++])
         }
 
         while (i < directionOrder.size && getTimeForDirection(directionOrder[i]) == 0L) ++i
 
-        return when (elapsedMilliesInCurrentRep) {
+        return when (elapsedMillisInCurrentRep) {
             nextDirectionChange -> directionOrder[i]
             else -> null
         }
@@ -190,10 +200,6 @@ class WorkoutController(private val activity: AppCompatActivity,
         repository.resetCounters()
         fillSetCounterTextViewWithTruncatedData()
         fillRepCounterTextViewWithTruncatedData()
-    }
-
-    fun initSettingsRelatedParts() {
-        help.setEnabled(settings.isShowHelp)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
