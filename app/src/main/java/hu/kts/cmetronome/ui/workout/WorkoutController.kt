@@ -11,22 +11,22 @@ import androidx.lifecycle.OnLifecycleEvent
 import hu.kts.cmetronome.*
 import hu.kts.cmetronome.repository.WorkoutRepository
 import kotlinx.android.synthetic.main.activity_workout.*
-import java.util.concurrent.TimeUnit
 
-class WorkoutController(private val activity: AppCompatActivity,
-                        private val repository: WorkoutRepository,
-                        private val settings: Settings,
-                        private val sounds: Sounds,
-                        private val timeProviderRep: TimeProvider,
-                        timeProviderStopwatch: TimeProvider,
-                        timeProviderCountdowner: TimeProvider) : LifecycleObserver {
+class WorkoutController constructor(private val activity: AppCompatActivity,
+                                            private val repository: WorkoutRepository,
+                                            private val settings: Settings,
+                                            private val sounds: Sounds,
+                                            private val timeProviderRep: TimeProvider,
+                                            timeProviderStopwatch: TimeProvider,
+                                            timeProviderCountdowner: TimeProvider,
+                                            private val calculations: WorkoutCalculations) : LifecycleObserver {
 
     private val stopWatch: Stopwatch = Stopwatch(activity, timeProviderStopwatch, sounds)
     private var indicatorAnimation: IndicatorAnimation? = null
     private val help: Help = Help(activity)
     private val countdowner = Countdowner(activity, settings, timeProviderCountdowner, onFinish = this::startWorkout, onCancel = this::onCountdownCancelled)
 
-    private val directionOrder = arrayOf(IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT, IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT)
+
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }
 
@@ -123,7 +123,7 @@ class WorkoutController(private val activity: AppCompatActivity,
     }
 
     private fun onRepTimeProviderTick(count: Long) {
-        getNextDirection(count)?.let {
+        calculations.getNextDirection(count)?.let {
             Log.d(TAG, "${count / 2} -> $it")
             val animation = getIndicatorAnimation()
             when (it) {
@@ -146,32 +146,6 @@ class WorkoutController(private val activity: AppCompatActivity,
 
         }
     }
-
-    private fun getNextDirection(count: Long): IndicatorAnimation.Direction? {
-        val completeRepDuration = settings.repUpTime + settings.repPause1Time + settings.repDownTime + settings.repPause2Time
-        val elapsedMillisInCurrentRep = (TimeUnit.SECONDS.toMillis(count) / 2) % completeRepDuration
-
-        var i = 0
-        var nextDirectionChange = 0L
-        while (nextDirectionChange < elapsedMillisInCurrentRep) {
-            nextDirectionChange += getTimeForDirection(directionOrder[i++])
-        }
-
-        while (i < directionOrder.size && getTimeForDirection(directionOrder[i]) == 0L) ++i
-
-        return when (elapsedMillisInCurrentRep) {
-            nextDirectionChange -> directionOrder[i]
-            else -> null
-        }
-    }
-
-    private fun getTimeForDirection(direction: IndicatorAnimation.Direction): Long =
-            when (direction) {
-                IndicatorAnimation.Direction.DOWN -> settings.repUpTime
-                IndicatorAnimation.Direction.RIGHT -> settings.repPause1Time
-                IndicatorAnimation.Direction.UP -> settings.repDownTime
-                IndicatorAnimation.Direction.LEFT -> settings.repPause2Time
-            }
 
     private fun stopSet() {
         setWorkoutStatusAndHelpText(WorkoutStatus.BETWEEN_SETS)
