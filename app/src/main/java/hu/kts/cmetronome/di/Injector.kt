@@ -7,9 +7,7 @@ import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.Sounds
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.repository.WorkoutRepository
-import hu.kts.cmetronome.ui.workout.WorkoutActivity
-import hu.kts.cmetronome.ui.workout.WorkoutCalculations
-import hu.kts.cmetronome.ui.workout.WorkoutController
+import hu.kts.cmetronome.ui.workout.*
 
 object Injector {
 
@@ -30,8 +28,13 @@ object Injector {
         timeProviderCountdowner = TimeProvider()
     }
 
-    fun inject(workoutActivity: WorkoutActivity) {
-        workoutActivity.workoutController = WorkoutController(workoutActivity, workoutRepository, settings, sounds, timeProviderRep, timeProviderStopwatch, timeProviderCountdowner, WorkoutCalculations(settings))
+    fun inject(activity: WorkoutActivity) {
+        val calculations = WorkoutCalculations(settings)
+        val indicatorAnimation = IndicatorAnimation(activity, settings)
+        val stopWatch = Stopwatch(activity, timeProviderStopwatch, sounds)
+        val help = Help(activity)
+        val countdowner = Countdowner(activity, settings, timeProviderCountdowner)
+        activity.workoutController = WorkoutController(activity, workoutRepository, settings, sounds, timeProviderRep, calculations, indicatorAnimation, stopWatch, help, countdowner)
     }
 
 }

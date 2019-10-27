@@ -2,6 +2,7 @@ package hu.kts.cmetronome.ui.workout
 
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.view.ViewTreeObserver
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
 import kotlinx.android.synthetic.main.activity_workout.*
@@ -12,15 +13,25 @@ import kotlinx.android.synthetic.main.activity_workout.*
 class IndicatorAnimation(private val activity: Activity, private val settings: Settings) {
 
     private var animationRunning: Boolean = false
-    private val down: ObjectAnimator
-    private val right: ObjectAnimator
-    private val up: ObjectAnimator
-    private val left: ObjectAnimator
+    private var down: ObjectAnimator = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, 0f)
+    private var right: ObjectAnimator = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, 0f)
+    private var up: ObjectAnimator = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, 0f)
+    private var left: ObjectAnimator = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", 0f, 0f)
     private var currentAnimation: ObjectAnimator? = null
-    private val longPath: Float
-    private val shortPath: Float
+    private var longPath: Float = 0F
+    private var shortPath: Float = 0F
 
     init {
+        activity.indicatorView.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        activity.indicatorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        init()
+                    }
+                })
+    }
+
+    private fun init() {
         val resources = activity.resources
         val indicatorDiameter = resources.getDimensionPixelSize(R.dimen.indicator_diameter).toFloat()
         val metronomePadding = resources.getDimensionPixelSize(R.dimen.metronome_padding).toFloat() * 2

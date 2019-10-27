@@ -12,20 +12,16 @@ import hu.kts.cmetronome.*
 import hu.kts.cmetronome.repository.WorkoutRepository
 import kotlinx.android.synthetic.main.activity_workout.*
 
-class WorkoutController constructor(private val activity: AppCompatActivity,
-                                            private val repository: WorkoutRepository,
-                                            private val settings: Settings,
-                                            private val sounds: Sounds,
-                                            private val timeProviderRep: TimeProvider,
-                                            timeProviderStopwatch: TimeProvider,
-                                            timeProviderCountdowner: TimeProvider,
-                                            private val calculations: WorkoutCalculations) : LifecycleObserver {
-
-    private val stopWatch: Stopwatch = Stopwatch(activity, timeProviderStopwatch, sounds)
-    private var indicatorAnimation: IndicatorAnimation? = null
-    private val help: Help = Help(activity)
-    private val countdowner = Countdowner(activity, settings, timeProviderCountdowner, onFinish = this::startWorkout, onCancel = this::onCountdownCancelled)
-
+class WorkoutController(private val activity: AppCompatActivity,
+                        private val repository: WorkoutRepository,
+                        private val settings: Settings,
+                        private val sounds: Sounds,
+                        private val timeProviderRep: TimeProvider,
+                        private val calculations: WorkoutCalculations,
+                        private val indicatorAnimation: IndicatorAnimation,
+                        private val stopWatch: Stopwatch,
+                        private val help: Help,
+                        private val countdowner: Countdowner) : LifecycleObserver {
 
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }
@@ -35,6 +31,8 @@ class WorkoutController constructor(private val activity: AppCompatActivity,
         timeProviderRep.observe(activity, Observer { count -> onRepTimeProviderTick(count) })
         settings.addListener(listener)
         help.setEnabled(settings.isShowHelp)
+        countdowner.onFinish = this::startWorkout
+        countdowner.onCancel = this::onCountdownCancelled
     }
 
     private fun initWorkoutData() {
@@ -88,7 +86,7 @@ class WorkoutController constructor(private val activity: AppCompatActivity,
     }
 
     private fun resetIndicator() {
-        getIndicatorAnimation().stop()
+        indicatorAnimation.stop()
         timeProviderRep.stop()
     }
 
@@ -112,33 +110,22 @@ class WorkoutController constructor(private val activity: AppCompatActivity,
         timeProviderRep.startUp()
     }
 
-    /**
-     * Initialization can't be called from onCreate because animation needs the actual size of the elements
-     */
-    private fun getIndicatorAnimation(): IndicatorAnimation {
-        if (indicatorAnimation == null) {
-            indicatorAnimation = IndicatorAnimation(activity, settings)
-        }
-        return indicatorAnimation!!
-    }
-
     private fun onRepTimeProviderTick(count: Long) {
         calculations.getNextDirection(count)?.let {
             Log.d(TAG, "${count / 2} -> $it")
-            val animation = getIndicatorAnimation()
             when (it) {
                 IndicatorAnimation.Direction.DOWN -> {
                     sounds.makeUpSound()
-                    animation.start(IndicatorAnimation.Direction.DOWN)
+                    indicatorAnimation.start(IndicatorAnimation.Direction.DOWN)
                 }
                 IndicatorAnimation.Direction.RIGHT ->
-                    animation.start(IndicatorAnimation.Direction.RIGHT)
+                    indicatorAnimation.start(IndicatorAnimation.Direction.RIGHT)
                 IndicatorAnimation.Direction.UP -> {
                     sounds.makeDownSound()
-                    animation.start(IndicatorAnimation.Direction.UP)
+                    indicatorAnimation.start(IndicatorAnimation.Direction.UP)
                 }
                 IndicatorAnimation.Direction.LEFT -> {
-                    animation.start(IndicatorAnimation.Direction.LEFT)
+                    indicatorAnimation.start(IndicatorAnimation.Direction.LEFT)
                 }
             }
 
