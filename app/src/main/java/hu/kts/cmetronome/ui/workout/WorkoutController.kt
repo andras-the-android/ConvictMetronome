@@ -139,11 +139,13 @@ class WorkoutController constructor(private val activity: AppCompatActivity,
                 }
                 IndicatorAnimation.Direction.LEFT -> {
                     animation.start(IndicatorAnimation.Direction.LEFT)
-                    repository.increaseRepCounter()
-                    fillRepCounterTextViewWithTruncatedData()
                 }
             }
 
+        }
+        if (calculations.shouldIncreaseRepCounter(count, repository.repCount)) {
+            repository.increaseRepCounter()
+            fillRepCounterTextViewWithTruncatedData()
         }
     }
 
