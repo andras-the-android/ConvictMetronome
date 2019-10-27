@@ -80,7 +80,11 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
     }
 
     private fun resetIndicatorPosition() {
-        moveIndicator(shortPath, longPath)
+        if (settings.repStartsWithUp) {
+            moveIndicator(shortPath, longPath)
+        } else {
+            moveIndicator(0f, 0f)
+        }
     }
 
     private fun moveIndicator(x: Float, y: Float) {

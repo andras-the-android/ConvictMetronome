@@ -7,13 +7,14 @@ import java.util.concurrent.TimeUnit
 class WorkoutCalculations(private val settings: Settings) {
 
     private var millisToIncreaseRepCounter = 0L
-    private val directionOrder = arrayOf(IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT, IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT)
+    private var directionOrder: Array<IndicatorAnimation.Direction>
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }
     private var completeRepDuration = 0L
 
     init {
         settings.addListener(listener)
+        directionOrder = if (settings.repStartsWithUp) directionOrderUp else directionOrderDown
         calculateRepData()
     }
 
@@ -39,12 +40,13 @@ class WorkoutCalculations(private val settings: Settings) {
 
     private fun onSettingsChanged(key: String?) {
         when (key) {
-            Settings.KEY_REP_UP_TIME, Settings.KEY_REP_DOWN_TIME, Settings.KEY_REP_PAUSE_1_TIME, Settings.KEY_REP_PAUSE_2_TIME -> calculateRepData()
+            Settings.KEY_REP_UP_TIME, Settings.KEY_REP_DOWN_TIME, Settings.KEY_REP_PAUSE_1_TIME, Settings.KEY_REP_PAUSE_2_TIME, Settings.KEY_REP_STARTS_WITH_UP -> calculateRepData()
         }
     }
 
     private fun calculateRepData() {
         completeRepDuration = settings.repUpTime + settings.repPause1Time + settings.repDownTime + settings.repPause2Time
+        directionOrder = if (settings.repStartsWithUp) directionOrderUp else directionOrderDown
         millisToIncreaseRepCounter = calcMillisToIncreaseRepCounter()
     }
 
@@ -65,4 +67,9 @@ class WorkoutCalculations(private val settings: Settings) {
                 IndicatorAnimation.Direction.UP -> settings.repUpTime
                 IndicatorAnimation.Direction.LEFT -> settings.repPause2Time
             }
+
+    companion object {
+        val directionOrderUp = arrayOf(IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT, IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT)
+        val directionOrderDown = arrayOf(IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT, IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT)
+    }
 }

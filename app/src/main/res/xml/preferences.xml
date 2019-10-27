@@ -14,6 +14,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_category_reps">
+        <CheckBoxPreference
+            android:key="repStartsWith"
+            android:title="@string/settings_start_with_up"
+            android:defaultValue="true" />
         <ListPreference
             android:key="repUpTime"
             android:title="@string/settings_rep_up_time"

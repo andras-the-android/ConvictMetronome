@@ -50,8 +50,9 @@ class WorkoutController(private val activity: AppCompatActivity,
     }
 
     private fun onSettingsChanged(key: String?) {
-        if (key == Settings.KEY_SHOW_HELP) {
-            help.setEnabled(settings.isShowHelp)
+        when (key) {
+            Settings.KEY_SHOW_HELP -> help.setEnabled(settings.isShowHelp)
+            Settings.KEY_REP_STARTS_WITH_UP -> resetIndicator()
         }
     }
 
