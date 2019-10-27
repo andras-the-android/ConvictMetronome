@@ -1,45 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:key="showHelp"
-        android:title="@string/settings_show_help"
-        android:defaultValue="true" />
-    <ListPreference
-        android:key="countdownStartValue"
-        android:title="@string/settings_countdown_start_value"
-        android:entries="@array/settings_countdown_start_values"
-        android:entryValues="@array/settings_countdown_start_values"
-        android:defaultValue="3" />
-    <ListPreference
-        android:key="repUpTime"
-        android:title="@string/settings_rep_up_time"
-        android:entries="@array/settings_rep_time_odd_titles"
-        android:entryValues="@array/settings_rep_time_odd_values"
-        android:defaultValue="2000" />
-    <ListPreference
-        android:key="repPause1Time"
-        android:title="@string/settings_rep_pause_1_time"
-        android:entries="@array/settings_rep_time_odd_titles"
-        android:entryValues="@array/settings_rep_time_odd_values"
-        android:defaultValue="1000" />
-    <ListPreference
-        android:key="repDownTime"
-        android:title="@string/settings_rep_down_time"
-        android:entries="@array/settings_rep_time_down_titles"
-        android:entryValues="@array/settings_rep_time_even_values"
-        android:defaultValue="-1" />
-    <ListPreference
-        android:key="repPause2Time"
-        android:title="@string/settings_rep_pause_2_time"
-        android:entries="@array/settings_rep_time_pause_2_titles"
-        android:entryValues="@array/settings_rep_time_even_values"
-        android:defaultValue="-1" />
-    <!--<CheckBoxPreference-->
-        <!--android:key="useDiagnostics"-->
-        <!--android:title="@string/settings_diagnostics"-->
-        <!--android:defaultValue="true" />-->
-    <Preference android:title="@string/privacy_policy" >
-        <intent android:action="android.intent.action.VIEW"
-            android:data="https://github.com/guni82hu/ConvictMetronome/blob/master/privacy_policy.md" />
-    </Preference>
+    <PreferenceCategory android:title="@string/settings_category_general">
+        <CheckBoxPreference
+            android:key="showHelp"
+            android:title="@string/settings_show_help"
+            android:defaultValue="true" />
+        <ListPreference
+            android:key="countdownStartValue"
+            android:title="@string/settings_countdown_start_value"
+            android:entries="@array/settings_countdown_start_values"
+            android:entryValues="@array/settings_countdown_start_values"
+            android:defaultValue="3" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_category_reps">
+        <ListPreference
+            android:key="repUpTime"
+            android:title="@string/settings_rep_up_time"
+            android:entries="@array/settings_rep_time_odd_titles"
+            android:entryValues="@array/settings_rep_time_odd_values"
+            android:defaultValue="2000" />
+        <ListPreference
+            android:key="repPause1Time"
+            android:title="@string/settings_rep_pause_1_time"
+            android:entries="@array/settings_rep_time_odd_titles"
+            android:entryValues="@array/settings_rep_time_odd_values"
+            android:defaultValue="1000" />
+        <ListPreference
+            android:key="repDownTime"
+            android:title="@string/settings_rep_down_time"
+            android:entries="@array/settings_rep_time_down_titles"
+            android:entryValues="@array/settings_rep_time_even_values"
+            android:defaultValue="-1" />
+        <ListPreference
+            android:key="repPause2Time"
+            android:title="@string/settings_rep_pause_2_time"
+            android:entries="@array/settings_rep_time_pause_2_titles"
+            android:entryValues="@array/settings_rep_time_even_values"
+            android:defaultValue="-1" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference android:title="@string/privacy_policy" >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/guni82hu/ConvictMetronome/blob/master/privacy_policy.md" />
+        </Preference>
+    </PreferenceCategory>
+
+
 </PreferenceScreen>

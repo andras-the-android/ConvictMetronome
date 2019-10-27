@@ -21,4 +21,6 @@
     <string name="admob_app_id">ca-app-pub-3891048739907811~3412266686</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="rep_is_empty_message">Rep length is 0. Set up values in Settings!</string>
+    <string name="settings_category_reps">Reps</string>
+    <string name="settings_category_general">General</string>
 </resources>
