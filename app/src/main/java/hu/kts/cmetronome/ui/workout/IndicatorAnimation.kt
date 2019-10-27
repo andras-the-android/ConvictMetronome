@@ -45,6 +45,7 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
         up = ObjectAnimator.ofFloat(activity.indicatorView, "translationY", longPath, 0f)
 
         left = ObjectAnimator.ofFloat(activity.indicatorView, "translationX", shortPath, 0f)
+        resetIndicatorPosition()
     }
 
     fun start(direction: Direction) {
@@ -57,9 +58,9 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
             Direction.LEFT -> moveIndicator(shortPath, 0f)
         }
         currentAnimation = when (direction) {
-            Direction.DOWN -> down.setDuration(settings.repUpTime)
+            Direction.DOWN -> down.setDuration(settings.repDownTime)
             Direction.RIGHT -> right.setDuration(settings.repPause1Time)
-            Direction.UP -> up.setDuration(settings.repDownTime)
+            Direction.UP -> up.setDuration(settings.repUpTime)
             Direction.LEFT -> left.setDuration(settings.repPause2Time)
         }
 
@@ -79,7 +80,7 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
     }
 
     private fun resetIndicatorPosition() {
-        moveIndicator(0f, 0f)
+        moveIndicator(shortPath, longPath)
     }
 
     private fun moveIndicator(x: Float, y: Float) {

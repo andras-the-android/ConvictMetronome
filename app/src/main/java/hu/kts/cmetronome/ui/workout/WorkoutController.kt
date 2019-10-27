@@ -115,13 +115,13 @@ class WorkoutController(private val activity: AppCompatActivity,
             Log.d(TAG, "${count / 2} -> $it")
             when (it) {
                 IndicatorAnimation.Direction.DOWN -> {
-                    sounds.makeUpSound()
+                    sounds.makeDownSound()
                     indicatorAnimation.start(IndicatorAnimation.Direction.DOWN)
                 }
                 IndicatorAnimation.Direction.RIGHT ->
                     indicatorAnimation.start(IndicatorAnimation.Direction.RIGHT)
                 IndicatorAnimation.Direction.UP -> {
-                    sounds.makeDownSound()
+                    sounds.makeUpSound()
                     indicatorAnimation.start(IndicatorAnimation.Direction.UP)
                 }
                 IndicatorAnimation.Direction.LEFT -> {

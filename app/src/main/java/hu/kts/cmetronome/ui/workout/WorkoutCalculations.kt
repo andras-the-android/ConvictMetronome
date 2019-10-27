@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 class WorkoutCalculations(private val settings: Settings) {
 
     private var millisToIncreaseRepCounter = 0L
-    private val directionOrder = arrayOf(IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT, IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT)
+    private val directionOrder = arrayOf(IndicatorAnimation.Direction.UP, IndicatorAnimation.Direction.LEFT, IndicatorAnimation.Direction.DOWN, IndicatorAnimation.Direction.RIGHT)
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }
     private var completeRepDuration = 0L
@@ -60,9 +60,9 @@ class WorkoutCalculations(private val settings: Settings) {
 
     private fun getTimeForDirection(direction: IndicatorAnimation.Direction): Long =
             when (direction) {
-                IndicatorAnimation.Direction.DOWN -> settings.repUpTime
+                IndicatorAnimation.Direction.DOWN -> settings.repDownTime
                 IndicatorAnimation.Direction.RIGHT -> settings.repPause1Time
-                IndicatorAnimation.Direction.UP -> settings.repDownTime
+                IndicatorAnimation.Direction.UP -> settings.repUpTime
                 IndicatorAnimation.Direction.LEFT -> settings.repPause2Time
             }
 }
