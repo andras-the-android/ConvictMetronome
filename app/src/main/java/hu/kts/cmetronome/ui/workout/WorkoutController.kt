@@ -131,7 +131,7 @@ class WorkoutController(private val activity: AppCompatActivity,
             }
 
         }
-        if (calculations.shouldIncreaseRepCounter(count, repository.repCount)) {
+        if (calculations.shouldIncreaseRepCounter(count)) {
             repository.increaseRepCounter()
             fillRepCounterTextViewWithTruncatedData()
         }

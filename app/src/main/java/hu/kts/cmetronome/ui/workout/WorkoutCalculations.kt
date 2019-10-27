@@ -36,7 +36,11 @@ class WorkoutCalculations(private val settings: Settings) {
         }
     }
 
-    fun shouldIncreaseRepCounter(count: Long, reps: Int) = convertTicksToMillis(count) == millisToIncreaseRepCounter + reps * completeRepDuration
+    fun shouldIncreaseRepCounter(count: Long): Boolean {
+        //if millisToIncreaseRepCounter is 0, that means that we only start incrementing in the second round
+        if (count == 0L) return false
+        return convertTicksToMillis(count) % completeRepDuration == millisToIncreaseRepCounter
+    }
 
     private fun onSettingsChanged(key: String?) {
         when (key) {
@@ -55,6 +59,8 @@ class WorkoutCalculations(private val settings: Settings) {
         for (i in 0..directionOrder.size - 2) {
             millis += getTimeForDirection(directionOrder[i])
         }
+        //this means that in this case we'll increase rep count on the beginning of the next rep
+        if (millis == completeRepDuration) millis = 0L
         return millis
     }
 
