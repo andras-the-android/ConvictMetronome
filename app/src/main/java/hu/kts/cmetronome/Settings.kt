@@ -31,6 +31,9 @@ class Settings(private val context: Context) {
     val repStartsWithUp: Boolean
         get() = sharedPreferences.getBoolean(KEY_REP_STARTS_WITH_UP, true)
 
+    val playSound: Boolean
+        get() = sharedPreferences.getBoolean(KEY_PLAY_SOUND, true)
+
     var repUpTime: Long = 0
     var repPause1Time: Long = 0
     var repDownTime: Long = 0
@@ -90,6 +93,7 @@ class Settings(private val context: Context) {
         const val KEY_REP_PAUSE_2_TIME = "repPause2Time"
         const val KEY_REP_STARTS_WITH_UP= "repStartsWith"
         const val KEY_SAME_AS = "-1"
+        const val KEY_PLAY_SOUND = "playSound"
     }
 
 }

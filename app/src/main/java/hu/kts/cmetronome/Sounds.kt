@@ -75,6 +75,8 @@ class Sounds(private val settings: Settings) {
     }
 
     private fun playSound(up: Boolean) {
+        if (!settings.playSound) return
+
         tryStop()
         GlobalScope.launch {
             // AudioTrack definition

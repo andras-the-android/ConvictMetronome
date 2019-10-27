@@ -11,6 +11,10 @@
             android:entries="@array/settings_countdown_start_values"
             android:entryValues="@array/settings_countdown_start_values"
             android:defaultValue="3" />
+        <CheckBoxPreference
+            android:key="playSound"
+            android:title="@string/settings_play_sound"
+            android:defaultValue="true" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_category_reps">
