@@ -29,8 +29,8 @@
             android:entryValues="@array/settings_rep_time_odd_values"
             android:defaultValue="2000" />
         <ListPreference
-            android:key="repPause1Time"
-            android:title="@string/settings_rep_pause_1_time"
+            android:key="repPauseUpTime"
+            android:title="@string/settings_rep_pause_up_time"
             android:entries="@array/settings_rep_time_odd_titles"
             android:entryValues="@array/settings_rep_time_odd_values"
             android:defaultValue="1000" />
@@ -41,9 +41,9 @@
             android:entryValues="@array/settings_rep_time_even_values"
             android:defaultValue="-1" />
         <ListPreference
-            android:key="repPause2Time"
-            android:title="@string/settings_rep_pause_2_time"
-            android:entries="@array/settings_rep_time_pause_2_titles"
+            android:key="repPauseDownTime"
+            android:title="@string/settings_rep_pause_down_time"
+            android:entries="@array/settings_rep_time_pause_down_titles"
             android:entryValues="@array/settings_rep_time_even_values"
             android:defaultValue="-1" />
     </PreferenceCategory>

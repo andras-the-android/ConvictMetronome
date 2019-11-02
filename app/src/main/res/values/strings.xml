@@ -12,8 +12,8 @@
     <string name="settings_countdown_start_value">Countdown from</string>
     <string name="settings_rep_up_time">Up duration</string>
     <string name="settings_rep_down_time">Down duration</string>
-    <string name="settings_rep_pause_1_time">1st pause duration</string>í
-    <string name="settings_rep_pause_2_time">2nd pause duration</string>
+    <string name="settings_rep_pause_up_time">Pause up duration</string>í
+    <string name="settings_rep_pause_down_time">Pause down duration</string>
     <string name="settings_diagnostics">Anonymous diagnostics</string>
     <string name="settings_diagnostics_message">This feature provides anonymous information which will improve user experience and help uncover bugs. Please help the developer by enabling this function.</string>
     <string name="settings_diagnostics_keep">Keep it enabled</string>

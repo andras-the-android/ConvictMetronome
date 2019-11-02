@@ -59,9 +59,9 @@ class IndicatorAnimation(private val activity: Activity, private val settings: S
         }
         currentAnimation = when (direction) {
             Direction.DOWN -> down.setDuration(settings.repDownTime)
-            Direction.RIGHT -> right.setDuration(settings.repPause1Time)
+            Direction.RIGHT -> right.setDuration(settings.repPauseUpTime)
             Direction.UP -> up.setDuration(settings.repUpTime)
-            Direction.LEFT -> left.setDuration(settings.repPause2Time)
+            Direction.LEFT -> left.setDuration(settings.repPauseDownTime)
         }
 
         currentAnimation?.start()

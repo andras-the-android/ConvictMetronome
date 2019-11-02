@@ -44,12 +44,12 @@ class WorkoutCalculations(private val settings: Settings) {
 
     private fun onSettingsChanged(key: String?) {
         when (key) {
-            Settings.KEY_REP_UP_TIME, Settings.KEY_REP_DOWN_TIME, Settings.KEY_REP_PAUSE_1_TIME, Settings.KEY_REP_PAUSE_2_TIME, Settings.KEY_REP_STARTS_WITH_UP -> calculateRepData()
+            Settings.KEY_REP_UP_TIME, Settings.KEY_REP_DOWN_TIME, Settings.KEY_REP_PAUSE_UP_TIME, Settings.KEY_REP_PAUSE_DOWN_TIME, Settings.KEY_REP_STARTS_WITH_UP -> calculateRepData()
         }
     }
 
     private fun calculateRepData() {
-        completeRepDuration = settings.repUpTime + settings.repPause1Time + settings.repDownTime + settings.repPause2Time
+        completeRepDuration = settings.repUpTime + settings.repPauseUpTime + settings.repDownTime + settings.repPauseDownTime
         directionOrder = if (settings.repStartsWithUp) directionOrderUp else directionOrderDown
         millisToIncreaseRepCounter = calcMillisToIncreaseRepCounter()
     }
@@ -69,9 +69,9 @@ class WorkoutCalculations(private val settings: Settings) {
     private fun getTimeForDirection(direction: IndicatorAnimation.Direction): Long =
             when (direction) {
                 IndicatorAnimation.Direction.DOWN -> settings.repDownTime
-                IndicatorAnimation.Direction.RIGHT -> settings.repPause1Time
+                IndicatorAnimation.Direction.RIGHT -> settings.repPauseUpTime
                 IndicatorAnimation.Direction.UP -> settings.repUpTime
-                IndicatorAnimation.Direction.LEFT -> settings.repPause2Time
+                IndicatorAnimation.Direction.LEFT -> settings.repPauseDownTime
             }
 
     companion object {

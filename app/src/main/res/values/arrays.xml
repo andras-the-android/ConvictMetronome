@@ -44,8 +44,8 @@
         <item>5 s</item>
     </string-array>
 
-    <string-array name="settings_rep_time_pause_2_titles">
-        <item>Same as 1st pause</item>
+    <string-array name="settings_rep_time_pause_down_titles">
+        <item>Same as pause up</item>
         <item>Skip</item>
         <item>0.5 s</item>
         <item>1 s</item>
