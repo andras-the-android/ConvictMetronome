@@ -16,6 +16,7 @@ class WorkoutActivity : AppCompatActivity() {
 
 
     lateinit var workoutController: WorkoutController
+    lateinit var whatsNew: WhatsNew
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,8 @@ class WorkoutActivity : AppCompatActivity() {
         
         repCounterTextView.setOnClickListener { workoutController.onRepCounterClick() }
         repCounterTextView.setOnLongClickListener { workoutController.onRepCounterLongClick() }
+
+        whatsNew.run()
     }
     
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

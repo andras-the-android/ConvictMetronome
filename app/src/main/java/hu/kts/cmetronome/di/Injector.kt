@@ -35,6 +35,7 @@ object Injector {
         val help = Help(activity)
         val countdowner = Countdowner(activity, settings, timeProviderCountdowner)
         activity.workoutController = WorkoutController(activity, workoutRepository, settings, sounds, timeProviderRep, calculations, indicatorAnimation, stopWatch, help, countdowner)
+        activity.whatsNew = WhatsNew(activity, settings)
     }
 
 }

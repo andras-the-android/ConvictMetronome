@@ -32,6 +32,9 @@ class Settings(private val context: Context) {
     val isAnalyticsEnabled: Boolean
         get() = sharedPreferences.getBoolean(KEY_USE_DIAGNOSTICS, true)
 
+    val whatsNewVersion: Int
+        get() = sharedPreferences.getInt(KEY_WHATS_NEW_VERSION, 10)
+
     var repStartsWithUp: Boolean = true
         private set
     var playSound: Boolean = true
@@ -47,6 +50,17 @@ class Settings(private val context: Context) {
 
     fun addListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         listeners.add(WeakReference(listener))
+    }
+
+    fun updateWhatsNewVersion() {
+        sharedPreferences.edit().putInt(KEY_WHATS_NEW_VERSION, BuildConfig.VERSION_CODE).apply()
+    }
+
+    fun runMigration11() {
+        sharedPreferences.edit()
+                .putString(KEY_REP_UP_TIME, sharedPreferences.getString(KEY_REP_UP_DOWN_TIME, "2000"))
+                .putString(KEY_REP_PAUSE_UP_TIME, sharedPreferences.getString(KEY_REP_PAUSE_TIME, "1000"))
+                .apply()
     }
 
     private fun onPreferencesChanged(key: String) {
@@ -95,8 +109,6 @@ class Settings(private val context: Context) {
 
     companion object {
 
-        const val REQUEST_CODE = 23429
-
         const val KEY_SHOW_HELP = "showHelp"
         const val KEY_COUNTDOWN_START_VALUE = "countdownStartValue"
         const val KEY_USE_DIAGNOSTICS = "useDiagnostics"
@@ -109,6 +121,7 @@ class Settings(private val context: Context) {
         const val KEY_REP_STARTS_WITH_UP= "repStartsWith"
         const val KEY_SAME_AS = "-1"
         const val KEY_PLAY_SOUND = "playSound"
+        const val KEY_WHATS_NEW_VERSION  = "whatsNewVersion"
     }
 
 }
