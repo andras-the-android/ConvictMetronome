@@ -32,16 +32,18 @@ class Settings(private val context: Context) {
     val isAnalyticsEnabled: Boolean
         get() = sharedPreferences.getBoolean(KEY_USE_DIAGNOSTICS, true)
 
-    val repStartsWithUp: Boolean
-        get() = sharedPreferences.getBoolean(KEY_REP_STARTS_WITH_UP, true)
-
-    val playSound: Boolean
-        get() = sharedPreferences.getBoolean(KEY_PLAY_SOUND, true)
-
+    var repStartsWithUp: Boolean = true
+        private set
+    var playSound: Boolean = true
+        private set
     var repUpTime: Long = 0
+        private set
     var repPauseUpTime: Long = 0
+        private set
     var repDownTime: Long = 0
+        private set
     var repPauseDownTime: Long = 0
+        private set
 
     fun addListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         listeners.add(WeakReference(listener))
@@ -73,6 +75,8 @@ class Settings(private val context: Context) {
                     sharedPreferences.getString(KEY_REP_PAUSE_DOWN_TIME, "1000")?.toLong() ?: 1000
                 }
             }
+            KEY_REP_STARTS_WITH_UP -> repStartsWithUp = sharedPreferences.getBoolean(KEY_REP_STARTS_WITH_UP, true)
+            KEY_PLAY_SOUND -> playSound = sharedPreferences.getBoolean(KEY_PLAY_SOUND, true)
         }
     }
 
