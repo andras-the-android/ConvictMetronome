@@ -4,12 +4,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.widget.Toast
+import java.lang.ref.WeakReference
 
 class Settings(private val context: Context) {
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     //we have to hold a reference to this or else it'd be gc-d
-    private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onPreferencesChanged(key)}
+    private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key -> onPreferencesChanged(key); callExternalListeners(sharedPreferences, key) }
+
+    //TODO replace with LiveData
+    private val listeners: MutableSet<WeakReference<SharedPreferences.OnSharedPreferenceChangeListener>> = mutableSetOf()
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
@@ -40,7 +44,7 @@ class Settings(private val context: Context) {
     var repPauseDownTime: Long = 0
 
     fun addListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+        listeners.add(WeakReference(listener))
     }
 
     private fun onPreferencesChanged(key: String) {
@@ -63,7 +67,7 @@ class Settings(private val context: Context) {
                 checkRepLength()
             }
             KEY_REP_PAUSE_DOWN_TIME -> {
-                repPauseUpTime = if (sharedPreferences.getString(KEY_REP_PAUSE_DOWN_TIME, KEY_SAME_AS) == KEY_SAME_AS) {
+                repPauseDownTime = if (sharedPreferences.getString(KEY_REP_PAUSE_DOWN_TIME, KEY_SAME_AS) == KEY_SAME_AS) {
                     repPauseUpTime
                 } else {
                     sharedPreferences.getString(KEY_REP_PAUSE_DOWN_TIME, "1000")?.toLong() ?: 1000
@@ -75,6 +79,13 @@ class Settings(private val context: Context) {
     private fun checkRepLength() {
         if (repDownTime + repUpTime == 0L) {
             Toast.makeText(context, context.getString(R.string.rep_is_empty_message), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun callExternalListeners(sharedPreferences: SharedPreferences, key: String) {
+        listeners.forEach {
+            val listener = it.get()
+            if (listener == null) listeners.remove(it) else listener.onSharedPreferenceChanged(sharedPreferences, key)
         }
     }
 
