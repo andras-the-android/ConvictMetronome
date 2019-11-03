@@ -69,9 +69,9 @@ class WorkoutCalculations(private val settings: Settings) {
     private fun getTimeForDirection(direction: IndicatorAnimation.Direction): Long =
             when (direction) {
                 IndicatorAnimation.Direction.DOWN -> settings.repDownTime
-                IndicatorAnimation.Direction.RIGHT -> settings.repPauseUpTime
+                IndicatorAnimation.Direction.RIGHT -> settings.repPauseDownTime
                 IndicatorAnimation.Direction.UP -> settings.repUpTime
-                IndicatorAnimation.Direction.LEFT -> settings.repPauseDownTime
+                IndicatorAnimation.Direction.LEFT -> settings.repPauseUpTime
             }
 
     companion object {
