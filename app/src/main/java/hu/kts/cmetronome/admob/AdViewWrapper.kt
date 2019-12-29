@@ -1,31 +1,27 @@
 package hu.kts.cmetronome.admob
 
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.ads.AdView
 
 
-class AdViewWrapper(private val adView: AdView) : LifecycleObserver {
+class AdViewWrapper(private val adView: AdView) : DefaultLifecycleObserver {
 
     init {
         val adRequest = AdMobTestDeviceFilteredBuilderFactory.get().build()
         adView.loadAd(adRequest)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onResume() {
+    override fun onResume(owner: LifecycleOwner) {
         adView.resume()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun onPause() {
+    override fun onPause(owner: LifecycleOwner) {
         adView.pause()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
+    override fun onDestroy(owner: LifecycleOwner) {
         adView.destroy()
     }
 }

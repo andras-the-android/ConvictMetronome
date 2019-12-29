@@ -5,10 +5,9 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.OnLifecycleEvent
 import hu.kts.cmetronome.*
 import hu.kts.cmetronome.repository.WorkoutRepository
 import kotlinx.android.synthetic.main.fragment_workout.*
@@ -24,7 +23,7 @@ class WorkoutController(private val appContext: Context,
                         private val indicatorAnimation: IndicatorAnimation,
                         private val stopWatch: Stopwatch,
                         private val help: Help,
-                        private val countdowner: Countdowner) : LifecycleObserver {
+                        private val countdowner: Countdowner) : DefaultLifecycleObserver {
 
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }
@@ -169,14 +168,12 @@ class WorkoutController(private val appContext: Context,
         fillRepCounterTextViewWithTruncatedData()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
+    override fun onDestroy(owner: LifecycleOwner) {
         stopWatch.stop()
         countdowner.cancel()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun onPause() {
+    override fun onPause(owner: LifecycleOwner) {
         if (repository.workoutStatus == WorkoutStatus.IN_PROGRESS || repository.workoutStatus == WorkoutStatus.COUNTDOWN_IN_PROGRESS) {
             pauseWorkout()
         }

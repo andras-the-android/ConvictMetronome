@@ -54,7 +54,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads:18.2.0"
     implementation "com.google.android.gms:play-services-analytics:17.0.0"
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
-    kapt "androidx.lifecycle:lifecycle-compiler:2.1.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.1.0"
 
     //more about espreso configuration
     //https://google.github.io/android-testing-support-library/docs/espresso/setup/index.html
