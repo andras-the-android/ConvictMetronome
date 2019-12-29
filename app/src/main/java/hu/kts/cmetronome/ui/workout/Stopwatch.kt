@@ -1,14 +1,14 @@
 package hu.kts.cmetronome.ui.workout
 
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import hu.kts.cmetronome.Sounds
 import hu.kts.cmetronome.TimeProvider
-import kotlinx.android.synthetic.main.activity_workout.*
+import kotlinx.android.synthetic.main.fragment_workout.*
 import java.util.*
 
-class Stopwatch(private val activity: AppCompatActivity, private val timeProvider: TimeProvider, private val sounds: Sounds) {
+class Stopwatch(private val fragement: Fragment, private val timeProvider: TimeProvider, private val sounds: Sounds) {
 
     private val sb = StringBuilder()
     private val formatter = Formatter(sb)
@@ -17,11 +17,11 @@ class Stopwatch(private val activity: AppCompatActivity, private val timeProvide
         get() = timeProvider.startTime
 
     init {
-        timeProvider.observe(activity, Observer { this.onStopwatchTick(it ?: 0) })
+        timeProvider.observe(fragement, Observer { this.onStopwatchTick(it ?: 0) })
     }
 
     fun start(originalStartTime: Long = 0) {
-        activity.stopwatchTextView.visibility = View.VISIBLE
+        fragement.stopwatchTextView.visibility = View.VISIBLE
         if (originalStartTime == 0L) {
             timeProvider.startUp()
         } else {
@@ -30,12 +30,12 @@ class Stopwatch(private val activity: AppCompatActivity, private val timeProvide
     }
 
     fun stop() {
-        activity.stopwatchTextView.visibility = View.INVISIBLE
+        fragement.stopwatchTextView.visibility = View.INVISIBLE
         timeProvider.stop()
     }
 
     private fun onStopwatchTick(totalSeconds: Long) {
-        activity.stopwatchTextView.text = format(totalSeconds)
+        fragement.stopwatchTextView.text = format(totalSeconds)
         if (totalSeconds > 0 && totalSeconds % 60 == 0L) {
             sounds.beep()
         }

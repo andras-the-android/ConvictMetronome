@@ -1,18 +1,21 @@
 package hu.kts.cmetronome.ui.workout
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.OnLifecycleEvent
 import hu.kts.cmetronome.*
 import hu.kts.cmetronome.repository.WorkoutRepository
-import kotlinx.android.synthetic.main.activity_workout.*
+import kotlinx.android.synthetic.main.fragment_workout.*
 
-class WorkoutController(private val activity: AppCompatActivity,
+//TODO remove android dependencies
+class WorkoutController(private val appContext: Context,
+                        private val fragment: Fragment,
                         private val repository: WorkoutRepository,
                         private val settings: Settings,
                         private val sounds: Sounds,
@@ -28,7 +31,7 @@ class WorkoutController(private val activity: AppCompatActivity,
 
     init {
         initWorkoutData()
-        timeProviderRep.observe(activity, Observer { count -> onRepTimeProviderTick(count) })
+        timeProviderRep.observe(fragment, Observer { count -> onRepTimeProviderTick(count) })
         settings.addListener(listener)
         help.setEnabled(settings.isShowHelp)
         countdowner.onFinish = this::startWorkout
@@ -94,7 +97,7 @@ class WorkoutController(private val activity: AppCompatActivity,
 
     private fun countDownAndStart() {
         if (settings.repDownTime + settings.repUpTime == 0L) {
-            Toast.makeText(activity, activity.getString(R.string.rep_is_empty_message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(appContext, appContext.resources.getString(R.string.rep_is_empty_message), Toast.LENGTH_SHORT).show()
             return
         }
         if (repository.workoutStatus == WorkoutStatus.BETWEEN_SETS) {
@@ -183,14 +186,14 @@ class WorkoutController(private val activity: AppCompatActivity,
      * counter should contain maximum 2 digits
      */
     private fun fillRepCounterTextViewWithTruncatedData() {
-        activity.repCounterTextView.text = (repository.repCount % 100).toString()
+        fragment.repCounterTextView.text = (repository.repCount % 100).toString()
     }
 
     /**
      * counter should contain maximum 2 digits
      */
     private fun fillSetCounterTextViewWithTruncatedData() {
-        activity.setCounterTextView.text = (repository.setCount % 100).toString()
+        fragment.setCounterTextView.text = (repository.setCount % 100).toString()
     }
 
     companion object {

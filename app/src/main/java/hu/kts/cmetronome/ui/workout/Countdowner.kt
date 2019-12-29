@@ -1,40 +1,41 @@
 package hu.kts.cmetronome.ui.workout
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.TimeProvider
-import kotlinx.android.synthetic.main.activity_workout.*
+import kotlinx.android.synthetic.main.fragment_workout.*
 
-class Countdowner(private val activity: AppCompatActivity, internal var settings: Settings, private val timeProvider: TimeProvider) {
+class Countdowner(context: Context, private val fragment: Fragment, internal var settings: Settings, private val timeProvider: TimeProvider) {
 
-    private val countDownColor: Int = ContextCompat.getColor(activity, R.color.accent)
-    private val normalColor: Int = ContextCompat.getColor(activity, R.color.secondary_text)
+    private val countDownColor: Int = ContextCompat.getColor(context, R.color.accent)
+    private val normalColor: Int = ContextCompat.getColor(context, R.color.secondary_text)
     var onFinish: (() -> Unit)? = null
     var onCancel: (() -> Unit)? = null
 
     init {
-        timeProvider.observe(activity, Observer { this.onCountDownTick(it ?: 0) })
+        timeProvider.observe(fragment, Observer { this.onCountDownTick(it ?: 0) })
     }
 
     private fun onCountDownTick(remainingSeconds: Long) {
-        activity.repCounterTextView.text = remainingSeconds.toString()
+        fragment.repCounterTextView.text = remainingSeconds.toString()
         if (remainingSeconds == 0L) {
-            activity.repCounterTextView.setTextColor(normalColor)
+            fragment.repCounterTextView.setTextColor(normalColor)
             onFinish?.invoke()
         }
     }
 
     fun start() {
-        activity.repCounterTextView.setTextColor(countDownColor)
+        fragment.repCounterTextView.setTextColor(countDownColor)
         timeProvider.startDown(settings.countdownStartValue)
     }
 
     fun cancel() {
         timeProvider.stop()
-        activity.repCounterTextView.setTextColor(normalColor)
+        fragment.repCounterTextView.setTextColor(normalColor)
         onCancel?.invoke()
     }
 }

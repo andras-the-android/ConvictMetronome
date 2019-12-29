@@ -2,6 +2,7 @@ package hu.kts.cmetronome.di
 
 
 import android.app.Application
+import android.content.Context
 
 import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.Sounds
@@ -12,6 +13,7 @@ import hu.kts.cmetronome.ui.workout.*
 object Injector {
 
     lateinit var settings: Settings
+    lateinit var appContext: Context
 
     private lateinit var workoutRepository: WorkoutRepository
     private lateinit var sounds: Sounds
@@ -21,6 +23,7 @@ object Injector {
 
     fun init(context: Application) {
         settings = Settings(context)
+        appContext = context
         workoutRepository = WorkoutRepository()
         sounds = Sounds(settings)
         timeProviderRep = TimeProvider(500)
@@ -28,14 +31,14 @@ object Injector {
         timeProviderCountdowner = TimeProvider()
     }
 
-    fun inject(activity: WorkoutActivity) {
+    fun inject(fragment: WorkoutFragment) {
         val calculations = WorkoutCalculations(settings)
-        val indicatorAnimation = IndicatorAnimation(activity, settings)
-        val stopWatch = Stopwatch(activity, timeProviderStopwatch, sounds)
-        val help = Help(activity)
-        val countdowner = Countdowner(activity, settings, timeProviderCountdowner)
-        activity.workoutController = WorkoutController(activity, workoutRepository, settings, sounds, timeProviderRep, calculations, indicatorAnimation, stopWatch, help, countdowner)
-        activity.whatsNew = WhatsNew(activity, settings)
+        val indicatorAnimation = IndicatorAnimation(fragment, settings)
+        val stopWatch = Stopwatch(fragment, timeProviderStopwatch, sounds)
+        val help = Help(fragment)
+        val countdowner = Countdowner(appContext, fragment, settings, timeProviderCountdowner)
+        fragment.workoutController = WorkoutController(appContext, fragment, workoutRepository, settings, sounds, timeProviderRep, calculations, indicatorAnimation, stopWatch, help, countdowner)
+        fragment.whatsNew = WhatsNew(fragment, settings)
     }
 
 }
