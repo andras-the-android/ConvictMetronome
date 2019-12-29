@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/cm_nav"
+    app:startDestination="@id/workoutFragment">
+
+    <fragment
+        android:id="@+id/workoutFragment"
+        android:name="hu.kts.cmetronome.ui.workout.WorkoutFragment"
+        android:label="WorkoutFragment" >
+        <action
+            android:id="@+id/go_to_settings"
+            app:destination="@id/cmPreferenceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cmPreferenceFragment"
+        android:name="hu.kts.cmetronome.ui.settings.CmPreferenceFragment"
+        android:label="CmPreferenceFragment" />
+</navigation>

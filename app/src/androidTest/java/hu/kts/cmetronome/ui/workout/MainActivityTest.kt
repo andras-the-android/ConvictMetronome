@@ -21,6 +21,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.ui.MainActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.not
@@ -32,12 +33,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class WorkoutActivityTest {
+class MainActivityTest {
 
     @Rule
     @JvmField
     var mActivityRule = ActivityTestRule(
-            WorkoutActivity::class.java)
+            MainActivity::class.java)
 
     @Test
     fun testApp() {

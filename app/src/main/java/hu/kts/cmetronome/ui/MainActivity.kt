@@ -1,15 +1,14 @@
-package hu.kts.cmetronome.ui.workout
+package hu.kts.cmetronome.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.ui.settings.SettingsActivity
 
-class WorkoutActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +32,6 @@ class WorkoutActivity : AppCompatActivity() {
     }
 
     private fun openSettings() {
-        startActivity(Intent(this, SettingsActivity::class.java))
+        findNavController(R.id.main_nav_controller).navigate(R.id.go_to_settings)
     }
 }

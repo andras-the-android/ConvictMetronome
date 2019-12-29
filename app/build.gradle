@@ -55,6 +55,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-analytics:17.0.0"
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     implementation "androidx.lifecycle:lifecycle-common-java8:2.1.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.1.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.1.0"
 
     //more about espreso configuration
     //https://google.github.io/android-testing-support-library/docs/espresso/setup/index.html
