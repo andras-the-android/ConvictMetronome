@@ -2,30 +2,28 @@ package hu.kts.cmetronome.ui.workout
 
 import android.animation.ObjectAnimator
 import android.view.ViewTreeObserver
-import androidx.fragment.app.Fragment
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
-import kotlinx.android.synthetic.main.fragment_workout.*
 
 /**
  * AnimatorSet is avoided because it behaved strange on cancel.
  */
-class IndicatorAnimation(private val fragment: Fragment, private val settings: Settings) {
+class IndicatorAnimation(private val fragment: WorkoutFragment, private val settings: Settings) {
 
     private var animationRunning: Boolean = false
-    private var down: ObjectAnimator = ObjectAnimator.ofFloat(fragment.indicatorView, "translationY", 0f, 0f)
-    private var right: ObjectAnimator = ObjectAnimator.ofFloat(fragment.indicatorView, "translationY", 0f, 0f)
-    private var up: ObjectAnimator = ObjectAnimator.ofFloat(fragment.indicatorView, "translationY", 0f, 0f)
-    private var left: ObjectAnimator = ObjectAnimator.ofFloat(fragment.indicatorView, "translationY", 0f, 0f)
+    private var down: ObjectAnimator = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", 0f, 0f)
+    private var right: ObjectAnimator = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", 0f, 0f)
+    private var up: ObjectAnimator = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", 0f, 0f)
+    private var left: ObjectAnimator = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", 0f, 0f)
     private var currentAnimation: ObjectAnimator? = null
     private var longPath: Float = 0F
     private var shortPath: Float = 0F
 
     init {
-        fragment.indicatorView.viewTreeObserver.addOnGlobalLayoutListener(
+        fragment.binding.indicatorView.viewTreeObserver.addOnGlobalLayoutListener(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        fragment.indicatorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        fragment.binding.indicatorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                         init()
                     }
                 })
@@ -35,16 +33,16 @@ class IndicatorAnimation(private val fragment: Fragment, private val settings: S
         val resources = fragment.resources
         val indicatorDiameter = resources.getDimensionPixelSize(R.dimen.indicator_diameter).toFloat()
         val metronomePadding = resources.getDimensionPixelSize(R.dimen.metronome_padding).toFloat() * 2
-        longPath = fragment.metronomeView.height.toFloat() - indicatorDiameter - metronomePadding
-        shortPath = fragment.metronomeView.width.toFloat() - indicatorDiameter - metronomePadding
+        longPath = fragment.binding.metronomeView.height.toFloat() - indicatorDiameter - metronomePadding
+        shortPath = fragment.binding.metronomeView.width.toFloat() - indicatorDiameter - metronomePadding
 
-        down = ObjectAnimator.ofFloat(fragment.indicatorView, "translationY", 0f, longPath)
+        down = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", 0f, longPath)
 
-        right = ObjectAnimator.ofFloat(fragment.indicatorView, "translationX", 0f, shortPath)
+        right = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationX", 0f, shortPath)
 
-        up = ObjectAnimator.ofFloat(fragment.indicatorView, "translationY", longPath, 0f)
+        up = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", longPath, 0f)
 
-        left = ObjectAnimator.ofFloat(fragment.indicatorView, "translationX", shortPath, 0f)
+        left = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationX", shortPath, 0f)
         resetIndicatorPosition()
     }
 
@@ -88,8 +86,8 @@ class IndicatorAnimation(private val fragment: Fragment, private val settings: S
     }
 
     private fun moveIndicator(x: Float, y: Float) {
-        fragment.indicatorView.translationX = x
-        fragment.indicatorView.translationY = y
+        fragment.binding.indicatorView.translationX = x
+        fragment.binding.indicatorView.translationY = y
     }
 
     enum class Direction {

@@ -1,19 +1,17 @@
 package hu.kts.cmetronome.ui.workout
 
 import android.view.View
-import androidx.fragment.app.Fragment
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.WorkoutStatus
-import kotlinx.android.synthetic.main.fragment_workout.*
 
-class Help(private val fragment: Fragment) {
+class Help(private val fragment: WorkoutFragment) {
 
     fun setEnabled(enabled: Boolean) {
-        fragment.helpTextView.visibility = if (enabled) View.VISIBLE else View.GONE
+        fragment.binding.helpTextView.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
     fun setHelpTextByWorkoutStatus(status: WorkoutStatus) {
-        fragment.helpTextView.setText(getHelpTextIdByWorkoutStatus(status))
+        fragment.binding.helpTextView.setText(getHelpTextIdByWorkoutStatus(status))
     }
 
     private fun getHelpTextIdByWorkoutStatus(status: WorkoutStatus): Int {

@@ -1,36 +1,31 @@
 package hu.kts.cmetronome.ui.workout
 
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import hu.kts.cmetronome.BuildConfig
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.databinding.ViewWhatsNewBinding
 
 class WhatsNew(val fragment: Fragment, val settings: Settings) {
 
     fun run() {
         if (settings.whatsNewVersion < LATEST_VERSION_WITH_WHATS_NEW_RECORD) {
-            val view = fragment.layoutInflater.inflate(R.layout.view_whats_new, null)
-            val textView = view.findViewById<TextView>(R.id.releaseNotes)
-
+            val binding = ViewWhatsNewBinding.inflate(fragment.layoutInflater)
             val inputStream = fragment.resources.openRawResource(R.raw.release_notes)
             val bytes = ByteArray(inputStream.available())
             inputStream.read(bytes)
-
             //TODO improve html processing https://stackoverflow.com/questions/11214001/show-ul-li-in-android-textview
-            textView.text = HtmlCompat.fromHtml(String(bytes), HtmlCompat.FROM_HTML_MODE_COMPACT)
+            binding.releaseNotes.text = HtmlCompat.fromHtml(String(bytes), HtmlCompat.FROM_HTML_MODE_COMPACT)
 
             fragment.activity?.let {
                 AlertDialog.Builder(it)
-                        .setView(view)
+                        .setView(binding.root)
                         .setCancelable(false)
                         .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss(); }
                         .show()
             }
-
-
 
             runMigrations()
             settings.updateWhatsNewVersion()

@@ -4,17 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import hu.kts.cmetronome.*
 import hu.kts.cmetronome.repository.WorkoutRepository
-import kotlinx.android.synthetic.main.fragment_workout.*
 
 //TODO remove android dependencies
 class WorkoutController(private val appContext: Context,
-                        private val fragment: Fragment,
+                        private val fragment: WorkoutFragment,
                         private val repository: WorkoutRepository,
                         private val settings: Settings,
                         private val sounds: Sounds,
@@ -183,14 +181,14 @@ class WorkoutController(private val appContext: Context,
      * counter should contain maximum 2 digits
      */
     private fun fillRepCounterTextViewWithTruncatedData() {
-        fragment.repCounterTextView.text = (repository.repCount % 100).toString()
+        fragment.binding.repCounterTextView.text = (repository.repCount % 100).toString()
     }
 
     /**
      * counter should contain maximum 2 digits
      */
     private fun fillSetCounterTextViewWithTruncatedData() {
-        fragment.setCounterTextView.text = (repository.setCount % 100).toString()
+        fragment.binding.setCounterTextView.text = (repository.setCount % 100).toString()
     }
 
     companion object {
