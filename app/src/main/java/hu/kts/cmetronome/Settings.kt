@@ -4,9 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.widget.Toast
+import hu.kts.cmetronome.di.AppContext
 import java.lang.ref.WeakReference
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Settings(private val context: Context) {
+@Singleton
+class Settings @Inject constructor(@AppContext private val context: Context) {
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     //we have to hold a reference to this or else it'd be gc-d

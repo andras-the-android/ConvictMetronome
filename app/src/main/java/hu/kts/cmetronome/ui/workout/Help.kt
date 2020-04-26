@@ -3,8 +3,9 @@ package hu.kts.cmetronome.ui.workout
 import android.view.View
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.WorkoutStatus
+import javax.inject.Inject
 
-class Help(private val fragment: WorkoutFragment) {
+class Help @Inject constructor(private val fragment: WorkoutFragment) {
 
     fun setEnabled(enabled: Boolean) {
         fragment.binding.helpTextView.visibility = if (enabled) View.VISIBLE else View.GONE

@@ -7,8 +7,9 @@ import hu.kts.cmetronome.BuildConfig
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.databinding.ViewWhatsNewBinding
+import javax.inject.Inject
 
-class WhatsNew(val fragment: Fragment, val settings: Settings) {
+class WhatsNew @Inject constructor(val fragment: Fragment, val settings: Settings) {
 
     fun run() {
         if (settings.whatsNewVersion < LATEST_VERSION_WITH_WHATS_NEW_RECORD) {

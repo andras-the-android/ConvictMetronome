@@ -4,11 +4,12 @@ import android.animation.ObjectAnimator
 import android.view.ViewTreeObserver
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
+import javax.inject.Inject
 
 /**
  * AnimatorSet is avoided because it behaved strange on cancel.
  */
-class IndicatorAnimation(private val fragment: WorkoutFragment, private val settings: Settings) {
+class IndicatorAnimation @Inject constructor(private val fragment: WorkoutFragment, private val settings: Settings) {
 
     private var animationRunning: Boolean = false
     private var down: ObjectAnimator = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", 0f, 0f)

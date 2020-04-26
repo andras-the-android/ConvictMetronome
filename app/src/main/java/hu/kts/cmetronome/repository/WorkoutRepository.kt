@@ -1,8 +1,11 @@
 package hu.kts.cmetronome.repository
 
 import hu.kts.cmetronome.WorkoutStatus
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class WorkoutRepository {
+@Singleton
+class WorkoutRepository @Inject constructor() {
 
     var repCount = 0
         internal set

@@ -8,20 +8,24 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import hu.kts.cmetronome.*
+import hu.kts.cmetronome.di.AppContext
+import hu.kts.cmetronome.di.TimeProviderRep
 import hu.kts.cmetronome.repository.WorkoutRepository
+import javax.inject.Inject
 
 //TODO remove android dependencies
-class WorkoutController(private val appContext: Context,
-                        private val fragment: WorkoutFragment,
-                        private val repository: WorkoutRepository,
-                        private val settings: Settings,
-                        private val sounds: Sounds,
-                        private val timeProviderRep: TimeProvider,
-                        private val calculations: WorkoutCalculations,
-                        private val indicatorAnimation: IndicatorAnimation,
-                        private val stopWatch: Stopwatch,
-                        private val help: Help,
-                        private val countdowner: Countdowner) : DefaultLifecycleObserver {
+class WorkoutController @Inject constructor(@AppContext private val appContext: Context,
+                                            private val fragment: WorkoutFragment,
+                                            private val repository: WorkoutRepository,
+                                            private val settings: Settings,
+                                            private val sounds: Sounds,
+                                            @TimeProviderRep private val timeProviderRep: TimeProvider,
+                                            private val calculations: WorkoutCalculations,
+                                            private val indicatorAnimation: IndicatorAnimation,
+                                            private val stopWatch: Stopwatch,
+                                            private val help: Help,
+                                            private val countdowner: Countdowner
+) : DefaultLifecycleObserver {
 
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }

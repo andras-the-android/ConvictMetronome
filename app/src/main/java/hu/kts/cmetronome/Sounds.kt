@@ -8,9 +8,12 @@ import android.media.ToneGenerator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Short
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Suppress("JoinDeclarationAndAssignment")
-class Sounds(private val settings: Settings) {
+@Singleton
+class Sounds @Inject constructor(private val settings: Settings) {
 
     private val toneGenerator: ToneGenerator
     private var audioTrack: AudioTrack? = null

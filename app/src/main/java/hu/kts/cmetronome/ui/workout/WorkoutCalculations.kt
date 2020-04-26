@@ -3,8 +3,9 @@ package hu.kts.cmetronome.ui.workout
 import android.content.SharedPreferences
 import hu.kts.cmetronome.Settings
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class WorkoutCalculations(private val settings: Settings) {
+class WorkoutCalculations @Inject constructor(private val settings: Settings) {
 
     private var millisToIncreaseRepCounter = 0L
     private var directionOrder: Array<IndicatorAnimation.Direction>

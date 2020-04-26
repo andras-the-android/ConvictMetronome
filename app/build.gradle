@@ -64,6 +64,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
     implementation "androidx.navigation:navigation-fragment-ktx:2.2.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.2.0"
+    implementation 'com.google.dagger:dagger:2.27'
+    kapt 'com.google.dagger:dagger-compiler:2.27'
 
     //more about espreso configuration
     //https://google.github.io/android-testing-support-library/docs/espresso/setup/index.html

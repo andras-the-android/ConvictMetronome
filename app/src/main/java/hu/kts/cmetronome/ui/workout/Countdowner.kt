@@ -6,8 +6,16 @@ import androidx.lifecycle.Observer
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.TimeProvider
+import hu.kts.cmetronome.di.AppContext
+import hu.kts.cmetronome.di.TimeProviderCountdowner
+import javax.inject.Inject
 
-class Countdowner(context: Context, private val fragment: WorkoutFragment, internal var settings: Settings, private val timeProvider: TimeProvider) {
+class Countdowner @Inject constructor(
+        @AppContext context: Context,
+        private val fragment: WorkoutFragment,
+        private val settings: Settings,
+        @TimeProviderCountdowner private val timeProvider: TimeProvider
+) {
 
     private val countDownColor: Int = ContextCompat.getColor(context, R.color.accent)
     private val normalColor: Int = ContextCompat.getColor(context, R.color.secondary_text)

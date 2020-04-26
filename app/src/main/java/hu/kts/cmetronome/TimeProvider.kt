@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.SystemClock
 import hu.kts.cmetronome.architetcture.SingleLiveEvent
 
-class TimeProvider(private val delayMillis: Long = 1000) : SingleLiveEvent<Long>() {
+class TimeProvider(private val delayMillis: Long) : SingleLiveEvent<Long>() {
 
     private var state = State.STOPPED
     private val handler = Handler()

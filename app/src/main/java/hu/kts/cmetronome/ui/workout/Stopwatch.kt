@@ -4,9 +4,15 @@ import android.view.View
 import androidx.lifecycle.Observer
 import hu.kts.cmetronome.Sounds
 import hu.kts.cmetronome.TimeProvider
+import hu.kts.cmetronome.di.TimeProviderStopwatch
 import java.util.*
+import javax.inject.Inject
 
-class Stopwatch(private val fragement: WorkoutFragment, private val timeProvider: TimeProvider, private val sounds: Sounds) {
+class Stopwatch @Inject constructor(
+        private val fragment: WorkoutFragment,
+        @TimeProviderStopwatch private val timeProvider: TimeProvider,
+        private val sounds: Sounds
+) {
 
     private val sb = StringBuilder()
     private val formatter = Formatter(sb)
@@ -15,11 +21,11 @@ class Stopwatch(private val fragement: WorkoutFragment, private val timeProvider
         get() = timeProvider.startTime
 
     init {
-        timeProvider.observe(fragement, Observer { this.onStopwatchTick(it ?: 0) })
+        timeProvider.observe(fragment, Observer { this.onStopwatchTick(it ?: 0) })
     }
 
     fun start(originalStartTime: Long = 0) {
-        fragement.binding.stopwatchTextView.visibility = View.VISIBLE
+        fragment.binding.stopwatchTextView.visibility = View.VISIBLE
         if (originalStartTime == 0L) {
             timeProvider.startUp()
         } else {
@@ -28,12 +34,12 @@ class Stopwatch(private val fragement: WorkoutFragment, private val timeProvider
     }
 
     fun stop() {
-        fragement.binding.stopwatchTextView.visibility = View.INVISIBLE
+        fragment.binding.stopwatchTextView.visibility = View.INVISIBLE
         timeProvider.stop()
     }
 
     private fun onStopwatchTick(totalSeconds: Long) {
-        fragement.binding.stopwatchTextView.text = format(totalSeconds)
+        fragment.binding.stopwatchTextView.text = format(totalSeconds)
         if (totalSeconds > 0 && totalSeconds % 60 == 0L) {
             sounds.beep()
         }

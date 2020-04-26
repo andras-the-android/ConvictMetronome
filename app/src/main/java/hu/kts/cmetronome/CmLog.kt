@@ -4,7 +4,6 @@ import android.content.Context
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
-import hu.kts.cmetronome.di.Injector
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -12,9 +11,9 @@ object CmLog {
 
     private lateinit var tracker: Tracker
 
-    internal fun init(context: Context) {
+    internal fun init(context: Context, settings: Settings) {
         createTracker(context)
-        enableTracker(context, Injector.settings.isAnalyticsEnabled)
+        enableTracker(context, settings.isAnalyticsEnabled)
     }
 
     private fun createTracker(context: Context) {
