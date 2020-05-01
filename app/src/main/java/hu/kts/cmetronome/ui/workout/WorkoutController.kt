@@ -7,10 +7,14 @@ import android.widget.Toast
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import hu.kts.cmetronome.*
+import hu.kts.cmetronome.R
+import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.TimeProvider
+import hu.kts.cmetronome.WorkoutStatus
 import hu.kts.cmetronome.di.AppContext
 import hu.kts.cmetronome.di.TimeProviderRep
 import hu.kts.cmetronome.repository.WorkoutRepository
+import hu.kts.cmetronome.sounds.Sounds
 import javax.inject.Inject
 
 //TODO remove android dependencies

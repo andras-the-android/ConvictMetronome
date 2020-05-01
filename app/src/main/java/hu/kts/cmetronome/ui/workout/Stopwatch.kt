@@ -2,9 +2,9 @@ package hu.kts.cmetronome.ui.workout
 
 import android.view.View
 import androidx.lifecycle.Observer
-import hu.kts.cmetronome.Sounds
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.di.TimeProviderStopwatch
+import hu.kts.cmetronome.sounds.Sounds
 import java.util.*
 import javax.inject.Inject
 

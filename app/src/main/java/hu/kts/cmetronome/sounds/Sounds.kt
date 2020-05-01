@@ -1,19 +1,20 @@
-package hu.kts.cmetronome
+package hu.kts.cmetronome.sounds
 
 import android.content.SharedPreferences
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.media.ToneGenerator
+import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.sounds.SoundWaveGenerator.Companion.SAMPLE_RATE
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.Short
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Suppress("JoinDeclarationAndAssignment")
 @Singleton
-class Sounds @Inject constructor(private val settings: Settings) {
+class Sounds @Inject constructor(private val settings: Settings, private val generator: SoundWaveGenerator) {
 
     private val toneGenerator: ToneGenerator
     private var audioTrack: AudioTrack? = null
@@ -50,31 +51,9 @@ class Sounds @Inject constructor(private val settings: Settings) {
 
     private fun generateUpDownSounds() {
         GlobalScope.launch{
-            sampleArrayUp = generateSoundArray(settings.repUpTime.toInt(), true)
-            sampleArrayDown = generateSoundArray(settings.repDownTime.toInt(),false)
+            sampleArrayUp = generator.generate(settings.repUpTime.toInt(), true)
+            sampleArrayDown = generator.generate(settings.repDownTime.toInt(),false)
         }
-    }
-
-    private fun generateSoundArray(durationMillis: Int, up: Boolean): ShortArray {
-        val sampleCount = durationMillis * SAMPLE_RATE / 1000
-        val result = ShortArray(sampleCount)
-        val frequencyIncrement = BASE_FREQUENCY / result.size
-        var frequency = BASE_FREQUENCY
-
-        for (i in result.indices) {
-            frequency += frequencyIncrement
-            var sample = Math.sin(2.0 * Math.PI * i.toDouble() / (SAMPLE_RATE / frequency)) * DISTORTION_AMOUNT
-            //inverting the peak of the sine wave
-            if (sample > 1) {
-                sample = 1 - (sample - 1)
-            }
-            if (sample < -1) {
-                sample = -1 - (sample + 1)
-            }
-            val index = if (up) i else sampleCount - i - 1
-            result[index] = (sample * Short.MAX_VALUE).toShort()
-        }
-        return result
     }
 
     private fun playSound(up: Boolean) {
@@ -107,12 +86,6 @@ class Sounds @Inject constructor(private val settings: Settings) {
                 release()
             }
         }
-    }
-
-    companion object {
-        private const val SAMPLE_RATE = 44100
-        private const val BASE_FREQUENCY = 261.63
-        private const val DISTORTION_AMOUNT = 1.7 //1 is pure sine
     }
 
 }
