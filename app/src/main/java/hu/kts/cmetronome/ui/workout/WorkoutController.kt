@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 //TODO remove android dependencies
 class WorkoutController @Inject constructor(@AppContext private val appContext: Context,
-                                            private val fragment: WorkoutFragment,
+                                            fragment: WorkoutFragment,
                                             private val repository: WorkoutRepository,
                                             private val settings: Settings,
                                             private val sounds: Sounds,
@@ -24,7 +24,8 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
                                             private val indicatorAnimation: IndicatorAnimation,
                                             private val stopWatch: Stopwatch,
                                             private val help: Help,
-                                            private val countdowner: Countdowner
+                                            private val countdowner: Countdowner,
+                                            private val counters: Counters
 ) : DefaultLifecycleObserver {
 
     //we have to hold a reference to this or else it'd be gc-d
@@ -49,8 +50,8 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
         } else {
             setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START)
         }
-        fillRepCounterTextViewWithTruncatedData()
-        fillSetCounterTextViewWithTruncatedData()
+        counters.setRepCount(repository.repCount)
+        counters.setSetCount(repository.setCount)
     }
 
     private fun onSettingsChanged(key: String?) {
@@ -87,7 +88,7 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
     }
 
     private fun onCountdownCancelled() {
-        fillRepCounterTextViewWithTruncatedData()
+        counters.setRepCount(repository.repCount)
     }
 
     private fun resetIndicator() {
@@ -111,7 +112,7 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
 
     private fun startWorkout() {
         setWorkoutStatusAndHelpText(WorkoutStatus.IN_PROGRESS)
-        fillRepCounterTextViewWithTruncatedData()
+        counters.setRepCount(repository.repCount)
         timeProviderRep.startUp()
     }
 
@@ -137,7 +138,7 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
         }
         if (calculations.shouldIncreaseRepCounter(count)) {
             repository.increaseRepCounter()
-            fillRepCounterTextViewWithTruncatedData()
+            counters.setRepCount(repository.repCount)
         }
     }
 
@@ -158,7 +159,7 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
 
     private fun increaseSetCounter() {
         repository.increaseSetCounter()
-        fillSetCounterTextViewWithTruncatedData()
+        counters.setSetCount(repository.setCount)
     }
 
 
@@ -166,8 +167,8 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
         setWorkoutStatusAndHelpText(WorkoutStatus.BEFORE_START)
         stopWatch.stop()
         repository.resetCounters()
-        fillSetCounterTextViewWithTruncatedData()
-        fillRepCounterTextViewWithTruncatedData()
+        counters.setSetCount(repository.setCount)
+        counters.setRepCount(repository.repCount)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -179,20 +180,6 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
         if (repository.workoutStatus == WorkoutStatus.IN_PROGRESS || repository.workoutStatus == WorkoutStatus.COUNTDOWN_IN_PROGRESS) {
             pauseWorkout()
         }
-    }
-
-    /**
-     * counter should contain maximum 2 digits
-     */
-    private fun fillRepCounterTextViewWithTruncatedData() {
-        fragment.binding.repCounterTextView.text = (repository.repCount % 100).toString()
-    }
-
-    /**
-     * counter should contain maximum 2 digits
-     */
-    private fun fillSetCounterTextViewWithTruncatedData() {
-        fragment.binding.setCounterTextView.text = (repository.setCount % 100).toString()
     }
 
     companion object {

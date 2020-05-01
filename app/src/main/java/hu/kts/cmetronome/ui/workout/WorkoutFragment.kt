@@ -20,13 +20,22 @@ class WorkoutFragment: Fragment() {
 
     lateinit var binding: FragmentWorkoutBinding
 
+    private var injected = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentWorkoutBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        return try {
+            binding.root
+        } catch (e: UninitializedPropertyAccessException) {
+            binding = FragmentWorkoutBinding.inflate(layoutInflater, container, false)
+            binding.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        AppComponent.get().workoutComponentFactory.create(this).inject(this)
+        if (!injected) {
+            AppComponent.get().workoutComponentFactory.create(this).inject(this)
+            injected = true
+        }
 
         lifecycle.addObserver(AdViewWrapper(binding.adView))
         lifecycle.addObserver(workoutController)
