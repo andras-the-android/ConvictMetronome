@@ -1,27 +1,21 @@
 package hu.kts.cmetronome.ui.workout
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.WorkoutStatus
-import hu.kts.cmetronome.di.AppContext
 import hu.kts.cmetronome.di.TimeProviderRep
 import hu.kts.cmetronome.logic.WorkoutCalculations
 import hu.kts.cmetronome.repository.Settings
 import hu.kts.cmetronome.repository.WorkoutRepository
 import hu.kts.cmetronome.sounds.Sounds
+import hu.kts.cmetronome.ui.Toaster
 import javax.inject.Inject
 
-//TODO remove android dependencies
-class WorkoutController @Inject constructor(@AppContext private val appContext: Context,
-                                            fragment: WorkoutFragment,
-                                            private val repository: WorkoutRepository,
+class WorkoutController @Inject constructor(private val repository: WorkoutRepository,
                                             private val settings: Settings,
                                             private val sounds: Sounds,
                                             @TimeProviderRep private val timeProviderRep: TimeProvider,
@@ -30,7 +24,8 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
                                             private val stopWatch: Stopwatch,
                                             private val help: Help,
                                             private val countdowner: Countdowner,
-                                            private val counters: Counters
+                                            private val counters: Counters,
+                                            private val toaster: Toaster
 ) : DefaultLifecycleObserver {
 
     //we have to hold a reference to this or else it'd be gc-d
@@ -38,7 +33,7 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
 
     init {
         initWorkoutData()
-        timeProviderRep.observe(fragment, Observer { count -> onRepTimeProviderTick(count) })
+        timeProviderRep.observeForever { count -> onRepTimeProviderTick(count) }
         settings.addListener(listener)
         help.setEnabled(settings.isShowHelp)
         countdowner.onFinish = this::startWorkout
@@ -104,7 +99,7 @@ class WorkoutController @Inject constructor(@AppContext private val appContext: 
 
     private fun countDownAndStart() {
         if (settings.repDownTime + settings.repUpTime == 0L) {
-            Toast.makeText(appContext, appContext.resources.getString(R.string.rep_is_empty_message), Toast.LENGTH_SHORT).show()
+            toaster.showShort(R.string.rep_is_empty_message)
             return
         }
         if (repository.workoutStatus == WorkoutStatus.BETWEEN_SETS) {

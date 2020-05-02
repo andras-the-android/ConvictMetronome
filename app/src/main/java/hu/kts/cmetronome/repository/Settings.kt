@@ -1,17 +1,15 @@
 package hu.kts.cmetronome.repository
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.widget.Toast
 import hu.kts.cmetronome.BuildConfig
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.di.AppContext
+import hu.kts.cmetronome.ui.Toaster
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Settings @Inject constructor(@AppContext private val context: Context, private val sharedPreferences: SharedPreferences) {
+class Settings @Inject constructor(private val sharedPreferences: SharedPreferences, private val toaster: Toaster) {
 
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key -> onPreferencesChanged(key); callExternalListeners(sharedPreferences, key) }
@@ -100,7 +98,7 @@ class Settings @Inject constructor(@AppContext private val context: Context, pri
 
     private fun checkRepLength() {
         if (repDownTime + repUpTime == 0L) {
-            Toast.makeText(context, context.getString(R.string.rep_is_empty_message), Toast.LENGTH_SHORT).show()
+            toaster.showShort(R.string.rep_is_empty_message)
         }
     }
 
