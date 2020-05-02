@@ -11,9 +11,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Settings @Inject constructor(@AppContext private val context: Context) {
+class Settings @Inject constructor(@AppContext private val context: Context, private val sharedPreferences: SharedPreferences) {
 
-    private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key -> onPreferencesChanged(key); callExternalListeners(sharedPreferences, key) }
 
