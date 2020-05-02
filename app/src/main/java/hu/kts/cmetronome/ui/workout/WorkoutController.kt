@@ -8,11 +8,12 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.WorkoutStatus
 import hu.kts.cmetronome.di.AppContext
 import hu.kts.cmetronome.di.TimeProviderRep
+import hu.kts.cmetronome.logic.WorkoutCalculations
+import hu.kts.cmetronome.repository.Settings
 import hu.kts.cmetronome.repository.WorkoutRepository
 import hu.kts.cmetronome.sounds.Sounds
 import javax.inject.Inject

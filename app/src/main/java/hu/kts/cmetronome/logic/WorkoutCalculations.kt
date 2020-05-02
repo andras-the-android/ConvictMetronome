@@ -1,7 +1,8 @@
-package hu.kts.cmetronome.ui.workout
+package hu.kts.cmetronome.logic
 
 import android.content.SharedPreferences
-import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.repository.Settings
+import hu.kts.cmetronome.ui.workout.IndicatorAnimation
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

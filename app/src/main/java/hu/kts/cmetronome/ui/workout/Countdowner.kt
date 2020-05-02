@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.di.AppContext
 import hu.kts.cmetronome.di.TimeProviderCountdowner
+import hu.kts.cmetronome.repository.Settings
 import javax.inject.Inject
 
 class Countdowner @Inject constructor(

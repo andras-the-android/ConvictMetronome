@@ -5,8 +5,8 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import hu.kts.cmetronome.BuildConfig
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.Settings
 import hu.kts.cmetronome.databinding.ViewWhatsNewBinding
+import hu.kts.cmetronome.repository.Settings
 import javax.inject.Inject
 
 class WhatsNew @Inject constructor(val fragment: Fragment, val settings: Settings) {

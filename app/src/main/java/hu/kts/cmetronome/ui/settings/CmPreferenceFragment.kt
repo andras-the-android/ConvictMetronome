@@ -8,7 +8,7 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.PreferenceFragmentCompat
 import hu.kts.cmetronome.CmLog
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.repository.Settings
 
 class CmPreferenceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {

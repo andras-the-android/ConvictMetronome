@@ -20,7 +20,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.repository.Settings
 import hu.kts.cmetronome.ui.MainActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher

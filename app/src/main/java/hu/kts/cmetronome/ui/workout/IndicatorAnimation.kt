@@ -3,7 +3,7 @@ package hu.kts.cmetronome.ui.workout
 import android.animation.ObjectAnimator
 import android.view.ViewTreeObserver
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.repository.Settings
 import javax.inject.Inject
 
 /**

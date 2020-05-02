@@ -1,9 +1,10 @@
-package hu.kts.cmetronome
+package hu.kts.cmetronome.repository
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import android.widget.Toast
+import hu.kts.cmetronome.BuildConfig
+import hu.kts.cmetronome.R
 import hu.kts.cmetronome.di.AppContext
 import java.lang.ref.WeakReference
 import javax.inject.Inject

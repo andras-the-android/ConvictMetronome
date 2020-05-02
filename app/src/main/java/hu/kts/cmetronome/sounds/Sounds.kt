@@ -5,7 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.media.ToneGenerator
-import hu.kts.cmetronome.Settings
+import hu.kts.cmetronome.repository.Settings
 import hu.kts.cmetronome.sounds.SoundWaveGenerator.Companion.SAMPLE_RATE
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
