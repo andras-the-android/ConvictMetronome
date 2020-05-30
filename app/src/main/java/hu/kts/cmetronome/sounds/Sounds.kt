@@ -5,7 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.media.ToneGenerator
-import hu.kts.cmetronome.repository.Settings
+import hu.kts.cmetronome.repository.WorkoutSettings
 import hu.kts.cmetronome.sounds.SoundWaveGenerator.Companion.SAMPLE_RATE
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Suppress("JoinDeclarationAndAssignment")
 @Singleton
-class Sounds @Inject constructor(private val settings: Settings, private val generator: SoundWaveGenerator) {
+class Sounds @Inject constructor(private val settings: WorkoutSettings, private val generator: SoundWaveGenerator) {
 
     private val toneGenerator: ToneGenerator
     private var audioTrack: AudioTrack? = null
@@ -22,7 +22,7 @@ class Sounds @Inject constructor(private val settings: Settings, private val gen
     private var sampleArrayDown = ShortArray(0)
     //we have to hold a reference to this or else it'd be gc-d
     private val settingsListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == Settings.KEY_REP_UP_TIME || key == Settings.KEY_REP_DOWN_TIME) generateUpDownSounds()
+        if (key == WorkoutSettings.KEY_REP_UP_TIME || key == WorkoutSettings.KEY_REP_DOWN_TIME) generateUpDownSounds()
     }
 
     init {

@@ -9,14 +9,14 @@ import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.WorkoutStatus
 import hu.kts.cmetronome.di.TimeProviderRep
 import hu.kts.cmetronome.logic.WorkoutCalculations
-import hu.kts.cmetronome.repository.Settings
 import hu.kts.cmetronome.repository.WorkoutRepository
+import hu.kts.cmetronome.repository.WorkoutSettings
 import hu.kts.cmetronome.sounds.Sounds
 import hu.kts.cmetronome.ui.Toaster
 import javax.inject.Inject
 
 class WorkoutController @Inject constructor(private val repository: WorkoutRepository,
-                                            private val settings: Settings,
+                                            private val settings: WorkoutSettings,
                                             private val sounds: Sounds,
                                             @TimeProviderRep private val timeProviderRep: TimeProvider,
                                             private val calculations: WorkoutCalculations,
@@ -56,8 +56,8 @@ class WorkoutController @Inject constructor(private val repository: WorkoutRepos
 
     private fun onSettingsChanged(key: String?) {
         when (key) {
-            Settings.KEY_SHOW_HELP -> help.setEnabled(settings.isShowHelp)
-            Settings.KEY_REP_STARTS_WITH_UP -> resetIndicator()
+            WorkoutSettings.KEY_SHOW_HELP -> help.setEnabled(settings.isShowHelp)
+            WorkoutSettings.KEY_REP_STARTS_WITH_UP -> resetIndicator()
         }
     }
 

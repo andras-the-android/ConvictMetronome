@@ -7,13 +7,13 @@ import hu.kts.cmetronome.R
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.di.AppContext
 import hu.kts.cmetronome.di.TimeProviderCountdowner
-import hu.kts.cmetronome.repository.Settings
+import hu.kts.cmetronome.repository.WorkoutSettings
 import javax.inject.Inject
 
 class Countdowner @Inject constructor(
         @AppContext context: Context,
         private val fragment: WorkoutFragment,
-        private val settings: Settings,
+        private val settings: WorkoutSettings,
         @TimeProviderCountdowner private val timeProvider: TimeProvider
 ) {
 

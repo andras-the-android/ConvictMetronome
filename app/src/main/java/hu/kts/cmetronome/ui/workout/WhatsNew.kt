@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import hu.kts.cmetronome.BuildConfig
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.databinding.ViewWhatsNewBinding
-import hu.kts.cmetronome.repository.Settings
+import hu.kts.cmetronome.repository.WorkoutSettings
 import javax.inject.Inject
 
-class WhatsNew @Inject constructor(val fragment: Fragment, val settings: Settings) {
+class WhatsNew @Inject constructor(val fragment: Fragment, val settings: WorkoutSettings) {
 
     fun run() {
         if (settings.whatsNewVersion < LATEST_VERSION_WITH_WHATS_NEW_RECORD) {

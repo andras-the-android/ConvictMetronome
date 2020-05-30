@@ -20,7 +20,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import hu.kts.cmetronome.R
-import hu.kts.cmetronome.repository.Settings
+import hu.kts.cmetronome.repository.WorkoutSettings
 import hu.kts.cmetronome.ui.MainActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -115,7 +115,7 @@ class MainActivityTest {
         @BeforeClass
         fun setUp() {
             val preferences = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
-            preferences.edit().putString(Settings.KEY_COUNTDOWN_START_VALUE, "3").apply()
+            preferences.edit().putString(WorkoutSettings.KEY_COUNTDOWN_START_VALUE, "3").apply()
         }
 
         private fun testBetweenSets(repCount: Int, setCount: Int) {

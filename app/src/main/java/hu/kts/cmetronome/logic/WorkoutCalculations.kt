@@ -1,12 +1,12 @@
 package hu.kts.cmetronome.logic
 
 import android.content.SharedPreferences
-import hu.kts.cmetronome.repository.Settings
+import hu.kts.cmetronome.repository.WorkoutSettings
 import hu.kts.cmetronome.ui.workout.IndicatorAnimation
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class WorkoutCalculations @Inject constructor(private val settings: Settings) {
+class WorkoutCalculations @Inject constructor(private val settings: WorkoutSettings) {
 
     private var millisToIncreaseRepCounter = 0L
     private var directionOrder: Array<IndicatorAnimation.Direction>
@@ -46,7 +46,7 @@ class WorkoutCalculations @Inject constructor(private val settings: Settings) {
 
     private fun onSettingsChanged(key: String?) {
         when (key) {
-            Settings.KEY_REP_UP_TIME, Settings.KEY_REP_DOWN_TIME, Settings.KEY_REP_PAUSE_UP_TIME, Settings.KEY_REP_PAUSE_DOWN_TIME, Settings.KEY_REP_STARTS_WITH_UP -> calculateRepData()
+            WorkoutSettings.KEY_REP_UP_TIME, WorkoutSettings.KEY_REP_DOWN_TIME, WorkoutSettings.KEY_REP_PAUSE_UP_TIME, WorkoutSettings.KEY_REP_PAUSE_DOWN_TIME, WorkoutSettings.KEY_REP_STARTS_WITH_UP -> calculateRepData()
         }
     }
 

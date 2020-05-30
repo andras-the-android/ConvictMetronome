@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Settings @Inject constructor(private val sharedPreferences: SharedPreferences, private val toaster: Toaster) {
+class WorkoutSettings @Inject constructor(private val sharedPreferences: SharedPreferences, private val toaster: Toaster) {
 
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key -> onPreferencesChanged(key); callExternalListeners(sharedPreferences, key) }
