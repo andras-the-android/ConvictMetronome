@@ -2,7 +2,6 @@ package hu.kts.cmetronome.ui.workout
 
 import android.animation.ObjectAnimator
 import android.view.ViewTreeObserver
-import hu.kts.cmetronome.R
 import hu.kts.cmetronome.repository.Settings
 import javax.inject.Inject
 
@@ -31,11 +30,8 @@ class IndicatorAnimation @Inject constructor(private val fragment: WorkoutFragme
     }
 
     private fun init() {
-        val resources = fragment.resources
-        val indicatorDiameter = resources.getDimensionPixelSize(R.dimen.indicator_diameter).toFloat()
-        val metronomePadding = resources.getDimensionPixelSize(R.dimen.metronome_padding).toFloat() * 2
-        longPath = fragment.binding.metronomeView.height.toFloat() - indicatorDiameter - metronomePadding
-        shortPath = fragment.binding.metronomeView.width.toFloat() - indicatorDiameter - metronomePadding
+        longPath = fragment.binding.metronomeIndicatorPath.height.toFloat()
+        shortPath = fragment.binding.metronomeIndicatorPath.width.toFloat()
 
         down = ObjectAnimator.ofFloat(fragment.binding.indicatorView, "translationY", 0f, longPath)
 

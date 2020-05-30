@@ -1,116 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ui.workout.WorkoutFragment">
 
-    <RelativeLayout
-        android:id="@+id/metronomeView"
+    <View
+        android:id="@+id/metronome_indicator_path"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:padding="@dimen/metronome_padding"
-        android:clipToPadding="false"
-        android:layout_margin="17dp"
-        >
+        android:layout_margin="35dp"
+        android:background="@drawable/metronome_indicator_path"
+        app:layout_constraintBottom_toTopOf="@id/adView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/metronome_indicator_path"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:layout_margin="20dp"
-            android:background="@drawable/metronome_indicator_path"/>
+    <View
+        android:id="@+id/indicatorView"
+        android:layout_width="@dimen/indicator_diameter"
+        android:layout_height="@dimen/indicator_diameter"
+        android:background="@drawable/metronome_indicator"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/metronome_indicator_path"
+        app:layout_constraintEnd_toStartOf="@+id/metronome_indicator_path"
+        app:layout_constraintStart_toStartOf="@+id/metronome_indicator_path"
+        app:layout_constraintTop_toTopOf="@+id/metronome_indicator_path" />
 
-        <View
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/indicatorView"
-            android:layout_width="@dimen/indicator_diameter"
-            android:layout_height="@dimen/indicator_diameter"
-            android:background="@drawable/metronome_indicator"
-            android:elevation="10dp"/>
+    <!--layout_constrainedHeight is to rather collapse this view when there is no more vertical space left
+    margin is to decrease overlapping with the indicator view on small displays -->
+    <TextView
+        android:id="@+id/helpTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constrainedHeight="true"
+        android:gravity="center"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/help_text_size"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/repCounterTextView"
+        app:layout_constraintEnd_toEndOf="@+id/metronome_indicator_path"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/metronome_indicator_path"
+        app:layout_constraintTop_toTopOf="@id/metronome_indicator_path"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/help_between_sets" />
 
-        <TextView
-            android:id="@+id/repCounterTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/secondary_text"
-            android:layout_marginLeft="@dimen/indicator_diameter"
-            android:layout_marginRight="@dimen/indicator_diameter"
-            tools:text="99"
-            android:textSize="@dimen/rep_counter_size"
-            android:textStyle="bold"
-            android:background="?attr/selectableItemBackground"
-            android:includeFontPadding="false"
-            android:gravity="center"/>
+    <TextView
+        android:id="@+id/repCounterTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/rep_counter_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/stopwatchTextView"
+        app:layout_constraintEnd_toEndOf="@+id/metronome_indicator_path"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/metronome_indicator_path"
+        app:layout_constraintTop_toBottomOf="@+id/helpTextView"
+        tools:text="99" />
 
-        <TextView
-            android:id="@+id/helpTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/indicator_diameter"
-            android:layout_marginRight="@dimen/indicator_diameter"
-            android:textColor="@color/accent"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@id/repCounterTextView"
-            android:gravity="center"
-            tools:text="@string/help_in_progress"
-            android:textSize="@dimen/help_text_size"/>
+    <TextView
+        android:id="@+id/stopwatchTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/stopwatch_text_size"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/set_counter_label"
+        app:layout_constraintEnd_toEndOf="@+id/metronome_indicator_path"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/metronome_indicator_path"
+        app:layout_constraintTop_toBottomOf="@+id/repCounterTextView"
+        tools:text="00:00" />
 
-        <TextView
-            android:id="@+id/stopwatchTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/set_counter_label"
-            android:layout_alignStart="@+id/set_counter_label"
-            android:layout_below="@+id/repCounterTextView"
-            android:gravity="center"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/stopwatch_text_size"
-            android:visibility="visible"
-            android:includeFontPadding="false"
-            tools:text="00:00" />
+    <!-- margin is to decrease overlapping with the indicator view on small displays -->
+    <TextView
+        android:id="@+id/set_counter_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_counter_label"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/help_text_size"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/metronome_indicator_path"
+        app:layout_constraintEnd_toStartOf="@id/setCounterTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/metronome_indicator_path"
+        app:layout_constraintTop_toBottomOf="@+id/stopwatchTextView" />
 
-        <TextView
-            android:id="@+id/set_counter_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/indicator_diameter"
-            android:layout_marginStart="@dimen/indicator_diameter"
-            android:textColor="@color/accent"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/stopwatchTextView"
-            android:text="@string/set_counter_label"
-            android:textSize="@dimen/help_text_size"/>
-
-        <TextView
-            android:id="@+id/setCounterTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginRight="@dimen/indicator_diameter"
-            android:layout_marginEnd="@dimen/indicator_diameter"
-            android:textColor="@color/secondary_text"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/stopwatchTextView"
-            android:layout_toRightOf="@+id/set_counter_label"
-            android:layout_toEndOf="@+id/set_counter_label"
-            android:textSize="@dimen/help_text_size"/>
-
-
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/setCounterTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/help_text_size"
+        android:layout_marginStart="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/metronome_indicator_path"
+        app:layout_constraintStart_toEndOf="@+id/set_counter_label"
+        app:layout_constraintBaseline_toBaselineOf="@id/set_counter_label"
+        tools:text="5" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="2dp"
         app:adSize="BANNER"
-        app:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
+        app:adUnitId="@string/banner_ad_unit_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
