@@ -1,7 +1,6 @@
 package hu.kts.cmetronome.repository
 
 import android.content.SharedPreferences
-import hu.kts.cmetronome.BuildConfig
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.ui.Toaster
 import java.lang.ref.WeakReference
@@ -14,7 +13,6 @@ class WorkoutSettings @Inject constructor(private val sharedPreferences: SharedP
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key -> onPreferencesChanged(key); callExternalListeners(sharedPreferences, key) }
 
-    //TODO replace with LiveData
     private val listeners: MutableSet<WeakReference<SharedPreferences.OnSharedPreferenceChangeListener>> = mutableSetOf()
 
     init {
@@ -25,17 +23,9 @@ class WorkoutSettings @Inject constructor(private val sharedPreferences: SharedP
         onPreferencesChanged(KEY_REP_PAUSE_DOWN_TIME)
     }
 
-    val isShowHelp: Boolean
-        get() = sharedPreferences.getBoolean(KEY_SHOW_HELP, true)
-
     val countdownStartValue: Int
         get() = sharedPreferences.getString(KEY_COUNTDOWN_START_VALUE, "3")!!.toInt()
 
-    val isAnalyticsEnabled: Boolean
-        get() = sharedPreferences.getBoolean(KEY_USE_DIAGNOSTICS, true)
-
-    val whatsNewVersion: Int
-        get() = sharedPreferences.getInt(KEY_WHATS_NEW_VERSION, 10)
 
     var repStartsWithUp: Boolean = sharedPreferences.getBoolean(KEY_REP_STARTS_WITH_UP, true)
         private set
@@ -52,17 +42,6 @@ class WorkoutSettings @Inject constructor(private val sharedPreferences: SharedP
 
     fun addListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         listeners.add(WeakReference(listener))
-    }
-
-    fun updateWhatsNewVersion() {
-        sharedPreferences.edit().putInt(KEY_WHATS_NEW_VERSION, BuildConfig.VERSION_CODE).apply()
-    }
-
-    fun runMigration11() {
-        sharedPreferences.edit()
-                .putString(KEY_REP_UP_TIME, sharedPreferences.getString(KEY_REP_UP_DOWN_TIME, "2000"))
-                .putString(KEY_REP_PAUSE_UP_TIME, sharedPreferences.getString(KEY_REP_PAUSE_TIME, "1000"))
-                .apply()
     }
 
     private fun onPreferencesChanged(key: String) {
@@ -110,10 +89,7 @@ class WorkoutSettings @Inject constructor(private val sharedPreferences: SharedP
     }
 
     companion object {
-
-        const val KEY_SHOW_HELP = "showHelp"
         const val KEY_COUNTDOWN_START_VALUE = "countdownStartValue"
-        const val KEY_USE_DIAGNOSTICS = "useDiagnostics"
         const val KEY_REP_UP_DOWN_TIME = "repUpDownTime"
         const val KEY_REP_UP_TIME = "repUpTime"
         const val KEY_REP_DOWN_TIME = "repDownTime"
@@ -123,7 +99,6 @@ class WorkoutSettings @Inject constructor(private val sharedPreferences: SharedP
         const val KEY_REP_STARTS_WITH_UP= "repStartsWith"
         const val KEY_SAME_AS = "-1"
         const val KEY_PLAY_SOUND = "playSound"
-        const val KEY_WHATS_NEW_VERSION  = "whatsNewVersion"
     }
 
 }

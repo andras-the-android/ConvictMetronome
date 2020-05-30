@@ -9,6 +9,8 @@ import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.WorkoutStatus
 import hu.kts.cmetronome.di.TimeProviderRep
 import hu.kts.cmetronome.logic.WorkoutCalculations
+import hu.kts.cmetronome.repository.AppSettings
+import hu.kts.cmetronome.repository.AppSettings.Companion.KEY_SHOW_HELP
 import hu.kts.cmetronome.repository.WorkoutRepository
 import hu.kts.cmetronome.repository.WorkoutSettings
 import hu.kts.cmetronome.sounds.Sounds
@@ -17,6 +19,7 @@ import javax.inject.Inject
 
 class WorkoutController @Inject constructor(private val repository: WorkoutRepository,
                                             private val settings: WorkoutSettings,
+                                            private val appSettings: AppSettings,
                                             private val sounds: Sounds,
                                             @TimeProviderRep private val timeProviderRep: TimeProvider,
                                             private val calculations: WorkoutCalculations,
@@ -35,7 +38,8 @@ class WorkoutController @Inject constructor(private val repository: WorkoutRepos
         initWorkoutData()
         timeProviderRep.observeForever { count -> onRepTimeProviderTick(count) }
         settings.addListener(listener)
-        help.setEnabled(settings.isShowHelp)
+        appSettings.addListener(listener)
+        help.setEnabled(appSettings.isShowHelp)
         countdowner.onFinish = this::startWorkout
         countdowner.onCancel = this::onCountdownCancelled
     }
@@ -56,7 +60,7 @@ class WorkoutController @Inject constructor(private val repository: WorkoutRepos
 
     private fun onSettingsChanged(key: String?) {
         when (key) {
-            WorkoutSettings.KEY_SHOW_HELP -> help.setEnabled(settings.isShowHelp)
+            KEY_SHOW_HELP -> help.setEnabled(appSettings.isShowHelp)
             WorkoutSettings.KEY_REP_STARTS_WITH_UP -> resetIndicator()
         }
     }
