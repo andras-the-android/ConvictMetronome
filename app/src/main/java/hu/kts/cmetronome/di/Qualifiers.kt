@@ -21,3 +21,8 @@ annotation class TimeProviderStopwatch
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 annotation class TimeProviderCountdowner
+
+@Qualifier
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
+annotation class WorkoutId

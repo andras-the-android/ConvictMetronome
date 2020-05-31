@@ -3,9 +3,8 @@ package hu.kts.cmetronome.di
 import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
-import javax.inject.Singleton
 
-@Singleton
+@AppScope
 @Component(modules = [AppModule::class])
 interface AppComponent {
 

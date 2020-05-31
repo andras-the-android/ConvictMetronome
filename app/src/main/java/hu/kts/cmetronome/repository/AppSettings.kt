@@ -2,10 +2,10 @@ package hu.kts.cmetronome.repository
 
 import android.content.SharedPreferences
 import hu.kts.cmetronome.BuildConfig
+import hu.kts.cmetronome.di.AppScope
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@AppScope
 class AppSettings @Inject constructor(
         private val sharedPreferences: SharedPreferences
 ) {

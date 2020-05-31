@@ -33,7 +33,7 @@ class WorkoutFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (!injected) {
-            AppComponent.get().workoutComponentFactory.create(this).inject(this)
+            AppComponent.get().workoutComponentFactory.create(this, 0).inject(this)
             injected = true
         }
 

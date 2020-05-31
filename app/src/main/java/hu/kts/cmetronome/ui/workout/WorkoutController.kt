@@ -8,6 +8,7 @@ import hu.kts.cmetronome.R
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.WorkoutStatus
 import hu.kts.cmetronome.di.TimeProviderRep
+import hu.kts.cmetronome.di.WorkoutScope
 import hu.kts.cmetronome.logic.WorkoutCalculations
 import hu.kts.cmetronome.repository.AppSettings
 import hu.kts.cmetronome.repository.AppSettings.Companion.KEY_SHOW_HELP
@@ -17,6 +18,7 @@ import hu.kts.cmetronome.sounds.Sounds
 import hu.kts.cmetronome.ui.Toaster
 import javax.inject.Inject
 
+@WorkoutScope
 class WorkoutController @Inject constructor(private val repository: WorkoutRepository,
                                             private val settings: WorkoutSettings,
                                             private val appSettings: AppSettings,

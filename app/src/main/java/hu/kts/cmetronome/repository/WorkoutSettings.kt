@@ -4,11 +4,8 @@ import android.content.SharedPreferences
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.ui.Toaster
 import java.lang.ref.WeakReference
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class WorkoutSettings @Inject constructor(private val sharedPreferences: SharedPreferences, private val toaster: Toaster) {
+class WorkoutSettings(private val sharedPreferences: SharedPreferences, private val toaster: Toaster) {
 
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key -> onPreferencesChanged(key); callExternalListeners(sharedPreferences, key) }

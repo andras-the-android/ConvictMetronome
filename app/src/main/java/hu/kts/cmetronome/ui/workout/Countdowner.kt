@@ -2,14 +2,15 @@ package hu.kts.cmetronome.ui.workout
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.TimeProvider
 import hu.kts.cmetronome.di.AppContext
 import hu.kts.cmetronome.di.TimeProviderCountdowner
+import hu.kts.cmetronome.di.WorkoutScope
 import hu.kts.cmetronome.repository.WorkoutSettings
 import javax.inject.Inject
 
+@WorkoutScope
 class Countdowner @Inject constructor(
         @AppContext context: Context,
         private val fragment: WorkoutFragment,

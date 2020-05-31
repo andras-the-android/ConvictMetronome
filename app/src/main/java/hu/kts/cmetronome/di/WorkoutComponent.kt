@@ -4,6 +4,7 @@ import dagger.BindsInstance
 import dagger.Subcomponent
 import hu.kts.cmetronome.ui.workout.WorkoutFragment
 
+@WorkoutScope
 @Subcomponent(modules = [WorkoutModule::class])
 interface WorkoutComponent {
 
@@ -11,6 +12,9 @@ interface WorkoutComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance fragment: WorkoutFragment): WorkoutComponent
+        fun create(
+                @BindsInstance fragment: WorkoutFragment,
+                @BindsInstance @WorkoutId workoutId: Int
+        ): WorkoutComponent
     }
 }

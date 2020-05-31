@@ -3,8 +3,10 @@ package hu.kts.cmetronome.ui.workout
 import android.view.View
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.WorkoutStatus
+import hu.kts.cmetronome.di.WorkoutScope
 import javax.inject.Inject
 
+@WorkoutScope
 class Help @Inject constructor(private val fragment: WorkoutFragment) {
 
     fun setEnabled(enabled: Boolean) {

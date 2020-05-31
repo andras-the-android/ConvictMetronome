@@ -1,11 +1,13 @@
 package hu.kts.cmetronome.logic
 
 import android.content.SharedPreferences
+import hu.kts.cmetronome.di.WorkoutScope
 import hu.kts.cmetronome.repository.WorkoutSettings
 import hu.kts.cmetronome.ui.workout.IndicatorAnimation
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+@WorkoutScope
 class WorkoutCalculations @Inject constructor(private val settings: WorkoutSettings) {
 
     private var millisToIncreaseRepCounter = 0L

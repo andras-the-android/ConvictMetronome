@@ -2,12 +2,14 @@ package hu.kts.cmetronome.ui.workout
 
 import android.animation.ObjectAnimator
 import android.view.ViewTreeObserver
+import hu.kts.cmetronome.di.WorkoutScope
 import hu.kts.cmetronome.repository.WorkoutSettings
 import javax.inject.Inject
 
 /**
  * AnimatorSet is avoided because it behaved strange on cancel.
  */
+@WorkoutScope
 class IndicatorAnimation @Inject constructor(private val fragment: WorkoutFragment, private val settings: WorkoutSettings) {
 
     private var animationRunning: Boolean = false

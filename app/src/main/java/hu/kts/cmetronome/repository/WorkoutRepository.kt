@@ -1,10 +1,10 @@
 package hu.kts.cmetronome.repository
 
 import hu.kts.cmetronome.WorkoutStatus
+import hu.kts.cmetronome.di.AppScope
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@AppScope
 class WorkoutRepository @Inject constructor() {
 
     var repCount = 0

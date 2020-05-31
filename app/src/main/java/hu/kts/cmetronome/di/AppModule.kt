@@ -6,32 +6,31 @@ import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import hu.kts.cmetronome.TimeProvider
-import javax.inject.Singleton
 
 @Module
 object AppModule {
 
     @Provides
     @AppContext
-    @Singleton
+    @AppScope
     fun appContext(application: Application): Context = application
 
     @Provides
     @TimeProviderRep
-    @Singleton
+    @AppScope
     fun timeProviderRep() = TimeProvider(500)
 
     @Provides
     @TimeProviderCountdowner
-    @Singleton
+    @AppScope
     fun timeProviderCountdowner() = TimeProvider(1000)
 
     @Provides
     @TimeProviderStopwatch
-    @Singleton
+    @AppScope
     fun timeProviderStopwatch() = TimeProvider(1000)
 
     @Provides
-    @Singleton
+    @AppScope
     fun sharedPreferences(application: Application) = PreferenceManager.getDefaultSharedPreferences(application)
 }

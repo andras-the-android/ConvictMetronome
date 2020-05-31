@@ -1,7 +1,9 @@
 package hu.kts.cmetronome.ui.workout
 
+import hu.kts.cmetronome.di.WorkoutScope
 import javax.inject.Inject
 
+@WorkoutScope
 class Counters @Inject constructor(private val fragment: WorkoutFragment) {
 
     /**
