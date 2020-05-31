@@ -33,10 +33,11 @@ class WorkoutController @Inject constructor(private val repository: WorkoutRepos
 
     //we have to hold a reference to this or else it'd be gc-d
     private val listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> onSettingsChanged(key) }
+    private val timeProviderObserver = { counter: Long -> onRepTimeProviderTick(counter) }
 
     init {
         initWorkoutData()
-        timeProviderRep.observeForever { count -> onRepTimeProviderTick(count) }
+        timeProviderRep.observeForever(timeProviderObserver)
         settings.addListener(listener)
         appSettings.addListener(listener)
         help.setEnabled(appSettings.isShowHelp)

@@ -14,14 +14,15 @@ class Stopwatch @Inject constructor(
         private val sounds: Sounds
 ) {
 
-    private val sb = StringBuilder()
-    private val formatter = Formatter(sb)
-
     val startTime: Long
         get() = timeProvider.startTime
 
+    private val sb = StringBuilder()
+    private val formatter = Formatter(sb)
+    private val timeProviderObserver = { counter: Long -> onStopwatchTick(counter) }
+
     init {
-        timeProvider.observe(fragment, Observer { this.onStopwatchTick(it ?: 0) })
+        timeProvider.observe(fragment.lifecycle, timeProviderObserver)
     }
 
     fun start(originalStartTime: Long = 0) {

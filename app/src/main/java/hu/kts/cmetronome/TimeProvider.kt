@@ -2,9 +2,12 @@ package hu.kts.cmetronome
 
 import android.os.Handler
 import android.os.SystemClock
-import hu.kts.cmetronome.architetcture.SingleLiveEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import java.lang.ref.WeakReference
 
-class TimeProvider(private val delayMillis: Long) : SingleLiveEvent<Long>() {
+class TimeProvider(private val delayMillis: Long): DefaultLifecycleObserver {
 
     private var state = State.STOPPED
     private val handler = Handler()
@@ -25,6 +28,17 @@ class TimeProvider(private val delayMillis: Long) : SingleLiveEvent<Long>() {
 
     private val isCountDownLastRound: Boolean
         get() = count == countDownStartValue.toLong()
+
+    private var observer: WeakReference<(Long) -> Unit>? = null
+
+    fun observeForever(observer: (Long) -> Unit) {
+        this.observer = WeakReference(observer)
+    }
+
+    fun observe(lifecycle: Lifecycle, observer: (Long) -> Unit) {
+        lifecycle.addObserver(this)
+        observeForever(observer)
+    }
 
     @Synchronized
     fun startUp() {
@@ -61,7 +75,7 @@ class TimeProvider(private val delayMillis: Long) : SingleLiveEvent<Long>() {
     private fun startCycle() {
         if (state == State.IN_PROGRESS) {
             val t = calcCallbackValue()
-            value = t
+            callObserver(t)
             if (isCountDownLastRound) {
                 state = State.STOPPED
             } else {
@@ -84,15 +98,18 @@ class TimeProvider(private val delayMillis: Long) : SingleLiveEvent<Long>() {
         return if (isCountDown) countDownStartValue - count else count
     }
 
-    override fun onActive() {
-        //invoked twice somehow
+    private fun callObserver(value: Long) {
+        observer?.get()?.invoke(value)
+    }
+
+    override fun onStart(owner: LifecycleOwner) {
         if (state == State.INACTIVE) {
             state = State.IN_PROGRESS
             startCycle()
         }
     }
 
-    override fun onInactive() {
+    override fun onStop(owner: LifecycleOwner) {
         if (state == State.IN_PROGRESS) {
             state = State.INACTIVE
         }

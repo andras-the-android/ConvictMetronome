@@ -17,13 +17,15 @@ class Countdowner @Inject constructor(
         @TimeProviderCountdowner private val timeProvider: TimeProvider
 ) {
 
-    private val countDownColor: Int = ContextCompat.getColor(context, R.color.accent)
-    private val normalColor: Int = ContextCompat.getColor(context, R.color.secondary_text)
     var onFinish: (() -> Unit)? = null
     var onCancel: (() -> Unit)? = null
 
+    private val countDownColor: Int = ContextCompat.getColor(context, R.color.accent)
+    private val normalColor: Int = ContextCompat.getColor(context, R.color.secondary_text)
+    private val timeProviderObserver = { counter: Long -> onCountDownTick(counter) }
+
     init {
-        timeProvider.observe(fragment, Observer { this.onCountDownTick(it ?: 0) })
+        timeProvider.observe(fragment.lifecycle, timeProviderObserver)
     }
 
     private fun onCountDownTick(remainingSeconds: Long) {
