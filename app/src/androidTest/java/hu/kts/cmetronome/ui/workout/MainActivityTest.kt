@@ -17,8 +17,8 @@ import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import hu.kts.cmetronome.R
 import hu.kts.cmetronome.repository.WorkoutSettings
 import hu.kts.cmetronome.ui.MainActivity
@@ -32,7 +32,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class MainActivityTest {
 
     @Rule
