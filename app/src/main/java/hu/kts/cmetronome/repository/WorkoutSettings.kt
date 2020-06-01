@@ -22,8 +22,6 @@ class WorkoutSettings(private val sharedPreferences: SharedPreferences, private 
 
     val countdownStartValue: Int
         get() = sharedPreferences.getString(KEY_COUNTDOWN_START_VALUE, "3")!!.toInt()
-
-
     var repStartsWithUp: Boolean = sharedPreferences.getBoolean(KEY_REP_STARTS_WITH_UP, true)
         private set
     var playSound: Boolean = sharedPreferences.getBoolean(KEY_PLAY_SOUND, true)

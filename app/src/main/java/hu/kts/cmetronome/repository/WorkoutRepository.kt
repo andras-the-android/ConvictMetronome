@@ -8,9 +8,9 @@ import javax.inject.Inject
 class WorkoutRepository @Inject constructor() {
 
     var repCount = 0
-        internal set
+        private set
     var setCount = 0
-        internal set
+        private set
     var workoutStatus: WorkoutStatus? = null
     var stopwatchStartTime: Long = 0
 
