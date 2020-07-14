@@ -27,7 +27,7 @@ class Settings(private val context: Context) {
         get() = sharedPreferences.getBoolean(KEY_SHOW_HELP, true)
 
     val countdownStartValue: Int
-        get() = Integer.parseInt(sharedPreferences.getString(KEY_COUNTDOWN_START_VALUE, "3")!!)
+        get() = sharedPreferences.getString(KEY_COUNTDOWN_START_VALUE, "3")!!.toInt()
 
     val isAnalyticsEnabled: Boolean
         get() = sharedPreferences.getBoolean(KEY_USE_DIAGNOSTICS, true)
@@ -35,9 +35,9 @@ class Settings(private val context: Context) {
     val whatsNewVersion: Int
         get() = sharedPreferences.getInt(KEY_WHATS_NEW_VERSION, 10)
 
-    var repStartsWithUp: Boolean = true
+    var repStartsWithUp: Boolean = sharedPreferences.getBoolean(KEY_REP_STARTS_WITH_UP, true)
         private set
-    var playSound: Boolean = true
+    var playSound: Boolean = sharedPreferences.getBoolean(KEY_PLAY_SOUND, true)
         private set
     var repUpTime: Long = 0
         private set
