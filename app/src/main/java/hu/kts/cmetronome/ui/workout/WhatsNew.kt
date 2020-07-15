@@ -11,7 +11,7 @@ import hu.kts.cmetronome.Settings
 class WhatsNew(val activity: Activity, val settings: Settings) {
 
     fun run() {
-        if (settings.whatsNewVersion < BuildConfig.VERSION_CODE) {
+        if (settings.whatsNewVersion < LATEST_VERSION_WITH_WHATS_NEW_RECORD) {
             val view = activity.layoutInflater.inflate(R.layout.view_whats_new, null)
             val textView = view.findViewById<TextView>(R.id.releaseNotes)
 
@@ -39,5 +39,9 @@ class WhatsNew(val activity: Activity, val settings: Settings) {
                 11 -> settings.runMigration11()
             }
         }
+    }
+
+    companion object {
+        private const val LATEST_VERSION_WITH_WHATS_NEW_RECORD = 13
     }
 }
